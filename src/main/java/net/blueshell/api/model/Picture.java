@@ -11,11 +11,15 @@ public class Picture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private String name;
+
     private String url;
+
     @OneToOne
     @JoinColumn(name = "uploader")
     private User user;
+
     @Column(name = "created_at")
     private Timestamp createdAt;
 
