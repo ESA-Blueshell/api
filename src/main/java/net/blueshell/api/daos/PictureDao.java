@@ -29,7 +29,7 @@ public class PictureDao implements Dao<Picture> {
         sessionFactory.openSession().update(picture);
     }
 
-    public void delete(int id) {
+    public void delete(long id) {
         sessionFactory.openSession().remove(getById(id));
     }
 
