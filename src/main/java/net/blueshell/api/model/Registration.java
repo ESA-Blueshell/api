@@ -16,12 +16,13 @@ public class Registration {
     private User user;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "registration_state")
     private RegistrationState registrationState;
 
     @OneToOne
     @JoinColumn(name = "accepted_by_user_id")
     private User acceptBy;
 
-    @Column(name = "created_at")
+    @Column(name = "accepted_at")
     private Timestamp createdAt;
 }

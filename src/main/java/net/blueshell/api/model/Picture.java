@@ -17,7 +17,7 @@ public class Picture {
     private String url;
 
     @OneToOne
-    @JoinColumn(name = "uploader")
+    @JoinColumn(name = "uploader_id")
     private User user;
 
     @Column(name = "created_at")
