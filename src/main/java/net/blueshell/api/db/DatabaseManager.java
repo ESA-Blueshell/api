@@ -1,7 +1,6 @@
 package net.blueshell.api.db;
 
-import net.blueshell.api.model.Picture;
-import net.blueshell.api.model.User;
+import net.blueshell.api.model.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -24,8 +23,14 @@ public class DatabaseManager {
         Configuration configuration = new Configuration().configure();
         configuration.setProperty("autoReconnect", "true");
         Class[] dbClasses = new Class[] {
+                Billable.class,
+                Committee.class,
+                Event.class,
+                EventFeedback.class,
                 Picture.class,
-                User.class
+                Registration.class,
+                Sponsor.class,
+                User.class,
         };
         for(Class clazz : dbClasses) {
             configuration.addAnnotatedClass(clazz);
