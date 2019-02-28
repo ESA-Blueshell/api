@@ -11,6 +11,7 @@ public class ApiApplication {
         System.out.println("[DB] Init");
         DatabaseManager.init();
         System.out.println("[DB] Done");
+        System.setProperty("server.servlet.context-path", "/api");
         SpringApplication.run(ApiApplication.class, args);
     }
 

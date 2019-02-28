@@ -1,26 +1,31 @@
 package net.blueshell.api.controller;
 
-import net.blueshell.api.db.DatabaseManager;
+import net.blueshell.api.daos.Dao;
+import net.blueshell.api.daos.PictureDao;
 import net.blueshell.api.model.Picture;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import java.util.List;
 
-@RestController(value = "/api/pictures")
+@RestController
 public class PictureController {
 
-    @RequestMapping("/{id}")
-    @Produces(value = MediaType.APPLICATION_JSON)
-    public Picture getPictureById(@PathVariable("id") String id) {
-        return (Picture) DatabaseManager.getObjFromDB(Picture.class, Integer.parseInt(id));
+    private final Dao<Picture> dao = new PictureDao();
+
+    @GetMapping(value = "/pictures/{id}")
+    public Object getPictureById(@PathVariable("id") String id) {
+        Picture pic = dao.getById(Long.parseLong(id));
+        if (pic == null) {
+            return new ResponseEntity<Picture>(HttpStatus.NOT_FOUND);
+        }
+        return pic;
     }
 
-    @RequestMapping
-    public String getDefault() {
-        return DatabaseManager.getObjFromDB(Picture.class, 1).toString();
+    @GetMapping(value = "/pictures")
+    public List<Picture> getPictures() {
+        return dao.list();
     }
+
 }

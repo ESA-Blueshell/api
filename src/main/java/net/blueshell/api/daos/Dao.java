@@ -8,7 +8,7 @@ public interface Dao<T> {
 
     public List<T> list();
 
-    public T getById(int id);
+    public T getById(long id);
 
     // .save() generates an ID, .persists() doesn't
     public T create(T t);

@@ -132,4 +132,8 @@ public class DatabaseManager {
         }
         return list;
     }
+
+    public static SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
 }
