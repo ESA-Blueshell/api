@@ -1,13 +1,9 @@
 package net.blueshell.api.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.core.JsonGenerator;
-
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
+
 
 @Entity
 @Table(name = "pictures")
@@ -23,7 +19,6 @@ public class Picture {
 
     @OneToOne
     @JoinColumn(name = "uploader_id")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
     private User user;
 
     @Column(name = "created_at")
