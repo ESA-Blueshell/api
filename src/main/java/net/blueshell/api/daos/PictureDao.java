@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 public class PictureDao implements Dao<Picture> {
@@ -18,9 +19,10 @@ public class PictureDao implements Dao<Picture> {
     public List<Picture> list() {
         Session session = sessionFactory.openSession();
         CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<Picture> criteria = builder.createQuery(Picture.class);
-        Query<Picture> query = session.createQuery(criteria);
-        return query.getResultList();
+        CriteriaQuery<Picture> criteriaQuery = builder.createQuery(Picture.class);
+        Root<Picture> pictureRoot = criteriaQuery.from(Picture.class);
+        criteriaQuery.select(pictureRoot);
+        return session.createQuery(criteriaQuery).getResultList();
     }
 
     public Picture getById(long id) {
