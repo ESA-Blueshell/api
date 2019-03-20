@@ -30,7 +30,7 @@ public class Event {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    private Visibility visibilty;
+    private Visibility visibility;
 
     private String location;
 
