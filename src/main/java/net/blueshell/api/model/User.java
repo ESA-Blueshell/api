@@ -2,6 +2,7 @@ package net.blueshell.api.model;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -76,5 +77,18 @@ public class User {
     @Column(name = "deleted_at")
     private Timestamp deletedAt;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Set<CommitteeMembership> committeeMemberships;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "subscriptions",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "committee_id")
+    )
+    private Set<Committee> subscriptions;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "source")
+    private Set<Billable> billables;
 
 }

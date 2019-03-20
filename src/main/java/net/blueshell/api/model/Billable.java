@@ -29,4 +29,5 @@ public class Billable {
 
     @Column(name = "created_at")
     private Timestamp createdAt;
+
 }

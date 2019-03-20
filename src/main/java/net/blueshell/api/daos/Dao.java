@@ -6,15 +6,15 @@ import java.util.List;
 
 public interface Dao<T> {
 
-    public List<T> list();
+    List<T> list();
 
-    public T getById(long id);
+    T getById(long id);
 
     // .save() generates an ID, .persists() doesn't
-    public T create(T t);
+    T create(T t);
 
-    public void update(T t);
+    void update(T t);
 
-    public void delete(int id);
+    void delete(long id);
 
 }

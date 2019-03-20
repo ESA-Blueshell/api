@@ -31,6 +31,7 @@ public class DatabaseManager {
                 Registration.class,
                 Sponsor.class,
                 User.class,
+                CommitteeMembership.class,
         };
         for(Class clazz : dbClasses) {
             configuration.addAnnotatedClass(clazz);
