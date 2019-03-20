@@ -1,4 +1,5 @@
 set FOREIGN_KEY_CHECKS = 0;
+ALTER DATABASE blueshell CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 drop table if exists
   pictures,

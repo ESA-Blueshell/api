@@ -2,9 +2,13 @@ package net.blueshell.api.daos;
 
 import net.blueshell.api.db.DatabaseManager;
 import net.blueshell.api.model.Picture;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
 public class PictureDao implements Dao<Picture> {
@@ -12,8 +16,11 @@ public class PictureDao implements Dao<Picture> {
     private SessionFactory sessionFactory = DatabaseManager.getSessionFactory();
 
     public List<Picture> list() {
-        String hql = "FROM Picture as picture ORDER BY picture.id";
-        return (List<Picture>) sessionFactory.openSession().createQuery(hql).getResultList();
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Picture> criteria = builder.createQuery(Picture.class);
+        Query<Picture> query = session.createQuery(criteria);
+        return query.getResultList();
     }
 
     public Picture getById(long id) {
