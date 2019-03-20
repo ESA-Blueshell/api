@@ -4,8 +4,6 @@ import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.daos.Dao;
 import net.blueshell.api.daos.PictureDao;
 import net.blueshell.api.model.Picture;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,8 +26,6 @@ public class PictureController {
         dao.create(picture);
         return StatusCodes.CREATED;
     }
-
-    // TODO put
 
     @GetMapping(value = "/pictures/{id}")
     public Object getPictureById(@PathVariable("id") String id) {

@@ -32,9 +32,9 @@ create table users (
   phone_number text,
   email text not null,
   student_number text,
-  date_of_birth text,
-  created_at datetime(3) not null,
-  member_since datetime(3) not null,
+  date_of_birth datetime,
+  created_at datetime not null,
+  member_since datetime not null,
   discord text,
   steamid text,
   newsletter bool not null,
@@ -43,7 +43,7 @@ create table users (
   consent_gdpr bool not null,
   registration_id bigint, # registration
   profile_picture bigint, # possible picture
-  deleted_at datetime(3),
+  deleted_at datetime,
   primary key (id)
 );
 
@@ -58,7 +58,7 @@ create table pictures (
   id bigint not null auto_increment,
   name varchar(255),
   url varchar(255),
-  created_at datetime(3),
+  created_at datetime,
   uploader_id bigint,
   primary key (id),
   foreign key (uploader_id) references users(id)
@@ -73,7 +73,7 @@ create table events (
   description varchar(255) not null,
   visibility varchar(255) not null, # Enum
   location varchar(255),
-  start_time datetime(3),
+  start_time datetime,
   banner_id bigint, # picture
   price_member double,
   price_public double,
@@ -98,7 +98,7 @@ create table billables (
   price double,
   paid bool,
   event_id bigint, # possible event
-  created_at datetime(3),
+  created_at datetime,
   primary key (id),
   foreign key (source_id) references users(id)
 );
@@ -143,7 +143,7 @@ create table registrations (
   user_id bigint,
   registration_state text, # enum
   accepted_by_user_id bigint, # user
-  accepted_at datetime(3),
+  accepted_at datetime,
   primary key (id),
   foreign key (user_id) references users(id),
   foreign key (accepted_by_user_id) references users(id)
