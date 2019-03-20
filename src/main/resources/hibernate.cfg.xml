@@ -13,11 +13,11 @@
         </property>
 
         <property name = "hibernate.connection.username">
-            root
+            mauk
         </property>
 
         <property name = "hibernate.connection.password">
-            blueshell
+            123
         </property>
 
         <property name="hibernate.enable_lazy_load_no_trans">

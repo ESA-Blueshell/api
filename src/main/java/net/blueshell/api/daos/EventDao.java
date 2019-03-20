@@ -28,7 +28,7 @@ public class EventDao implements Dao<Event>  {
         sessionFactory.openSession().update(event);
     }
 
-    public void delete(int id) {
+    public void delete(long id) {
         sessionFactory.openSession().remove(getById(id));
     }
 
