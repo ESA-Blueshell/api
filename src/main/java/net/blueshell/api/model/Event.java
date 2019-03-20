@@ -44,7 +44,7 @@ public class Event {
     @Column(name = "price_member")
     private double memberPrice;
 
-    @Column(name = "price_pulic")
+    @Column(name = "price_public")
     private double publicPrice;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
