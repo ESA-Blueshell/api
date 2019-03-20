@@ -8,6 +8,7 @@ import org.hibernate.query.Query;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 public class UserDao implements Dao<User> {
@@ -17,9 +18,10 @@ public class UserDao implements Dao<User> {
     public List<User> list() {
         Session session = sessionFactory.openSession();
         CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<User> criteria = builder.createQuery(User.class);
-        Query<User> query = session.createQuery(criteria);
-        return query.getResultList();
+        CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
+        Root<User> userRoot = criteriaQuery.from(User.class);
+        criteriaQuery.select(userRoot);
+        return session.createQuery(criteriaQuery).getResultList();
     }
 
     public User getById(long id) {
