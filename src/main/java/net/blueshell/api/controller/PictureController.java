@@ -27,6 +27,18 @@ public class PictureController {
         return StatusCodes.CREATED;
     }
 
+    @PutMapping(value = "/pictures/{id}")
+    public Object createOrUpdatePicture(Picture picture) {
+        Picture pic = dao.getById(picture.getId());
+        if (pic == null) {
+            // create new picture
+            return createPicture(picture);
+        } else {
+            dao.update(pic);
+        }
+        return StatusCodes.OK;
+    }
+
     @GetMapping(value = "/pictures/{id}")
     public Object getPictureById(@PathVariable("id") String id) {
         Picture pic = dao.getById(Long.parseLong(id));
