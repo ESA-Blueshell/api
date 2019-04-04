@@ -4,8 +4,6 @@ import net.blueshell.api.db.DatabaseManager;
 import net.blueshell.api.model.Picture;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;

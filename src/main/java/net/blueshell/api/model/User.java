@@ -1,5 +1,6 @@
 package net.blueshell.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -77,6 +78,10 @@ public class User {
     @JoinColumn(name = "profile_picture")
     private Picture profilePicture;
 
+    @JsonIgnore
+    @Column(name = "profile_picture", updatable=false, insertable=false)
+    private Long profilePictureFk;
+
     @Column(name = "deleted_at")
     private Timestamp deletedAt;
 
@@ -93,5 +98,25 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "source")
     private Set<Billable> billables;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Long getProfilePicture() {
+        return profilePictureFk;
+    }
+
+    public void setProfilePicture(Picture profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public void setProfilePictureFk(Long profilePictureFk) {
+        this.profilePictureFk = profilePictureFk;
+    }
 
 }

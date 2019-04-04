@@ -1,9 +1,7 @@
 package net.blueshell.api.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -11,6 +9,7 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "pictures")
+@Data
 public class Picture {
 
     @Id
@@ -23,8 +22,11 @@ public class Picture {
 
     @OneToOne
     @JoinColumn(name = "uploader_id")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
-    private User user;
+    private User uploader;
+
+    @JsonIgnore
+    @Column(name = "uploader_id", updatable=false, insertable=false)
+    private Long uploaderFk;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -33,11 +35,12 @@ public class Picture {
         createdAt = Timestamp.from(Instant.now());
     }
 
-    public Picture(String name, String url, User user) {
+    public Picture(String name, String url, User uploader) {
         this();
         this.name = name;
         this.url = url;
-        this.user = user;
+        this.uploader = uploader;
+        this.uploaderFk = uploader.getId();
     }
 
     public long getId() {
@@ -64,19 +67,15 @@ public class Picture {
         this.url = url;
     }
 
-    public User getUser() {
-        return user;
+    public Long getUploader() {
+        return uploaderFk;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUploader(User uploader) {
+        this.uploader = uploader;
     }
 
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
+    public void setUploaderFk(Long uploader_fk) {
+        this.uploaderFk = uploader_fk;
     }
 }
