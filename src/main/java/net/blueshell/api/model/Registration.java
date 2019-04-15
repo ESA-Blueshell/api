@@ -1,10 +1,13 @@
 package net.blueshell.api.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "registrations")
+@Data
 public class Registration {
 
     @Id

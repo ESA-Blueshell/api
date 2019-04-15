@@ -1,6 +1,7 @@
 package net.blueshell.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -22,11 +23,8 @@ public class Picture {
 
     @OneToOne
     @JoinColumn(name = "uploader_id")
-    private User uploader;
-
     @JsonIgnore
-    @Column(name = "uploader_id", updatable=false, insertable=false)
-    private Long uploaderFk;
+    private User uploader;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -40,7 +38,6 @@ public class Picture {
         this.name = name;
         this.url = url;
         this.uploader = uploader;
-        this.uploaderFk = uploader.getId();
     }
 
     public long getId() {
@@ -67,15 +64,16 @@ public class Picture {
         this.url = url;
     }
 
-    public Long getUploader() {
-        return uploaderFk;
+    public User getUploader() {
+        return uploader;
     }
 
     public void setUploader(User uploader) {
         this.uploader = uploader;
     }
 
-    public void setUploaderFk(Long uploader_fk) {
-        this.uploaderFk = uploader_fk;
+    @JsonProperty("uploader")
+    public long getUploaderId() {
+        return getUploader().getId();
     }
 }
