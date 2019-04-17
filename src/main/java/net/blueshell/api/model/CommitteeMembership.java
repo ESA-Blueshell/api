@@ -6,6 +6,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "committee_members")
@@ -36,4 +37,17 @@ public class CommitteeMembership implements Serializable {
         return getCommittee() == null ? 0 : getCommittee().getId();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CommitteeMembership that = (CommitteeMembership) o;
+        return Objects.equals(user, that.user) &&
+                Objects.equals(committee, that.committee);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(user, committee);
+    }
 }
