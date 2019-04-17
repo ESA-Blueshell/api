@@ -18,6 +18,7 @@ public class Billable {
 
     @OneToOne
     @JoinColumn(name = "source_id")
+    @JsonIgnore
     private User source;
 
     private String description;
@@ -35,6 +36,11 @@ public class Billable {
 
     @Column(name = "created_at")
     private Timestamp createdAt;
+
+    @JsonProperty("source")
+    public long getSourceId() {
+        return getSource() == null ? 0 : getSource().getId();
+    }
 
     @JsonProperty("event")
     public long getEventId() {
