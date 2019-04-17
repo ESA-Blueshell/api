@@ -6,6 +6,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -93,9 +94,11 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "committee_id")
     )
+    @JsonIgnore
     private Set<Committee> subscriptions;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "source")
+    @JsonIgnore
     private Set<Billable> billables;
 
     public long getId() {
@@ -114,6 +117,30 @@ public class User {
     @JsonProperty("profilePicture")
     public long getProfilePictureId() {
         return getProfilePicture() == null ? 0 : getProfilePicture().getId();
+    }
+
+    @JsonProperty("committeeMemberships")
+    public Set<Long> getSubscriptionIds() {
+        Set<Long> set = new HashSet<>();
+        if (getSubscriptions() == null) {
+            return set;
+        }
+        for (Committee sub : getSubscriptions()) {
+            set.add(sub.getId());
+        }
+        return set;
+    }
+
+    @JsonProperty("billables")
+    public Set<Long> getBillableIds() {
+        Set<Long> set = new HashSet<>();
+        if (getBillables() == null) {
+            return set;
+        }
+        for (Billable billable : getBillables()) {
+            set.add(billable.getId());
+        }
+        return set;
     }
 
 }

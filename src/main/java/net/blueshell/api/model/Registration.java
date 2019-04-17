@@ -1,5 +1,7 @@
 package net.blueshell.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -16,6 +18,7 @@ public class Registration {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @Enumerated(EnumType.STRING)
@@ -24,8 +27,19 @@ public class Registration {
 
     @OneToOne
     @JoinColumn(name = "accepted_by_user_id")
+    @JsonIgnore
     private User acceptBy;
 
     @Column(name = "accepted_at")
     private Timestamp createdAt;
+
+    @JsonProperty("user")
+    public long getUserId() {
+        return getUser() == null ? 0 : getUser().getId();
+    }
+
+    @JsonProperty("acceptedBy")
+    public long getAcceptedById() {
+        return getAcceptBy() == null ? 0 : getAcceptBy().getId();
+    }
 }
