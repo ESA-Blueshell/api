@@ -87,6 +87,7 @@ public class User {
     private Timestamp deletedAt;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonIgnore
     private Set<CommitteeMembership> committeeMemberships;
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -120,7 +121,19 @@ public class User {
         return getProfilePicture() == null ? 0 : getProfilePicture().getId();
     }
 
-    @JsonProperty("committeeMemberships")
+    @JsonProperty("committees")
+    public Set<Long> getCommitteeIds() {
+        Set<Long> set = new HashSet<>();
+        if (getCommitteeMemberships() == null) {
+            return set;
+        }
+        for (CommitteeMembership cm : getCommitteeMemberships()) {
+            set.add(cm.getUserId());
+        }
+        return set;
+    }
+
+    @JsonProperty("subscriptions")
     public Set<Long> getSubscriptionIds() {
         Set<Long> set = new HashSet<>();
         if (getSubscriptions() == null) {
