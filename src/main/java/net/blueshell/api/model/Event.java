@@ -59,7 +59,6 @@ public class Event {
     private double publicPrice;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
-    @JsonIgnore
     private Set<EventFeedback> feedbacks;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
@@ -84,18 +83,6 @@ public class Event {
     @JsonProperty("banner")
     public long getBannerId() {
         return getBanner() == null ? 0 : getBanner().getId();
-    }
-
-    @JsonProperty("feedbacks")
-    public Set<Long> getFeedbackIds() {
-        Set<Long> set = new HashSet<>();
-        if (getFeedbacks() == null) {
-            return set;
-        }
-        for (EventFeedback ef : getFeedbacks()) {
-            set.add(ef.getId());
-        }
-        return set;
     }
 
     @JsonProperty("billables")
