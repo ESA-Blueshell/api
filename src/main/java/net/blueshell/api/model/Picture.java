@@ -7,6 +7,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Objects;
 
 @Entity
 @Table(name = "pictures")
@@ -75,5 +76,18 @@ public class Picture {
     @JsonProperty("uploader")
     public long getUploaderId() {
         return getUploader().getId();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Picture picture = (Picture) o;
+        return id == picture.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

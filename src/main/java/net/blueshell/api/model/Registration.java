@@ -6,6 +6,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @Entity
 @Table(name = "registrations")
@@ -41,5 +42,18 @@ public class Registration {
     @JsonProperty("acceptedBy")
     public long getAcceptedById() {
         return getAcceptBy() == null ? 0 : getAcceptBy().getId();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Registration that = (Registration) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

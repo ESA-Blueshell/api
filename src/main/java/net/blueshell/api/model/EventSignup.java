@@ -7,6 +7,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @Entity
 @Table(name = "event_signups")
@@ -40,4 +41,17 @@ public class EventSignup implements Serializable {
         return getEvent() == null ? 0 : getUser().getId();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EventSignup that = (EventSignup) o;
+        return Objects.equals(user, that.user) &&
+                Objects.equals(event, that.event);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(user, event);
+    }
 }

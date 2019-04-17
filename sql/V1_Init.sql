@@ -88,6 +88,7 @@ create table event_signups (
   event_id bigint,
   user_id bigint,
   options text,
+  signed_up_at datetime,
   primary key (event_id, user_id)
 );
 
