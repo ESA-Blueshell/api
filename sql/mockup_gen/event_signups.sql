@@ -97,4 +97,4 @@ insert into event_signups (user_id, event_id, options, signed_up_at) values (55,
 (12, 30, 'Synergistic', '2019-03-02 02:53:19'),
 (40, 23, 'Customer-focused', '2019-01-03 05:17:11'),
 (34, 71, 'impactful', '2019-01-10 00:37:48'),
-(56, 42, 'Customizable', '2019-04-11 02:42:44'),
+(56, 42, 'Customizable', '2019-04-11 02:42:44');
