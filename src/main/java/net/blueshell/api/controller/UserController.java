@@ -14,7 +14,7 @@ public class UserController {
     private final Dao<User> dao = new UserDao();
 
     @GetMapping(value = "/users")
-    public List<User> getPictures() {
+    public List<User> getUsers() {
         return dao.list();
     }
 
@@ -26,7 +26,19 @@ public class UserController {
             e.printStackTrace();
             return StatusCodes.BAD_REQUEST;
         }
-        return StatusCodes.CREATED;
+        return user;
+    }
+
+    @PutMapping(value = "/users/{id}")
+    public Object createOrUpdateUser(User user) {
+        User oldUser = dao.getById(user.getId());
+        if (oldUser == null) {
+            // create new user
+            return createUser(user);
+        } else {
+            dao.update(user);
+        }
+        return StatusCodes.OK;
     }
 
     @GetMapping(value = "/users/{id}")
@@ -40,8 +52,8 @@ public class UserController {
 
     @DeleteMapping(value = "/users/{id}")
     public Object deleteUserById(@PathVariable("id") String id) {
-        User pic = dao.getById(Long.parseLong(id));
-        if (pic == null) {
+        User user = dao.getById(Long.parseLong(id));
+        if (user == null) {
             return StatusCodes.NOT_FOUND;
         }
         dao.delete(Long.parseLong(id));

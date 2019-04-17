@@ -24,7 +24,7 @@ public class PictureController {
             return StatusCodes.BAD_REQUEST;
         }
         dao.create(picture);
-        return StatusCodes.CREATED;
+        return picture;
     }
 
     @PutMapping(value = "/pictures/{id}")
