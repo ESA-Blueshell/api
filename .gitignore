@@ -18,6 +18,7 @@
 
 ### Hibernate cdf ###
 .cfg.xml
+.xml
 
 ### NetBeans ###
 /nbproject/private/
