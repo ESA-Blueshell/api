@@ -16,6 +16,9 @@
 *.iml
 *.ipr
 
+### Hibernate cdf ###
+.cfg.xml
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
