@@ -19,6 +19,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private String username;
+
+    @JsonIgnore
     private String password;
 
     @Column(name = "first_name")
@@ -169,4 +172,5 @@ public class User {
     public int hashCode() {
         return Objects.hash(id);
     }
+
 }

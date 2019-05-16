@@ -4,6 +4,7 @@ import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.daos.Dao;
 import net.blueshell.api.daos.UserDao;
 import net.blueshell.api.model.User;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public class UserController {
 
     private final Dao<User> dao = new UserDao();
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping(value = "/users")
     public List<User> getUsers() {
         return dao.list();
@@ -29,6 +31,7 @@ public class UserController {
         return user;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/users/{id}")
     public Object createOrUpdateUser(User user) {
         User oldUser = dao.getById(user.getId());
