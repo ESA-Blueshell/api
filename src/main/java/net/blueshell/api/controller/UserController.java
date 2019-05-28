@@ -5,6 +5,7 @@ import net.blueshell.api.daos.Dao;
 import net.blueshell.api.daos.UserDao;
 import net.blueshell.api.model.User;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,9 +48,17 @@ public class UserController {
     @PreAuthorize("hasAuthority('USER')")
     @GetMapping(value = "/users/{id}")
     public Object getUserById(@PathVariable("id") String id) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        boolean authed = true;
         User user = dao.getById(Long.parseLong(id));
         if (user == null) {
             return StatusCodes.NOT_FOUND;
+        }
+        if (principal instanceof org.springframework.security.core.userdetails.User) {
+            authed = user.getUsername().equalsIgnoreCase(((org.springframework.security.core.userdetails.User) principal).getUsername());
+        }
+        if (!authed) {
+            return StatusCodes.FORBIDDEN;
         }
         return user;
     }
