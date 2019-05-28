@@ -1,6 +1,5 @@
 package net.blueshell.api.auth;
 
-import net.blueshell.api.db.DatabaseManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -8,8 +7,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.sql.DataSource;
@@ -21,27 +19,26 @@ import javax.sql.DataSource;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final DataSource dataSource = DatabaseManager.dataSource();
+    private final DataSource dataSource;
 
     private PasswordEncoder passwordEncoder;
-    private UserDetailsService userDetailsService;
 
     public WebSecurityConfiguration(DataSource dataSource) {
         // done via @Bean in DatabaseManager.
-//        this.dataSource = dataSource;
+        this.dataSource = dataSource;
     }
 
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("admin")
-                .password("{bcrypt}$2a$10$mCnOQpkhdT2.30bceBLQ4u3HwY3TSyeAzbBj6v2rTXT51KxKKyCEe")
-                .roles("USER");
+        auth.jdbcAuthentication().dataSource(dataSource)
+                .authoritiesByUsernameQuery("SELECT username, authority FROM authorities WHERE username = ?")
+                .usersByUsernameQuery("SELECT username, password, enabled FROM users where username = ?");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/login").permitAll()
+                .antMatchers("/", "/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().permitAll();
@@ -56,7 +53,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         if (passwordEncoder == null) {
-            passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+            passwordEncoder = new BCryptPasswordEncoder();
         }
         return passwordEncoder;
     }

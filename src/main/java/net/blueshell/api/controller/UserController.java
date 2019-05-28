@@ -14,7 +14,7 @@ public class UserController {
 
     private final Dao<User> dao = new UserDao();
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = "/users")
     public List<User> getUsers() {
         return dao.list();
@@ -31,7 +31,7 @@ public class UserController {
         return user;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping(value = "/users/{id}")
     public Object createOrUpdateUser(User user) {
         User oldUser = dao.getById(user.getId());
@@ -44,6 +44,7 @@ public class UserController {
         return StatusCodes.OK;
     }
 
+    @PreAuthorize("hasAuthority('USER')")
     @GetMapping(value = "/users/{id}")
     public Object getUserById(@PathVariable("id") String id) {
         User user = dao.getById(Long.parseLong(id));

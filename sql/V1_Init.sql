@@ -48,7 +48,7 @@ create table users
   registration_id   bigint, # registration
   profile_picture   bigint, # possible picture
   deleted_at        datetime,
-  enabled           boolean,
+  enabled           boolean  default false,
   primary key (id)
 );
 
@@ -176,11 +176,14 @@ create table authorities
 
 insert into users (username, enabled, password, first_name, last_name, email, created_at, member_since, newsletter,
                    contribution_paid, consent_privacy, consent_gdpr)
-values ('admin', true, '{bcrypt}admin', 'ad', 'min', 'ad@min', NOW(), NOW(), true, true, true, true);
+values
+       ('admin', true, '$2a$10$cwKSYweW60.FIJf8rR40.e8t3706g4ReEDEXAYmxX16oXkWfdVSba', 'ad', 'min', 'ad@min', NOW(), NOW(), true, true, true, true),
+       ('user', true, '$2a$10$/qL7UwPKq0qeAoQDrQ2k2egdk7ldDroa50CPNmf6nud7F4QOGm3S6', 'u', 'ser', 'us@er', NOW(), NOW(), true, true, true, true);
 
 insert into authorities (username, authority)
-values ('admin', 'write'),
-       ('admin', 'USER');
+values ('admin', 'ADMIN'),
+       ('admin', 'USER'),
+       ('user', 'USER');
 
 
 
