@@ -4,12 +4,12 @@ import java.util.Arrays;
 
 public enum Role {
     GUEST("Guest"),
+    COMPANY("Company"),
     MEMBER("Member", GUEST),
     VEGAN("Vegan", MEMBER),
-    BHV("BHV", MEMBER),
     EHBO("EHBO", MEMBER),
+    BHV("BHV", MEMBER),
     BOARD("Board", MEMBER),
-    COMPANY("Company", MEMBER),
     TREASURER("Treasurer", BOARD),
     ADMIN("Admin", TREASURER),
     ;
@@ -28,5 +28,9 @@ public enum Role {
 
     public boolean matchesRole(Role role) {
         return role == this || Arrays.stream(inheritedRoles).anyMatch(r -> r.matchesRole(role));
+    }
+
+    public Role[] getInheritedRoles() {
+        return inheritedRoles;
     }
 }

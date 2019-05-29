@@ -1,6 +1,11 @@
 package net.blueshell.api.auth;
 
+import net.blueshell.api.model.Role;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.access.expression.SecurityExpressionHandler;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -9,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.FilterInvocation;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 
 import javax.sql.DataSource;
 
@@ -26,6 +33,17 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public WebSecurityConfiguration(DataSource dataSource) {
         // done via @Bean in DatabaseManager.
         this.dataSource = dataSource;
+    }
+
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
+        StringBuilder sb = new StringBuilder();
+        for (int i = Role.values().length - 1; i >= 0; i--) {
+            sb.append(Role.values()[i]).append(" > ");
+        }
+        hierarchy.setHierarchy(sb.toString().substring(0, sb.toString().length() - 3));
+        return hierarchy;
     }
 
     @Override
