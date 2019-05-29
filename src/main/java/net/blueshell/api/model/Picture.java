@@ -30,7 +30,7 @@ public class Picture {
     @Column(name = "created_at")
     private Timestamp createdAt;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "event_id")
     @JsonIgnore
     private Event event;

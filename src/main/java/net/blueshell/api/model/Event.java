@@ -66,6 +66,10 @@ public class Event {
     @JsonIgnore
     private Set<Billable> billables;
 
+    @OneToMany(mappedBy = "event")
+    @JsonIgnore
+    private Set<Picture> pictures;
+
     @JsonProperty("creator")
     public long getCreatorId() {
         return getCreator() == null ? 0 : getCreator().getId();
