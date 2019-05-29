@@ -1,7 +1,7 @@
 package net.blueshell.api.controller;
 
+import net.blueshell.api.daos.UserDao;
 import net.blueshell.api.model.Role;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 
@@ -10,6 +10,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class AuthorizationController {
+
+    private final UserDao userDao = new UserDao();
 
     protected User getPrincipal() {
         Object obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -49,5 +51,12 @@ public class AuthorizationController {
                 .stream()
                 .map(ga -> Role.valueOf(ga.toString()))
                 .collect(Collectors.toCollection(HashSet::new));
+    }
+
+    protected net.blueshell.api.model.User getAuthedUser() {
+        if (getPrincipal() == null) {
+            return null;
+        }
+        return userDao.getByUsername(getAuthorizedUsername());
     }
 }

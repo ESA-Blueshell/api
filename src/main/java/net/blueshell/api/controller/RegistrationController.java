@@ -1,5 +1,6 @@
 package net.blueshell.api.controller;
 
+import com.wordnik.swagger.annotations.ApiParam;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.daos.Dao;
 import net.blueshell.api.daos.RegistrationDao;
@@ -46,7 +47,9 @@ public class RegistrationController {
 
     @PreAuthorize("hasAuthority('BOARD')")
     @GetMapping(value = "/registrations/{id}")
-    public Object getRegistrationById(@PathVariable("id") String id) {
+    public Object getRegistrationById(
+            @ApiParam(name = "Id of the registration")
+            @PathVariable("id") String id) {
         Registration registration = dao.getById(Long.parseLong(id));
         if (registration == null) {
             return StatusCodes.NOT_FOUND;

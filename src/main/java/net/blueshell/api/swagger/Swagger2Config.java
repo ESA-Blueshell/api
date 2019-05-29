@@ -27,6 +27,8 @@ public class Swagger2Config {
         return new ApiInfoBuilder().title("Blueshell REST API")
                 .description("Blueshell website REST API")
                 .contact("<Contact info here>")
+                .license("MIT")
+                .licenseUrl("https://opensource.org/licenses/MIT")
                 .version("1.0.0")
                 .build();
     }

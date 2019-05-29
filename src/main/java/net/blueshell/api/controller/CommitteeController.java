@@ -1,5 +1,6 @@
 package net.blueshell.api.controller;
 
+import com.wordnik.swagger.annotations.ApiParam;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.daos.CommitteeDao;
 import net.blueshell.api.daos.Dao;
@@ -48,7 +49,9 @@ public class CommitteeController extends AuthorizationController {
     }
 
     @GetMapping(value = "/committees/{id}")
-    public Object getCommitteeById(@PathVariable("id") String id) {
+    public Object getCommitteeById(
+            @ApiParam(name = "Id of the committee")
+            @PathVariable("id") String id) {
         Committee committee = dao.getById(Long.parseLong(id));
         if (committee == null) {
             return StatusCodes.NOT_FOUND;

@@ -1,5 +1,6 @@
 package net.blueshell.api.controller;
 
+import com.wordnik.swagger.annotations.ApiParam;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.daos.Dao;
 import net.blueshell.api.daos.PictureDao;
@@ -41,7 +42,9 @@ public class PictureController extends AuthorizationController {
     }
 
     @GetMapping(value = "/pictures/{id}")
-    public Object getPictureById(@PathVariable("id") String id) {
+    public Object getPictureById(
+            @ApiParam(name = "Id of the picture")
+            @PathVariable("id") String id) {
         Picture pic = dao.getById(Long.parseLong(id));
         if (pic == null) {
             return StatusCodes.NOT_FOUND;

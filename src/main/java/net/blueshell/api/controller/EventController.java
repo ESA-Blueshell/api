@@ -1,5 +1,6 @@
 package net.blueshell.api.controller;
 
+import com.wordnik.swagger.annotations.ApiParam;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.daos.Dao;
 import net.blueshell.api.daos.EventDao;
@@ -20,7 +21,9 @@ public class EventController extends AuthorizationController {
     private final UserDao userDao = new UserDao();
 
     @GetMapping(value = "/events/{id}")
-    public Object getEventById(@PathVariable("id") String id) {
+    public Object getEventById(
+            @ApiParam(name = "Id of the event")
+            @PathVariable("id") String id) {
         Event event = dao.getById(Long.parseLong(id));
         if (event == null) {
             return StatusCodes.NOT_FOUND;

@@ -1,5 +1,6 @@
 package net.blueshell.api.controller;
 
+import com.wordnik.swagger.annotations.ApiParam;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.daos.Dao;
 import net.blueshell.api.daos.UserDao;
@@ -45,7 +46,9 @@ public class UserController extends AuthorizationController {
     }
 
     @GetMapping(value = "/users/{id}")
-    public Object getUserById(@PathVariable("id") String id) {
+    public Object getUserById(
+            @ApiParam(name = "Id of the user")
+            @PathVariable("id") String id) {
         User user = dao.getById(Long.parseLong(id));
         if (user == null) {
             return StatusCodes.NOT_FOUND;

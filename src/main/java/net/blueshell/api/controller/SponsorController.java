@@ -1,5 +1,6 @@
 package net.blueshell.api.controller;
 
+import com.wordnik.swagger.annotations.ApiParam;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.daos.Dao;
 import net.blueshell.api.daos.SponsorDao;
@@ -46,7 +47,9 @@ public class SponsorController {
 
     @PreAuthorize("hasAuthority('BOARD')")
     @GetMapping(value = "/sponsors/{id}")
-    public Object getSponsorById(@PathVariable("id") String id) {
+    public Object getSponsorById(
+            @ApiParam(name = "Id of the sponsor")
+            @PathVariable("id") String id) {
         Sponsor sponsor = dao.getById(Long.parseLong(id));
         if (sponsor == null) {
             return StatusCodes.NOT_FOUND;

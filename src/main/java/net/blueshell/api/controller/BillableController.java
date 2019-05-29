@@ -2,6 +2,7 @@ package net.blueshell.api.controller;
 
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.daos.BillableDao;
 import net.blueshell.api.daos.Dao;
@@ -56,7 +57,9 @@ public class BillableController extends AuthorizationController {
 
     @ApiOperation(value = "Gets a billable by id.", response = Billable.class)
     @GetMapping(value = "/billables/{id}")
-    public Object getBillableById(@PathVariable("id") String id) {
+    public Object getBillableById(
+            @ApiParam(name = "Id of the billable")
+            @PathVariable("id") String id) {
         Billable billable = dao.getById(Long.parseLong(id));
         if (billable == null) {
             return StatusCodes.NOT_FOUND;
