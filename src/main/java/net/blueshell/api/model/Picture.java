@@ -30,6 +30,11 @@ public class Picture {
     @Column(name = "created_at")
     private Timestamp createdAt;
 
+    @OneToMany
+    @JoinColumn(name = "event_id")
+    @JsonIgnore
+    private Event event;
+
     public Picture() {
         createdAt = Timestamp.from(Instant.now());
     }
@@ -76,6 +81,15 @@ public class Picture {
     @JsonProperty("uploader")
     public long getUploaderId() {
         return getUploader().getId();
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    @JsonProperty("event")
+    public long getEventId() {
+        return event.getId();
     }
 
     @Override

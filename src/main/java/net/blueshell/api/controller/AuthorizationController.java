@@ -1,5 +1,7 @@
 package net.blueshell.api.controller;
 
+import net.blueshell.api.daos.Dao;
+import net.blueshell.api.daos.UserDao;
 import net.blueshell.api.model.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;

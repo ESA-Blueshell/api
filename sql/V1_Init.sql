@@ -67,6 +67,7 @@ create table pictures
   url         varchar(255),
   created_at  datetime,
   uploader_id bigint,
+  event_id    bigint,
   primary key (id),
   foreign key (uploader_id) references users (id)
 );
