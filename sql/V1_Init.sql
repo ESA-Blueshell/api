@@ -169,6 +169,7 @@ create table registrations
 
 create table authorities
 (
+  user_id   bigint,       # for
   username  varchar(255), # needs size as it's a PK
   authority varchar(255), # same
   primary key (username, authority)
@@ -180,10 +181,10 @@ values
        ('admin', true, '$2a$10$cwKSYweW60.FIJf8rR40.e8t3706g4ReEDEXAYmxX16oXkWfdVSba', 'ad', 'min', 'ad@min', NOW(), NOW(), true, true, true, true),
        ('user', true, '$2a$10$/qL7UwPKq0qeAoQDrQ2k2egdk7ldDroa50CPNmf6nud7F4QOGm3S6', 'u', 'ser', 'us@er', NOW(), NOW(), true, true, true, true);
 
-insert into authorities (username, authority)
-values ('admin', 'ADMIN'),
-       ('admin', 'USER'),
-       ('user', 'USER');
+insert into authorities (user_id, username, authority)
+values (1, 'admin', 'ADMIN'),
+       (1, 'admin', 'USER'),
+       (2, 'user', 'USER');
 
 
 

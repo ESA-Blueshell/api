@@ -68,4 +68,7 @@ public class SessionWrapper<T> {
         }
     }
 
+    public SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
 }

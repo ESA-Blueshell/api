@@ -106,6 +106,14 @@ public class User {
     @JsonIgnore
     private Set<Billable> billables;
 
+    @Enumerated(EnumType.STRING)
+    @JoinTable(
+            name = "authorizations",
+            joinColumns = @JoinColumn(name = "user_id")
+    )
+    @JsonIgnore
+    private Set<Role> roles;
+
     public long getId() {
         return id;
     }
@@ -160,6 +168,18 @@ public class User {
         return set;
     }
 
+    @JsonProperty("roles")
+    public Set<String> getRoleStrings() {
+        Set<String> set = new HashSet<>();
+        if (getRoles() == null) {
+            return set;
+        }
+        for (Role role : getRoles()) {
+            set.add(role.getReprString());
+        }
+        return set;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -171,6 +191,10 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public boolean hasRole(Role role) {
+        return getRoles().stream().anyMatch(r -> r.matchesRole(role));
     }
 
 }

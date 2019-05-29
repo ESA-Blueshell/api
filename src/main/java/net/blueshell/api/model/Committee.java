@@ -36,7 +36,7 @@ public class Committee {
         if (getMembers() == null) {
             return set;
         }
-        for (CommitteeMembership cm: getMembers()) {
+        for (CommitteeMembership cm : getMembers()) {
             set.add(cm.getUserId());
         }
         return set;
@@ -65,5 +65,16 @@ public class Committee {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public boolean hasMember(String username) {
+        return getMembers().stream()
+                .map(CommitteeMembership::getUser)
+                .anyMatch(user -> user.getUsername().equalsIgnoreCase(username));
+    }
+
+    public boolean hasMember(User user) {
+        return getMembers().stream()
+                .anyMatch(cm -> cm.getUser().equals(user));
     }
 }

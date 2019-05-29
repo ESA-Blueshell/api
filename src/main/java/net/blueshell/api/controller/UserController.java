@@ -5,17 +5,15 @@ import net.blueshell.api.daos.Dao;
 import net.blueshell.api.daos.UserDao;
 import net.blueshell.api.model.User;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-public class UserController extends BlueshellController {
+public class UserController extends AuthorizationController {
 
     private final Dao<User> dao = new UserDao();
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = "/users")
     public List<User> getUsers() {
         return dao.list();
@@ -32,14 +30,13 @@ public class UserController extends BlueshellController {
         return user;
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping(value = "/users/{id}")
     public Object createOrUpdateUser(User user) {
         User oldUser = dao.getById(user.getId());
         if (oldUser == null) {
             // create new user
             return createUser(user);
-        } else {
+        } else if (isAuthedForUser(user)){
             dao.update(user);
         }
         return StatusCodes.OK;
@@ -52,9 +49,7 @@ public class UserController extends BlueshellController {
         if (user == null) {
             return StatusCodes.NOT_FOUND;
         }
-        boolean authed = hasAuthorization("ADMIN")
-                || hasAuthorization("USER") && getAuthorizedUsername().equalsIgnoreCase(user.getUsername());
-        if (!authed) {
+        if (!isAuthedForUser(user)) {
             return StatusCodes.FORBIDDEN;
         }
         return user;
@@ -66,8 +61,12 @@ public class UserController extends BlueshellController {
         if (user == null) {
             return StatusCodes.NOT_FOUND;
         }
+        if (!isAuthedForUser(user)) {
+            return StatusCodes.FORBIDDEN;
+        }
         dao.delete(Long.parseLong(id));
         return StatusCodes.OK;
     }
+
 
 }

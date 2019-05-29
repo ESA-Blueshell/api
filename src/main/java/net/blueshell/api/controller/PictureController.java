@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class PictureController {
+public class PictureController extends AuthorizationController {
 
     private final Dao<Picture> dao = new PictureDao();
+
 
     @GetMapping(value = "/pictures")
     public List<Picture> getPictures() {

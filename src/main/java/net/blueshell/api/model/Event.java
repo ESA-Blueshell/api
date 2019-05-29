@@ -122,4 +122,19 @@ public class Event {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public boolean canSee(User user) {
+        Visibility vis = getVisibility();
+        // public: available to everyone
+        // internal: members only
+        // private: commitee only
+        if (user == null) {
+            return vis == Visibility.PUBLIC;
+        }
+        boolean canSee = vis == Visibility.PUBLIC || user.hasRole(Role.MEMBER);
+        if (canSee && vis == Visibility.PRIVATE) {
+            canSee = user.hasRole(Role.BOARD) || getCommittee().hasMember(user);
+        }
+        return canSee;
+    }
 }
