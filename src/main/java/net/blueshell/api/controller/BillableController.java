@@ -1,5 +1,7 @@
 package net.blueshell.api.controller;
 
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.daos.BillableDao;
 import net.blueshell.api.daos.Dao;
@@ -11,17 +13,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Api(value = "Billable management", description = "Operations with everything billable related")
 @RestController
 public class BillableController extends AuthorizationController {
 
     private final Dao<Billable> dao = new BillableDao();
 
+    @ApiOperation(value = "Get a list of all billables", response = List.class)
     @PreAuthorize("hasAuthority('TREASURER')")
     @GetMapping(value = "/billables")
     public List<Billable> getBillables() {
         return dao.list();
     }
 
+    @ApiOperation(value = "Create a new billable", response = Billable.class)
     @PreAuthorize("hasAuthority('TREASURER')")
     @PostMapping(value = "/billables")
     public Object createBillable(Billable billable) {
@@ -33,6 +38,7 @@ public class BillableController extends AuthorizationController {
         }
     }
 
+    @ApiOperation(value = "Creates or updates a billable, given it's id", response = Billable.class)
     @PutMapping(value = "/billables/{id}")
     public Object createOrUpdateBillable(Billable billable) {
         User user = billable.getSource();
@@ -48,6 +54,7 @@ public class BillableController extends AuthorizationController {
         return StatusCodes.OK;
     }
 
+    @ApiOperation(value = "Gets a billable by id.", response = Billable.class)
     @GetMapping(value = "/billables/{id}")
     public Object getBillableById(@PathVariable("id") String id) {
         Billable billable = dao.getById(Long.parseLong(id));
@@ -60,6 +67,7 @@ public class BillableController extends AuthorizationController {
         return billable;
     }
 
+    @ApiOperation(value = "Deletes a billable by id.")
     @PreAuthorize("hasAuthority('TREASURER')")
     @DeleteMapping(value = "/billables/{id}")
     public Object deleteBillableById(@PathVariable("id") String id) {

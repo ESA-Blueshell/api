@@ -106,12 +106,14 @@ public class User {
     @JsonIgnore
     private Set<Billable> billables;
 
-    @Enumerated(EnumType.STRING)
-    @JoinTable(
-            name = "authorizations",
-            joinColumns = @JoinColumn(name = "user_id")
-    )
-    @JsonIgnore
+//    @JoinTable(
+//            name = "authorizations",
+//            joinColumns = @JoinColumn(name = "user_id")
+//    )
+//    @ElementCollection(targetClass = Role.class)
+//    @Enumerated(EnumType.STRING)
+//    @JsonIgnore
+    @Transient
     private Set<Role> roles;
 
     public long getId() {

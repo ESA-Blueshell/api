@@ -179,12 +179,17 @@ insert into users (username, enabled, password, first_name, last_name, email, cr
                    contribution_paid, consent_privacy, consent_gdpr)
 values
        ('admin', true, '$2a$10$cwKSYweW60.FIJf8rR40.e8t3706g4ReEDEXAYmxX16oXkWfdVSba', 'ad', 'min', 'ad@min', NOW(), NOW(), true, true, true, true),
-       ('user', true, '$2a$10$/qL7UwPKq0qeAoQDrQ2k2egdk7ldDroa50CPNmf6nud7F4QOGm3S6', 'u', 'ser', 'us@er', NOW(), NOW(), true, true, true, true);
+       ('user', true, '$2a$10$/qL7UwPKq0qeAoQDrQ2k2egdk7ldDroa50CPNmf6nud7F4QOGm3S6', 'u', 'ser', 'us@er', NOW(), NOW(), true, true, true, true),
+       ('board', true, '$2a$10$/qL7UwPKq0qeAoQDrQ2k2egdk7ldDroa50CPNmf6nud7F4QOGm3S6', 'u', 'ser', 'us@er', NOW(), NOW(), true, true, true, true),
+       ('treasurer', true, '$2a$10$/qL7UwPKq0qeAoQDrQ2k2egdk7ldDroa50CPNmf6nud7F4QOGm3S6', 'u', 'ser', 'us@er', NOW(), NOW(), true, true, true, true),
+       ('guest', true, '$2a$10$/qL7UwPKq0qeAoQDrQ2k2egdk7ldDroa50CPNmf6nud7F4QOGm3S6', 'u', 'ser', 'us@er', NOW(), NOW(), true, true, true, true);
 
 insert into authorities (user_id, username, authority)
 values (1, 'admin', 'ADMIN'),
-       (1, 'admin', 'USER'),
-       (2, 'user', 'USER');
+       (2, 'user', 'MEMBER'),
+       (3, 'board', 'BOARD'),
+       (4, 'treasurer', 'TREASURER'),
+       (5, 'guest', 'GUEST');
 
 
 

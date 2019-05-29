@@ -11,7 +11,7 @@ public enum Role {
     BOARD("Board", MEMBER),
     COMPANY("Company", MEMBER),
     TREASURER("Treasurer", BOARD),
-    ADMIN("Admin", BOARD),
+    ADMIN("Admin", TREASURER),
     ;
 
     private String reprString;

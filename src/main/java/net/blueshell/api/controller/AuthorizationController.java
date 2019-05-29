@@ -12,10 +12,17 @@ import java.util.stream.Collectors;
 public class AuthorizationController {
 
     protected User getPrincipal() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Object obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (obj instanceof User) {
+            return (User) obj;
+        }
+        return null;
     }
 
     protected String getAuthorizedUsername() {
+        if (getPrincipal() == null) {
+            return null;
+        }
         return getPrincipal().getUsername();
     }
 
@@ -25,6 +32,9 @@ public class AuthorizationController {
     }
 
     protected boolean hasAuthorization(Role role) {
+        if (getPrincipal() == null) {
+            return false;
+        }
         return getPrincipal().getAuthorities()
                 .stream()
                 .anyMatch(r -> Role.valueOf(r.toString())
@@ -32,6 +42,9 @@ public class AuthorizationController {
     }
 
     public Set<Role> getRoles() {
+        if (getPrincipal() == null) {
+            return new HashSet<>();
+        }
         return getPrincipal().getAuthorities()
                 .stream()
                 .map(ga -> Role.valueOf(ga.toString()))

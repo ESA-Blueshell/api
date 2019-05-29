@@ -42,7 +42,6 @@ public class UserController extends AuthorizationController {
         return StatusCodes.OK;
     }
 
-    @PreAuthorize("hasAuthority('USER')")
     @GetMapping(value = "/users/{id}")
     public Object getUserById(@PathVariable("id") String id) {
         User user = dao.getById(Long.parseLong(id));
