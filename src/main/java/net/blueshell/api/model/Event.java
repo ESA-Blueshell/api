@@ -70,6 +70,18 @@ public class Event {
     @JsonIgnore
     private Set<Picture> pictures;
 
+    public Event(Committee committee, String title, String description, Visibility visibility, String location, Timestamp startTime, Picture banner, String memberPrice, String publicPrice) {
+        this.committee = committee;
+        this.title = title;
+        this.description = description;
+        this.visibility = visibility;
+        this.location = location;
+        this.startTime = startTime;
+        this.banner = banner;
+        this.memberPrice = Double.parseDouble(memberPrice);
+        this.publicPrice = Double.parseDouble(publicPrice);
+    }
+
     @JsonProperty("creator")
     public long getCreatorId() {
         return getCreator() == null ? 0 : getCreator().getId();
