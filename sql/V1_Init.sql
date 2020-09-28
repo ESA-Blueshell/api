@@ -1,5 +1,5 @@
 set FOREIGN_KEY_CHECKS = 0;
-ALTER DATABASE blueshell CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER SCHEMA `blueshell`  DEFAULT CHARACTER SET utf8  DEFAULT COLLATE utf8_general_ci ;
 
 drop table if exists
   pictures,
@@ -171,7 +171,7 @@ create table registrations
 create table authorities
 (
   user_id   bigint,       # for
-  username  varchar(255), # needs size as it's a PK
+  username  varchar(30), # needs size as it's a PK
   authority varchar(255), # same
   primary key (username, authority)
 );
@@ -191,6 +191,3 @@ values (1, 'admin', 'ADMIN'),
        (3, 'board', 'BOARD'),
        (4, 'treasurer', 'TREASURER'),
        (5, 'guest', 'GUEST');
-
-
-

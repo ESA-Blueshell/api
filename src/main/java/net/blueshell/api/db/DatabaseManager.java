@@ -67,7 +67,6 @@ public class DatabaseManager {
                 t.commit();
             }
         }
-        cleanUpSessions();
     }
 
     public static void deleteFromDB(Object obj) {
@@ -78,7 +77,6 @@ public class DatabaseManager {
                 t.commit();
             }
         }
-        cleanUpSessions();
     }
 
     public static Object getObjFromDB(Class clazz, long id) {
