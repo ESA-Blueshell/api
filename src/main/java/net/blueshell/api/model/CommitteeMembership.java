@@ -27,6 +27,9 @@ public class CommitteeMembership implements Serializable {
 
     private String role;
 
+    public CommitteeMembership() {
+    }
+
     @JsonProperty("user")
     public long getUserId() {
         return getUser() == null ? 0 : getUser().getId();

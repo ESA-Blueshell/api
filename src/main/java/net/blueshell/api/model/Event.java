@@ -70,6 +70,9 @@ public class Event {
     @JsonIgnore
     private Set<Picture> pictures;
 
+    public Event() {
+    }
+
     public Event(Committee committee, String title, String description, Visibility visibility, String location, Timestamp startTime, Picture banner, String memberPrice, String publicPrice) {
         this.committee = committee;
         this.title = title;
@@ -143,7 +146,7 @@ public class Event {
         Visibility vis = getVisibility();
         // public: available to everyone
         // internal: members only
-        // private: commitee only
+        // private: committee only
         if (user == null) {
             return vis == Visibility.PUBLIC;
         }

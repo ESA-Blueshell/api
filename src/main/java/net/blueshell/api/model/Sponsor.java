@@ -25,6 +25,9 @@ public class Sponsor {
     @JsonIgnore
     private Picture picture;
 
+    public Sponsor() {
+    }
+
     @JsonProperty("picture")
     public long getPictureId() {
         return getPicture() == null ? 0 : getPicture().getId();

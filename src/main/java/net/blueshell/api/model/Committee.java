@@ -30,6 +30,9 @@ public class Committee {
     @JsonIgnore
     private Set<User> subscribers;
 
+    public Committee() {
+    }
+
     @JsonProperty("members")
     public Set<Long> getMemberIds() {
         Set<Long> set = new HashSet<>();

@@ -38,6 +38,9 @@ public class Billable {
     @Column(name = "created_at")
     private Timestamp createdAt;
 
+    public Billable() {
+    }
+
     @JsonProperty("source")
     public long getSourceId() {
         return getSource() == null ? 0 : getSource().getId();

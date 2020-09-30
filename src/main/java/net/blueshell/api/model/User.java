@@ -116,6 +116,9 @@ public class User {
     @Transient
     private Set<Role> roles;
 
+    public User() {
+    }
+
     public long getId() {
         return id;
     }

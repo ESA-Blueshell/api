@@ -34,6 +34,9 @@ public class Registration {
     @Column(name = "accepted_at")
     private Timestamp createdAt;
 
+    public Registration() {
+    }
+
     @JsonProperty("user")
     public long getUserId() {
         return getUser() == null ? 0 : getUser().getId();

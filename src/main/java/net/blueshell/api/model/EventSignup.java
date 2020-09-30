@@ -31,6 +31,9 @@ public class EventSignup implements Serializable {
     @Column(name = "signed_up_at")
     private Timestamp signupDate;
 
+    public EventSignup() {
+    }
+
     @JsonProperty("user")
     public long getUserId() {
         return getUser() == null ? 0 : getUser().getId();
