@@ -6,6 +6,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -155,5 +156,43 @@ public class Event {
             canSee = user.hasRole(Role.BOARD) || getCommittee().hasMember(user);
         }
         return canSee;
+    }
+
+    /**
+     * Checks if this Event is in the given month
+     * @param month the month is formatted as "yyyy-MM"
+     * @return true if the Event is in the month
+     */
+    public boolean inMonth(String month) {
+        return inRange(month, nextMonth(month));
+    }
+
+    /**
+     * Checks if the Event is in the given range of months (exclusive)
+     * @param from the month is formatted as "yyyy-MM"
+     * @param to the month is formatted as "yyyy-MM"
+     * @return true if the Event is in the range
+     */
+    public boolean inRange(String from, String to) {
+        try {
+            Timestamp fromTimestamp = new Timestamp(new java.text.SimpleDateFormat("yyyy-MM").parse(from).getTime());
+            Timestamp toTimestamp = new Timestamp(new java.text.SimpleDateFormat("yyyy-MM").parse(to).getTime());
+            return startTime.after(fromTimestamp) && startTime.before(toTimestamp);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Get the next month
+     * @param month the month is formatted as "yyyy-MM"
+     * @return the next month in the format "yyyy-MM"
+     */
+    private static String nextMonth(String month) {
+        final String[] splitMonth = month.split("-");
+        if (splitMonth[1].equals("12"))
+            return (Integer.parseInt(splitMonth[0]) + 1) + "-01";
+        return splitMonth[0] + "-" + (Integer.parseInt(splitMonth[1]) + 1);
     }
 }

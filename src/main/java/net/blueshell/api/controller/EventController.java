@@ -6,15 +6,15 @@ import net.blueshell.api.daos.Dao;
 import net.blueshell.api.daos.EventDao;
 import net.blueshell.api.daos.UserDao;
 import net.blueshell.api.dtos.EventDTO;
-import net.blueshell.api.model.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import net.blueshell.api.model.Event;
+import net.blueshell.api.model.Role;
+import net.blueshell.api.model.User;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @RestController
@@ -61,9 +61,14 @@ public class EventController extends AuthorizationController {
     }
 
     @GetMapping(value = "/events")
-    public List<Event> getEvents() {
+    public List<Event> getEvents(
+            @RequestParam(required = false) String from,
+            @RequestParam(required = false) String to) {
+        Predicate<Event> timePredicate = event -> from == null || (to == null ? event.inMonth(from) : event.inRange(from, to));
+
         return dao.list().stream()
-                .filter(event -> event.canSee(userDao.getByUsername(getAuthorizedUsername())))
+                .filter(timePredicate)
+//                .filter(event -> event.canSee(userDao.getByUsername(getAuthorizedUsername())))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
