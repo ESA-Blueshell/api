@@ -7,6 +7,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -48,6 +49,9 @@ public class Event {
     @Column(name = "start_time")
     private Timestamp startTime;
 
+    @Column(name = "end_time")
+    private Timestamp endTime;
+
     @OneToOne
     @JoinColumn(name = "banner_id")
     @JsonIgnore
@@ -71,19 +75,36 @@ public class Event {
     @JsonIgnore
     private Set<Picture> pictures;
 
+    @Column(name = "google_id")
+    private String googleId;
+
     public Event() {
     }
 
-    public Event(Committee committee, String title, String description, Visibility visibility, String location, Timestamp startTime, Picture banner, String memberPrice, String publicPrice) {
+    public Event(Committee committee, String title, String description, Visibility visibility, String location, Timestamp startTime, Timestamp endTime, Picture banner, String memberPrice, String publicPrice) {
         this.committee = committee;
         this.title = title;
         this.description = description;
         this.visibility = visibility;
         this.location = location;
         this.startTime = startTime;
+        this.endTime = endTime;
         this.banner = banner;
         this.memberPrice = Double.parseDouble(memberPrice);
         this.publicPrice = Double.parseDouble(publicPrice);
+    }
+
+    /**
+     * Get the next month
+     *
+     * @param month the month is formatted as "yyyy-MM"
+     * @return the next month in the format "yyyy-MM"
+     */
+    private static String nextMonth(String month) {
+        final String[] splitMonth = month.split("-");
+        if (splitMonth[1].equals("12"))
+            return (Integer.parseInt(splitMonth[0]) + 1) + "-01";
+        return splitMonth[0] + "-" + (Integer.parseInt(splitMonth[1]) + 1);
     }
 
     @JsonProperty("creator")
@@ -102,8 +123,8 @@ public class Event {
     }
 
     @JsonProperty("banner")
-    public long getBannerId() {
-        return getBanner() == null ? 0 : getBanner().getId();
+    public String getBannerId() {
+        return getBanner() == null ? null : getBanner().getUrl();
     }
 
     @JsonProperty("feedbacks")
@@ -160,6 +181,7 @@ public class Event {
 
     /**
      * Checks if this Event is in the given month
+     *
      * @param month the month is formatted as "yyyy-MM"
      * @return true if the Event is in the month
      */
@@ -169,30 +191,19 @@ public class Event {
 
     /**
      * Checks if the Event is in the given range of months (exclusive)
+     *
      * @param from the month is formatted as "yyyy-MM"
-     * @param to the month is formatted as "yyyy-MM"
+     * @param to   the month is formatted as "yyyy-MM"
      * @return true if the Event is in the range
      */
     public boolean inRange(String from, String to) {
         try {
-            Timestamp fromTimestamp = new Timestamp(new java.text.SimpleDateFormat("yyyy-MM").parse(from).getTime());
-            Timestamp toTimestamp = new Timestamp(new java.text.SimpleDateFormat("yyyy-MM").parse(to).getTime());
+            Timestamp fromTimestamp = new Timestamp(new SimpleDateFormat("yyyy-MM").parse(from).getTime());
+            Timestamp toTimestamp = new Timestamp(new SimpleDateFormat("yyyy-MM").parse(to).getTime());
             return startTime.after(fromTimestamp) && startTime.before(toTimestamp);
         } catch (ParseException e) {
             e.printStackTrace();
             return false;
         }
-    }
-
-    /**
-     * Get the next month
-     * @param month the month is formatted as "yyyy-MM"
-     * @return the next month in the format "yyyy-MM"
-     */
-    private static String nextMonth(String month) {
-        final String[] splitMonth = month.split("-");
-        if (splitMonth[1].equals("12"))
-            return (Integer.parseInt(splitMonth[0]) + 1) + "-01";
-        return splitMonth[0] + "-" + (Integer.parseInt(splitMonth[1]) + 1);
     }
 }
