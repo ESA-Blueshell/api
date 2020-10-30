@@ -5,10 +5,7 @@ add end_time timestamp null;
 alter table events
 add google_id text null;
 
--- Default value == original time + 3 hours
-update table events
-set end_time = DATE_ADD(start_time, INTERVAL 3 HOUR);
 
--- Default value == id for random event
-update events
-set google_id='M2ZkcmtrcWxxYnRmOTRqcGZyZGM2NjdkNmQgY19rcXAycnU3OTJwbjdnaG5yYTMyODAyYjNtZ0Bn' where true
+ALTER DATABASE blueshell CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+ALTER TABLE events CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE events CHANGE description description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
