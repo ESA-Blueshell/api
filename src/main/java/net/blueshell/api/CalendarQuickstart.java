@@ -72,7 +72,7 @@ public class CalendarQuickstart {
         try (Session session = DatabaseManager.getSession()) {
             Transaction t = session.beginTransaction();
             // Nuke the whole events table before refilling it
-            session.createSQLQuery("delete from events where true").executeUpdate();
+            session.createSQLQuery("delete from events where id>100").executeUpdate();
 
             // Setting up connection
             final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -101,22 +101,25 @@ public class CalendarQuickstart {
                 } else {
                     startTime = gevent.getStart().getDate().getValue();
                 }
-                event.setStartTime(new Timestamp(startTime));
-                if (!gevent.isEndTimeUnspecified()) {
-                    if (gevent.getEnd().getDateTime() != null) {
-                        event.setEndTime(new Timestamp(gevent.getEnd().getDateTime().getValue()));
+                if (startTime < Integer.MAX_VALUE) {
+                    event.setStartTime(new Timestamp(startTime));
+                    if (!gevent.isEndTimeUnspecified()) {
+                        if (gevent.getEnd().getDateTime() != null) {
+                            event.setEndTime(new Timestamp(gevent.getEnd().getDateTime().getValue()));
+                        } else {
+                            event.setEndTime(new Timestamp(gevent.getEnd().getDate().getValue()));
+                        }
                     } else {
-                        event.setEndTime(new Timestamp(gevent.getEnd().getDate().getValue()));
+                        event.setEndTime(new Timestamp(startTime + 86400000));
                     }
-                } else {
-                    event.setEndTime(new Timestamp(startTime + 86400000));
+                    event.setGoogleId(gevent.getHtmlLink().replace("https://www.google.com/calendar/event?eid=", "").split("&tmsrc")[0]);
+                    session.save(event);
                 }
-                event.setGoogleId(gevent.getHtmlLink().replace("https://www.google.com/calendar/event?eid=", "").split("&tmsrc")[0]);
-                session.save(event);
             });
 
             // Commit all changes
             t.commit();
+            System.exit(100);
         }
     }
 }
