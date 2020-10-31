@@ -101,7 +101,7 @@ public class CalendarQuickstart {
                 } else {
                     startTime = gevent.getStart().getDate().getValue();
                 }
-                if (startTime < Integer.MAX_VALUE) {
+                if (startTime < 2147483647000L) {
                     event.setStartTime(new Timestamp(startTime));
                     if (!gevent.isEndTimeUnspecified()) {
                         if (gevent.getEnd().getDateTime() != null) {
