@@ -14,10 +14,11 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Events;
-import net.blueshell.api.daos.EventDao;
 import net.blueshell.api.db.DatabaseManager;
 import net.blueshell.api.model.Event;
 import net.blueshell.api.model.Visibility;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -62,49 +63,60 @@ public class CalendarQuickstart {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
+    /**
+     * Yeets away everything in the events table and fills it up with updated events
+     */
     public static void main(String... args) throws IOException, GeneralSecurityException {
         DatabaseManager.init();
-        EventDao dao = new EventDao();
 
+        try (Session session = DatabaseManager.getSession()) {
+            Transaction t = session.beginTransaction();
+            // Nuke the whole events table before refilling it
+            session.createSQLQuery("delete from events where true").executeUpdate();
 
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-                .setApplicationName(APPLICATION_NAME)
-                .build();
+            // Setting up connection
+            final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+            Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                    .setApplicationName(APPLICATION_NAME)
+                    .build();
 
+            // Getting all events from the blueshell calendar since 01-01-2018
+            Events events = service.events().list("blueshellesports@gmail.com")
+                    .setTimeMin(new DateTime(1514764800000L))
+                    .setOrderBy("startTime")
+                    .setSingleEvents(true)
+                    .execute();
 
-        Events events = service.events().list("blueshellesports@gmail.com")
-                .setTimeMin(new DateTime(1514764800000L))
-                .setOrderBy("startTime")
-                .setSingleEvents(true)
-                .execute();
+            events.getItems().forEach(gevent -> {
 
-        events.getItems().forEach(gevent -> {
+                Event event = new Event();
 
-            Event event = new Event();
-
-            event.setTitle(gevent.getSummary());
-            event.setLocation(gevent.getLocation());
-            event.setDescription(gevent.getDescription());
-            event.setVisibility(Visibility.PUBLIC);
-            long startTime;
-            if (gevent.getStart().getDateTime() != null) {
-                startTime = gevent.getStart().getDateTime().getValue();
-            } else {
-                startTime = gevent.getStart().getDate().getValue();
-            }
-            event.setStartTime(new Timestamp(startTime));
-            if (!gevent.isEndTimeUnspecified()) {
-                if (gevent.getEnd().getDateTime() != null) {
-                    event.setEndTime(new Timestamp(gevent.getEnd().getDateTime().getValue()));
+                event.setTitle(gevent.getSummary());
+                event.setLocation(gevent.getLocation());
+                event.setDescription(gevent.getDescription());
+                event.setVisibility(Visibility.PUBLIC);
+                long startTime;
+                if (gevent.getStart().getDateTime() != null) {
+                    startTime = gevent.getStart().getDateTime().getValue();
                 } else {
-                    event.setEndTime(new Timestamp(gevent.getEnd().getDate().getValue()));
+                    startTime = gevent.getStart().getDate().getValue();
                 }
-            } else {
-                event.setEndTime(new Timestamp(startTime + 86400000));
-            }
-            event.setGoogleId(gevent.getHtmlLink().replace("https://www.google.com/calendar/event?eid=", "").split("&tmsrc")[0]);
-            dao.create(event);
-        });
+                event.setStartTime(new Timestamp(startTime));
+                if (!gevent.isEndTimeUnspecified()) {
+                    if (gevent.getEnd().getDateTime() != null) {
+                        event.setEndTime(new Timestamp(gevent.getEnd().getDateTime().getValue()));
+                    } else {
+                        event.setEndTime(new Timestamp(gevent.getEnd().getDate().getValue()));
+                    }
+                } else {
+                    event.setEndTime(new Timestamp(startTime + 86400000));
+                }
+                event.setGoogleId(gevent.getHtmlLink().replace("https://www.google.com/calendar/event?eid=", "").split("&tmsrc")[0]);
+                session.save(event);
+            });
+
+            // Commit all changes
+            t.commit();
+        }
     }
 }
