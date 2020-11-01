@@ -72,7 +72,7 @@ public class CalendarQuickstart {
         try (Session session = DatabaseManager.getSession()) {
             Transaction t = session.beginTransaction();
             // Nuke the whole events table before refilling it
-            session.createSQLQuery("delete from events where id>100").executeUpdate();
+            session.createSQLQuery("delete from events where true").executeUpdate();
 
             // Setting up connection
             final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();

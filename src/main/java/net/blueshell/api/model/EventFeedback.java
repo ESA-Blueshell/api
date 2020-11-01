@@ -18,7 +18,7 @@ public class EventFeedback {
 
     private String feedback;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "event_id")
     @JsonIgnore
     private Event event;

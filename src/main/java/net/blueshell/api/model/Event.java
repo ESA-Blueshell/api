@@ -58,10 +58,10 @@ public class Event {
     private Picture banner;
 
     @Column(name = "price_member")
-    private double memberPrice;
+    private Double memberPrice;
 
     @Column(name = "price_public")
-    private double publicPrice;
+    private Double publicPrice;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
     @JsonIgnore

@@ -17,7 +17,7 @@ public class Billable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "source_id")
     @JsonIgnore
     private User source;
@@ -30,7 +30,7 @@ public class Billable {
 
     private boolean paid;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "event_id")
     @JsonIgnore
     private Event event;
