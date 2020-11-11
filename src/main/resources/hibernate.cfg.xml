@@ -22,7 +22,7 @@
         </property>
 
         <property name = "hibernate.connection.password">
-
+            sonic56blade
         </property>
 
         <property name="hibernate.enable_lazy_load_no_trans">

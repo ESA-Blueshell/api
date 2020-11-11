@@ -14,6 +14,7 @@ drop table if exists
   subscriptions,
   roles,
   registrations,
+  news,
   authorities
 ;
 
@@ -167,6 +168,19 @@ create table registrations
   foreign key (accepted_by_user_id) references users (id)
 );
 
+create table news
+(
+id             bigint not null auto_increment,
+creator_id     bigint,                  # user
+last_editor_id bigint,                # user
+news_type      varchar(255) not null,
+title          varchar(255) not null,
+content        text not null,
+posted_at      datetime,
+primary key (id),
+foreign key (creator_id) references users (id),
+foreign key (last_editor_id) references users (id)
+);
 
 create table authorities
 (
