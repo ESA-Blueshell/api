@@ -39,6 +39,7 @@ public class DatabaseManager {
                 Picture.class,
                 Registration.class,
                 Sponsor.class,
+                News.class,
                 User.class,
                 CommitteeMembership.class,
         };

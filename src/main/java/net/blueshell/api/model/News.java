@@ -25,6 +25,7 @@ public class News {
     @JoinColumn(name = "last_editor_id")
     private User lastEditor;
 
+    @Column(name = "news_type")
     private String newsType;
 
     private String title;

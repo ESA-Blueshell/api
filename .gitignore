@@ -27,5 +27,6 @@
 /nbdist/
 /.nb-gradle/
 /build/
+/tokens/
 
 .cfg.xml
