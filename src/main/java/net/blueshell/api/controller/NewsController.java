@@ -5,12 +5,15 @@ import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.daos.Dao;
 import net.blueshell.api.daos.NewsDao;
 import net.blueshell.api.daos.UserDao;
+import net.blueshell.api.dtos.NewsDTO;
 import net.blueshell.api.model.News;
 import net.blueshell.api.model.Role;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class NewsController extends AuthorizationController {
@@ -19,7 +22,10 @@ public class NewsController extends AuthorizationController {
     private final UserDao userDao = new UserDao();
 
     @GetMapping(value = "/news")
-    public List<News> getNews() {return dao.list();}
+    public List<NewsDTO> getNews() {
+        // https://stackoverflow.com/questions/7221833/how-can-i-call-a-method-on-each-element-of-a-list/20684006#20684006 have fun
+        return dao.list().stream().map(this::from).collect(Collectors.toList());
+    }
 
     @PreAuthorize(("hasAuthority('BOARD')"))
     @PostMapping(value = "/news")
@@ -66,5 +72,13 @@ public class NewsController extends AuthorizationController {
         }
         dao.delete(Long.parseLong(id));
         return StatusCodes.OK;
+    }
+
+
+
+    public NewsDTO from(News news) {
+        return new NewsDTO(String.valueOf(news.getAuthorId()), userDao.getById(news.getAuthorId()).getUsername(),
+                String.valueOf(news.getLastEditorId()), userDao.getById(news.getLastEditorId()).getUsername(), news.getNewsType(),
+                news.getTitle(), news.getContent(), news.getPostedAt().toString());
     }
 }
