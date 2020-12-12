@@ -21,50 +21,5 @@ public class SecurityProperties {
 
     public static class JwtProperties {
 
-        private Resource keyStore = new ClassPathResource("keystore.jks");
-        private Resource publicKey = new ClassPathResource("public.txt");
-        private String keyStorePassword = "blueshell";
-        private String keyPairAlias = "tim";
-        private String keyPairPassword = "blueshell";
-
-        public Resource getKeyStore() {
-            return keyStore;
-        }
-
-        public void setKeyStore(Resource keyStore) {
-            this.keyStore = keyStore;
-        }
-
-        public String getKeyStorePassword() {
-            return keyStorePassword;
-        }
-
-        public void setKeyStorePassword(String keyStorePassword) {
-            this.keyStorePassword = keyStorePassword;
-        }
-
-        public String getKeyPairAlias() {
-            return keyPairAlias;
-        }
-
-        public void setKeyPairAlias(String keyPairAlias) {
-            this.keyPairAlias = keyPairAlias;
-        }
-
-        public String getKeyPairPassword() {
-            return keyPairPassword;
-        }
-
-        public void setKeyPairPassword(String keyPairPassword) {
-            this.keyPairPassword = keyPairPassword;
-        }
-
-        public Resource getPublicKey() {
-            return publicKey;
-        }
-
-        public void setPublicKey(Resource publicKey) {
-            this.publicKey = publicKey;
-        }
     }
 }

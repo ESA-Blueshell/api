@@ -43,7 +43,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         for (int i = Role.values().length - 1; i >= 0; i--) {
             sb.append(Role.values()[i]).append(" > ");
         }
-        hierarchy.setHierarchy(sb.toString().substring(0, sb.toString().length() - 3));
+        hierarchy.setHierarchy(sb.substring(0, sb.toString().length() - 3));
         return hierarchy;
     }
 
