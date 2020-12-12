@@ -1,58 +1,97 @@
 package net.blueshell.api.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
 import net.blueshell.api.daos.UserDao;
 import net.blueshell.api.model.News;
 import net.blueshell.api.model.User;
-import org.bouncycastle.util.Times;
 
 import java.sql.Timestamp;
 
 public class NewsDTO {
 
+    UserDao userDao = new UserDao();
+
+    @JsonProperty("id")
+    private String id;
+
+    @JsonProperty("creatorId")
+    private String creatorId;
+
+    @JsonProperty("creatorUsername")
+    private String creatorUsername;
+
+    @JsonProperty("lastEditorId")
+    private String lastEditorId;
+
+    @JsonProperty("last_elastEditorUsernameditor_username")
+    private String lastEditorUsername;
+
+    @JsonProperty("newsType")
+    private String newsType;
+
+    @JsonProperty("title")
+    private String title;
+
+    @JsonProperty("content")
+    private String content;
+
+    @JsonProperty("postedAt")
+    private String postedAt;
+
+    public NewsDTO(String id, String creatorId, String creatorUsername, String lastEditorId, String lastEditorUsername, String newsType, String title, String content, String postedAt) {
+        this.id = id;
+        this.creatorId = creatorId;
+        this.creatorUsername = creatorUsername;
+        this.lastEditorId = lastEditorId;
+        this.lastEditorUsername = lastEditorUsername;
+        this.newsType = newsType;
+        this.title = title;
+        this.content = content;
+        this.postedAt = postedAt;
+    }
+
     public String getId() {
         return id;
     }
 
-    public String getCreator_id() {
-        return creator_id;
+    public String getCreatorId() {
+        return creatorId;
     }
 
-    public void setCreator_id(String creator_id) {
-        this.creator_id = creator_id;
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
     }
 
-    public String getCreator_username() {
-        return creator_username;
+    public String getCreatorUsername() {
+        return creatorUsername;
     }
 
-    public void setCreator_username(String creator_username) {
-        this.creator_username = creator_username;
+    public void setCreatorUsername(String creatorUsername) {
+        this.creatorUsername = creatorUsername;
     }
 
-    public String getLast_editor_id() {
-        return last_editor_id;
+    public String getLastEditorId() {
+        return lastEditorId;
     }
 
-    public void setLast_editor_id(String last_editor_id) {
-        this.last_editor_id = last_editor_id;
+    public void setLastEditorId(String lastEditorId) {
+        this.lastEditorId = lastEditorId;
     }
 
-    public String getLast_editor_username() {
-        return last_editor_username;
+    public String getLastEditorUsername() {
+        return lastEditorUsername;
     }
 
-    public void setLast_editor_username(String last_editor_username) {
-        this.last_editor_username = last_editor_username;
+    public void setLastEditorUsername(String lastEditorUsername) {
+        this.lastEditorUsername = lastEditorUsername;
     }
 
-    public String getNews_type() {
-        return news_type;
+    public String getNewsType() {
+        return newsType;
     }
 
-    public void setNews_type(String news_type) {
-        this.news_type = news_type;
+    public void setNewsType(String newsType) {
+        this.newsType = newsType;
     }
 
     public String getTitle() {
@@ -71,61 +110,20 @@ public class NewsDTO {
         this.content = content;
     }
 
-    public String getPosted_at() {
-        return posted_at;
+    public String getPostedAt() {
+        return postedAt;
     }
 
-    public void setPosted_at(String posted_at) {
-        this.posted_at = posted_at;
-    }
-
-    UserDao userDao = new UserDao();
-
-    @JsonProperty("id")
-    private String id;
-
-    @JsonProperty("creator_id")
-    private String creator_id;
-
-    @JsonProperty("creator_username")
-    private String creator_username;
-
-    @JsonProperty("last_editor_id")
-    private String last_editor_id;
-
-    @JsonProperty("last_editor_username")
-    private String last_editor_username;
-
-    @JsonProperty("news_type")
-    private String news_type;
-
-    @JsonProperty("title")
-    private String title;
-
-    @JsonProperty("content")
-    private String content;
-
-    @JsonProperty("posted_at")
-    private String posted_at;
-
-    public NewsDTO(String id, String creator_id, String creator_username, String last_editor_id, String last_editor_username, String news_type, String title, String content, String posted_at) {
-        this.id = id;
-        this.creator_id = creator_id;
-        this.creator_username = creator_username;
-        this.last_editor_id = last_editor_id;
-        this.last_editor_username = last_editor_username;
-        this.news_type = news_type;
-        this.title = title;
-        this.content = content;
-        this.posted_at = posted_at;
+    public void setPostedAt(String postedAt) {
+        this.postedAt = postedAt;
     }
 
     //TODO: fix this when we work with POST (the id part)
     public News toNews() {
-        User author = userDao.getById(Integer.parseInt(creator_id));
-        User last_editor = userDao.getById(Integer.parseInt(last_editor_id));
-        Timestamp posted_at = Timestamp.valueOf(this.posted_at);
-        return new News(author, news_type, title, content, posted_at);
+        User author = userDao.getById(Integer.parseInt(creatorId));
+        User last_editor = userDao.getById(Integer.parseInt(lastEditorId));
+        Timestamp posted_at = Timestamp.valueOf(this.postedAt);
+        return new News(author, newsType, title, content, posted_at);
     }
 
 }
