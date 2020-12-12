@@ -10,6 +10,11 @@ import org.bouncycastle.util.Times;
 import java.sql.Timestamp;
 
 public class NewsDTO {
+
+    public String getId() {
+        return id;
+    }
+
     public String getCreator_id() {
         return creator_id;
     }
@@ -76,6 +81,9 @@ public class NewsDTO {
 
     UserDao userDao = new UserDao();
 
+    @JsonProperty("id")
+    private String id;
+
     @JsonProperty("creator_id")
     private String creator_id;
 
@@ -100,7 +108,8 @@ public class NewsDTO {
     @JsonProperty("posted_at")
     private String posted_at;
 
-    public NewsDTO(String creator_id, String creator_username, String last_editor_id, String last_editor_username, String news_type, String title, String content, String posted_at) {
+    public NewsDTO(String id, String creator_id, String creator_username, String last_editor_id, String last_editor_username, String news_type, String title, String content, String posted_at) {
+        this.id = id;
         this.creator_id = creator_id;
         this.creator_username = creator_username;
         this.last_editor_id = last_editor_id;
@@ -111,6 +120,7 @@ public class NewsDTO {
         this.posted_at = posted_at;
     }
 
+    //TODO: fix this when we work with POST (the id part)
     public News toNews() {
         User author = userDao.getById(Integer.parseInt(creator_id));
         User last_editor = userDao.getById(Integer.parseInt(last_editor_id));

@@ -51,11 +51,10 @@ public class NewsController extends AuthorizationController {
         return StatusCodes.OK;
     }
 
-    @PreAuthorize("hasAuthority('BOARD')")
     @GetMapping(value = "/news/{id}")
     public Object getNewsById(
-            @ApiParam(name = "Id of the news")
-            @PathVariable("id") String id) {
+            @PathVariable(name = "id")
+                    String id) {
         News news = dao.getById(Long.parseLong(id));
         if (news == null) {
             return StatusCodes.NOT_FOUND;
@@ -77,7 +76,7 @@ public class NewsController extends AuthorizationController {
 
 
     public NewsDTO from(News news) {
-        return new NewsDTO(String.valueOf(news.getAuthorId()), userDao.getById(news.getAuthorId()).getUsername(),
+        return new NewsDTO(String.valueOf(news.getId()), String.valueOf(news.getAuthorId()), userDao.getById(news.getAuthorId()).getUsername(),
                 String.valueOf(news.getLastEditorId()), userDao.getById(news.getLastEditorId()).getUsername(), news.getNewsType(),
                 news.getTitle(), news.getContent(), news.getPostedAt().toString());
     }
