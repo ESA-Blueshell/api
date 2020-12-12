@@ -75,7 +75,7 @@ public class EventController extends AuthorizationController {
 
     @PostMapping(value = "/events")
     public Object createEvent(@RequestBody EventDTO eventDTO) {
-        User authedUser = super.getAuthedUser();
+        User authedUser = getAuthedUser();
         if (authedUser == null) {
             return StatusCodes.FORBIDDEN;
         }
@@ -83,14 +83,14 @@ public class EventController extends AuthorizationController {
         Event event = eventDTO.toEvent();
         try {
             if (authedUserCommitteeIds.contains(event.getCommitteeId()) || hasAuthorization(Role.BOARD)) {
-        try {
-            String googleId = addToGoogleCalendar(event);
-            event.setGoogleId(googleId);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return StatusCodes.INTERNAL_SERVER_ERROR;
-        }
-        dao.create(event);
+                try {
+                    String googleId = addToGoogleCalendar(event);
+                    event.setGoogleId(googleId);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return StatusCodes.INTERNAL_SERVER_ERROR;
+                }
+                dao.create(event);
             } else {
                 System.out.println(authedUserCommitteeIds);
                 System.out.println(event.getCommitteeId());
@@ -122,6 +122,7 @@ public class EventController extends AuthorizationController {
                 .setTimeZone("Europe/Amsterdam");
         googleEvent.setEnd(end);
         //TODO: CHANGE TO BLUESHELL CALENDAR!!!!!!!!!1!!!!!111!!
+        //TODO: This is now live
         String calendarId = "c_kqp2ru792pn7ghnra32802b3mg@group.calendar.google.com";
         googleEvent = service.events().insert(calendarId, googleEvent).execute();
         return googleEvent.getHtmlLink().replace("https://www.google.com/calendar/event?eid=", "").split("&tmsrc")[0];

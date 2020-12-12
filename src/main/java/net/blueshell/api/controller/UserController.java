@@ -22,6 +22,7 @@ public class UserController extends AuthorizationController {
         return dao.list();
     }
 
+    @PreAuthorize("hasAuthority('BOARD')")
     @PostMapping(value = "/users")
     public Object createUser(User user) {
         try {
