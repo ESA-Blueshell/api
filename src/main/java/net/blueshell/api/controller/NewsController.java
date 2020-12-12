@@ -27,7 +27,7 @@ public class NewsController extends AuthorizationController {
         return dao.list().stream().map(this::from).collect(Collectors.toList());
     }
 
-    @PreAuthorize(("hasAuthority('BOARD')"))
+    @PreAuthorize("hasAuthority('BOARD')")
     @PostMapping(value = "/news")
     public Object createNews(News news) {
         try {

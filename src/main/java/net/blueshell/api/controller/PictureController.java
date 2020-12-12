@@ -27,6 +27,7 @@ public class PictureController extends AuthorizationController {
         return pictureDao.list();
     }
 
+    @PreAuthorize("hasAuthority('BOARD')")
     @PostMapping(value = "/pictures")
     public Object createPicture(Picture picture) {
         if (picture.getUrl() == null || "".equals(picture.getUrl())) {
@@ -36,6 +37,7 @@ public class PictureController extends AuthorizationController {
         return picture;
     }
 
+    @PreAuthorize("hasAuthority('BOARD')")
     @PutMapping(value = "/pictures/{id}")
     public Object createOrUpdatePicture(Picture picture) {
         Picture pic = pictureDao.getById(picture.getId());

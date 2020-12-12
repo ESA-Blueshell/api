@@ -42,8 +42,10 @@ public class CommitteeController extends AuthorizationController {
         if (com == null && hasAuthorization(Role.BOARD)) {
             // create new committee
             return createCommittee(committee);
-        } else {
+        } else if (com != null && com.hasMember(getAuthorizedUsername())) {
             dao.update(com);
+        } else {
+            return StatusCodes.NOT_FOUND;
         }
         return StatusCodes.OK;
     }

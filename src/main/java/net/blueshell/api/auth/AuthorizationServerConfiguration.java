@@ -25,23 +25,21 @@ import java.security.KeyPair;
  */
 @Configuration
 @EnableAuthorizationServer
-@EnableConfigurationProperties(SecurityProperties.class)
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
     private final DataSource dataSource;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final SecurityProperties securityProperties;
 
     private JwtAccessTokenConverter jwtAccessTokenConverter;
     private TokenStore tokenStore;
 
-    public AuthorizationServerConfiguration(final DataSource dataSource, final PasswordEncoder passwordEncoder,
-                                            final AuthenticationManager authenticationManager, final SecurityProperties securityProperties) {
+    public AuthorizationServerConfiguration(final DataSource dataSource,
+                                            final PasswordEncoder passwordEncoder,
+                                            final AuthenticationManager authenticationManager) {
         this.dataSource = dataSource;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
-        this.securityProperties = securityProperties;
     }
 
     @Bean
@@ -69,11 +67,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
             return jwtAccessTokenConverter;
         }
 
-        SecurityProperties.JwtProperties jwtProperties = securityProperties.getJwt();
-        KeyPair keyPair = keyPair(jwtProperties, keyStoreKeyFactory(jwtProperties));
-
         jwtAccessTokenConverter = new JwtAccessTokenConverter();
-        jwtAccessTokenConverter.setKeyPair(keyPair);
         return jwtAccessTokenConverter;
     }
 
@@ -95,11 +89,4 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 .checkTokenAccess("isAuthenticated()");
     }
 
-    private KeyPair keyPair(SecurityProperties.JwtProperties jwtProperties, KeyStoreKeyFactory keyStoreKeyFactory) {
-        return keyStoreKeyFactory.getKeyPair(jwtProperties.getKeyPairAlias(), jwtProperties.getKeyPairPassword().toCharArray());
-    }
-
-    private KeyStoreKeyFactory keyStoreKeyFactory(SecurityProperties.JwtProperties jwtProperties) {
-        return new KeyStoreKeyFactory(jwtProperties.getKeyStore(), jwtProperties.getKeyStorePassword().toCharArray());
-    }
 }
