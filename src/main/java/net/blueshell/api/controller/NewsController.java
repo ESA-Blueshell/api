@@ -55,7 +55,7 @@ public class NewsController extends AuthorizationController {
     public Object getNewsById(
             @PathVariable(name = "id")
                     String id) {
-        News news = dao.getById(Long.parseLong(id));
+        NewsDTO news = from(dao.getById(Long.parseLong(id)));
         if (news == null) {
             return StatusCodes.NOT_FOUND;
         }

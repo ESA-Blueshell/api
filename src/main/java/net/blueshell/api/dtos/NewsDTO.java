@@ -23,7 +23,7 @@ public class NewsDTO {
     @JsonProperty("lastEditorId")
     private String lastEditorId;
 
-    @JsonProperty("last_elastEditorUsernameditor_username")
+    @JsonProperty("lastEditorUsername")
     private String lastEditorUsername;
 
     @JsonProperty("newsType")
