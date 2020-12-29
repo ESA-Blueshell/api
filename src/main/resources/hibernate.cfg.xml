@@ -13,8 +13,8 @@
         </property>
 
         <!-- com.mysql.cj.jdbc.Driver-->
-        <property name="hibernate.connection.url">
-            jdbc:mysql://127.0.0.1:3306/blueshell?useSSL=false&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true
+        <property name = "hibernate.connection.url">
+            jdbc:mysql://127.0.0.1:3306/blueshell?autoReconnect=true&amp;useSSL=false&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true
         </property>
 
         <property name = "hibernate.connection.username">
