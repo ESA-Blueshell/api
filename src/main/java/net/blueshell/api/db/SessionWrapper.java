@@ -35,6 +35,7 @@ public class SessionWrapper<T> {
 //            }
         } catch (Exception e) {
             System.out.println("OK WHAT THE ACTUAL FUCKKKK");
+            e.printStackTrace();
         }
         return list;
     }
@@ -53,6 +54,7 @@ public class SessionWrapper<T> {
 //            }
         } catch (Exception e) {
             System.out.println("OK WHAT THE ACTUAL FUCKKKK");
+            e.printStackTrace();
         }
         return obj;
     }
