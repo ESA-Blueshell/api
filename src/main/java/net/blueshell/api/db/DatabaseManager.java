@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @Component
 public class DatabaseManager {
     private static SessionFactory sessionFactory;
-    private static List<Session> sessions;
     private static Configuration config;
 
 
@@ -47,17 +46,10 @@ public class DatabaseManager {
             configuration.addAnnotatedClass(clazz);
         }
         sessionFactory = configuration.buildSessionFactory();
-        sessions = new ArrayList<>();
     }
 
     public static Session getSession() {
-        Session session = sessionFactory.openSession();
-        sessions.add(session);
-        return session;
-    }
-
-    public static void cleanUpSessions() {
-        sessions.removeAll(sessions.stream().filter(s -> !s.isOpen()).collect(Collectors.toList()));
+        return sessionFactory.openSession();
     }
 
     public static void saveToDB(Object obj) {
