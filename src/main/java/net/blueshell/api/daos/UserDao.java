@@ -1,6 +1,5 @@
 package net.blueshell.api.daos;
 
-import net.blueshell.api.db.DatabaseManager;
 import net.blueshell.api.db.SessionWrapper;
 import net.blueshell.api.model.User;
 import org.hibernate.Session;
@@ -17,7 +16,7 @@ public class UserDao extends SessionWrapper<User> implements Dao<User>  {
 
     public User getByUsername(String username) {
         User obj;
-        try (Session session = DatabaseManager.getSession()) {
+        try (Session session = getSessionFactory().openSession()) {
             Transaction t = session.beginTransaction();
             Query query = session.createQuery("from users where username = :name");
             query.setParameter("name", username);
