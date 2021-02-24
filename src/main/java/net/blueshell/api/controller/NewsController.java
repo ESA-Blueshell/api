@@ -24,7 +24,12 @@ public class NewsController extends AuthorizationController {
     @GetMapping(value = "/news")
     public List<NewsDTO> getNews() {
         // https://stackoverflow.com/questions/7221833/how-can-i-call-a-method-on-each-element-of-a-list/20684006#20684006 have fun
-        return dao.list().stream().map(this::from).collect(Collectors.toList());
+        List<NewsDTO> newsList = dao.list().stream().map(this::from).collect(Collectors.toList());
+        // Collections.reverse didn't work
+        for (int i = 0, j = newsList.size() - 1; i < j; i++) {
+            newsList.add(i, newsList.remove(j));
+        }
+        return newsList;
     }
 
     @PreAuthorize("hasAuthority('BOARD')")
