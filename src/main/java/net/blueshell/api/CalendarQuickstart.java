@@ -97,7 +97,7 @@ public class CalendarQuickstart {
                 event.setVisibility(Visibility.PUBLIC);
                 long startTime;
 
-                if (gevent.getStart().getDateTime() != null) {
+                if (gevent.getStart().getDate() == null) {
                     startTime = gevent.getStart().getDateTime().getValue();
                     if (startTime < 2147483647000L) {
                         event.setStartTime(new Timestamp(startTime));
