@@ -103,14 +103,13 @@ public class CalendarQuickstart {
                 }
                 if (startTime < 2147483647000L) {
                     event.setStartTime(new Timestamp(startTime));
-                    if (!gevent.isEndTimeUnspecified()) {
-                        if (gevent.getEnd().getDateTime() != null) {
-                            event.setEndTime(new Timestamp(gevent.getEnd().getDateTime().getValue()));
+                    if (!gevent.isEndTimeUnspecified() && gevent.getEnd().getDateTime() != null) {
+                        //Check if the event is until midnight (vuetify's calendar doesn't like it when there's an event until midnight for some reason ¯\_(ツ)_/¯)
+                        if (gevent.getEnd().getDateTime().toStringRfc3339().contains("00:00:00")) {
+                            event.setEndTime(new Timestamp(gevent.getEnd().getDateTime().getValue() - 60000));
                         } else {
-                            event.setEndTime(new Timestamp(gevent.getEnd().getDate().getValue()));
+                            event.setEndTime(new Timestamp(gevent.getEnd().getDateTime().getValue() ));
                         }
-                    } else {
-                        event.setEndTime(new Timestamp(startTime + 86400000));
                     }
                     event.setGoogleId(gevent.getHtmlLink().replace("https://www.google.com/calendar/event?eid=", "").split("&tmsrc")[0]);
                     session.save(event);
