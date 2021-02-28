@@ -95,23 +95,23 @@ public class CalendarQuickstart {
                 event.setLocation(gevent.getLocation());
                 event.setDescription(gevent.getDescription());
                 event.setVisibility(Visibility.PUBLIC);
-                long startTime;
-
-                if (gevent.getStart().getDate() == null) {
-                    startTime = gevent.getStart().getDateTime().getValue();
-                    event.setStartTime(new Timestamp(startTime));
-                    if (!gevent.isEndTimeUnspecified() || gevent.getStart().getDate() == null) {
-                        //Check if the event is until midnight (vuetify's calendar doesn't like it when there's an event until midnight for some reason ¯\_(ツ)_/¯)
-                        if (gevent.getEnd().getDateTime().toStringRfc3339().contains("00:00:00")) {
-                            event.setEndTime(new Timestamp(gevent.getEnd().getDateTime().getValue() - 60000));
-                        } else {
-                            event.setEndTime(new Timestamp(gevent.getEnd().getDateTime().getValue()));
-                        }
-                    }
+                // Check if it's an all day event or not
+                if (gevent.getStart().getDateTime() == null) {
+                    // It's an all day event, so only set the start time
+                    event.setStartTime(new Timestamp(gevent.getStart().getDate().getValue()));
                 } else {
-                    startTime = gevent.getStart().getDate().getValue();
+                    // Set start time
+                    event.setStartTime(new Timestamp(gevent.getStart().getDateTime().getValue()));
 
-                    event.setStartTime(new Timestamp(startTime));
+                    // Check if the event is until midnight (vuetify's calendar doesn't like it when there's an event until midnight for some reason ¯\_(ツ)_/¯)
+                    if (gevent.getEnd().getDateTime().toStringRfc3339().contains("00:00:00")) {
+                        // Set end time - 1 minute
+                        event.setEndTime(new Timestamp(gevent.getEnd().getDateTime().getValue() - 60000));
+                    } else {
+                        // Set end time
+                        event.setEndTime(new Timestamp(gevent.getEnd().getDateTime().getValue()));
+                    }
+
                 }
 
                 event.setGoogleId(gevent.getHtmlLink().replace("https://www.google.com/calendar/event?eid=", "").split("&tmsrc")[0]);
