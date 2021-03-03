@@ -80,9 +80,12 @@ public class CalendarQuickstart {
                     .setApplicationName(APPLICATION_NAME)
                     .build();
 
-            // Getting all events from the blueshell calendar since 01-01-2018
+            // TODO: https://discord.com/channels/324285132133629963/390108059994685440/816774856196227102
+            // Getting all events from the blueshell calendar since 01-01-2019*
             Events events = service.events().list("blueshellesports@gmail.com")
-                    .setTimeMin(new DateTime(1514764800000L))
+//                    .setTimeMin(new DateTime(1514764800000L))
+                    .setTimeMin(new DateTime(1546347600000L))
+                    .setTimeMax(new DateTime(System.currentTimeMillis() + 60L * 24 * 60 * 60 * 1000))
                     .setOrderBy("startTime")
                     .setSingleEvents(true)
                     .execute();
