@@ -34,8 +34,8 @@ public class FileController {
         if (filename.endsWith(".pdf")) {
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.add("content-disposition", "inline;filename=\"" + resource.getFilename() + "\"");
-        } else if (filename.endsWith(".png")) {
-            headers.setContentType(MediaType.IMAGE_PNG);
+        } else if (filename.endsWith(".jpg")) {
+            headers.setContentType(MediaType.IMAGE_JPEG);
             headers.add("content-disposition", "inline;filename=\"" + resource.getFilename() + "\"");
         } else {
             headers.add("content-disposition", "attachment;filename=\"" + resource.getFilename() + "\"");
