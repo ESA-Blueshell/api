@@ -6,13 +6,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.util.stream.Collectors;
 
 /**
  * yoinked from <a href="https://attacomsian.com/blog/uploading-files-spring-boot">https://attacomsian.com/blog/uploading-files-spring-boot</a>
@@ -37,6 +33,9 @@ public class FileController {
         // If the file is a pdf, open it in a new tab
         if (filename.endsWith(".pdf")) {
             headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.add("content-disposition", "inline;filename=\"" + resource.getFilename() + "\"");
+        } else if (filename.endsWith(".png")) {
+            headers.setContentType(MediaType.IMAGE_PNG);
             headers.add("content-disposition", "inline;filename=\"" + resource.getFilename() + "\"");
         } else {
             headers.add("content-disposition", "attachment;filename=\"" + resource.getFilename() + "\"");
