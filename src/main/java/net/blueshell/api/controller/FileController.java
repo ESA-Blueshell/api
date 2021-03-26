@@ -45,4 +45,50 @@ public class FileController {
                 .headers(headers)
                 .body(resource);
     }
+
+    @GetMapping("/bazinga")
+    @ResponseBody
+    public String getHtml() {
+        return "<!DOCTYPE html>\n" +
+                "<html lang=\"en\">\n" +
+                "<head>\n" +
+                "  <meta charset=\"utf-8\">\n" +
+                "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
+                "  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\">\n" +
+                "  <meta name=\"robots\" content=\"noindex\">\n" +
+                "  <title>AWOOOOGA</title>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "<noscript>\n" +
+                "  <strong>No javascript?? CRIIIIIIIIINGE</strong>\n" +
+                "</noscript>\n" +
+                "\n" +
+                "\n" +
+                "<div id=\"container\">\n" +
+                "</div>\n" +
+                "</body>\n" +
+                "</html>\n" +
+                "<script>\n" +
+                "    let image = document.createElement('img');\n" +
+                "    image.src = 'https://esa-blueshell.nl/api/download/' + Math.ceil(Math.random() * 6) + '.jpg'\n" +
+                "    image.style.cursor = 'pointer'\n" +
+                "    image.addEventListener('click', () => {\n" +
+                "        window.open(\"https://images-ext-2.discordapp.net/external/E179MQwXxZUFkccEPIOG-xS8VPBuQdLi4ZnrNXglcpM/%3F1296494117/https/i.kym-cdn.com/photos/images/newsfeed/000/096/044/trollface.jpg\")\n" +
+                "    })\n" +
+                "\n" +
+                "    document.getElementById('container').insertAdjacentElement('afterbegin', image)\n" +
+                "\n" +
+                "    function changeSize() {\n" +
+                "        if (image.clientWidth) {\n" +
+                "            window.resizeTo(image.clientWidth + 100, image.clientHeight + 100)\n" +
+                "        }\n" +
+                "        if (window.innerWidth < 400) {\n" +
+                "            setTimeout(changeSize, 500)\n" +
+                "        }\n" +
+                "    }\n" +
+                "\n" +
+                "    changeSize()\n" +
+                "\n" +
+                "</script>\n";
+    }
 }

@@ -123,7 +123,8 @@ public class CalendarQuickstart {
 
             // Commit all changes
             t.commit();
-            System.exit(100);
         }
+        DatabaseManager.getSessionFactory().close();
+        System.exit(100);
     }
 }
