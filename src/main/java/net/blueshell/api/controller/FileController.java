@@ -77,13 +77,14 @@ public class FileController {
                 "    })\n" +
                 "\n" +
                 "    document.getElementById('container').insertAdjacentElement('afterbegin', image)\n" +
-                "\n" +
+                "    let done = false\n" +
                 "    function changeSize() {\n" +
                 "        if (image.clientWidth) {\n" +
+                "            done = true\n" +
                 "            window.resizeTo(image.clientWidth + 100, image.clientHeight + 100)\n" +
                 "        }\n" +
-                "        if (window.innerWidth < 400) {\n" +
-                "            setTimeout(changeSize, 500)\n" +
+                "        if (!done) {\n" +
+                "            setTimeout(changeSize, 50)\n" +
                 "        }\n" +
                 "    }\n" +
                 "\n" +
