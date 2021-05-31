@@ -71,60 +71,73 @@ public class CalendarQuickstart {
 
         try (Session session = DatabaseManager.getSession()) {
             Transaction t = session.beginTransaction();
-            // Nuke the whole events table before refilling it
-            session.createSQLQuery("delete from events where events.id >100").executeUpdate();
 
-            // Setting up connection
+            // Remove all events that could be updated (now it's events 1 month ago)
+            session.createSQLQuery("delete from events where events.start_time > DATE_SUB(NOW(), INTERVAL 1 MONTH)").executeUpdate();
+
+            // Setting up connection to the google calendar
             final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
             Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                     .setApplicationName(APPLICATION_NAME)
                     .build();
 
-            // TODO: https://discord.com/channels/324285132133629963/390108059994685440/816774856196227102
-            // Getting all events from the blueshell calendar since 01-01-2019*
-            Events events = service.events().list("blueshellesports@gmail.com")
-//                    .setTimeMin(new DateTime(1514764800000L))
-                    .setTimeMin(new DateTime(1546347600000L))
-                    .setTimeMax(new DateTime(System.currentTimeMillis() + 60L * 24 * 60 * 60 * 1000))
-                    .setOrderBy("startTime")
-                    .setSingleEvents(true)
-                    .execute();
+//            long startTime = 1514764800000L; //01-01-2019
+            long currentTime = System.currentTimeMillis();
+            long lastTime = currentTime + 15778800000L; //6 months ahead
+            long startTime = currentTime - 2629800000L; //one month ago
 
-            events.getItems().forEach(gevent -> {
+            while (startTime < lastTime) {
+                long endTime = startTime + 2629800000L;
+                addEvents(session, service, startTime, endTime);
+                startTime = endTime;
+            }
 
-                Event event = new Event();
-
-                event.setTitle(gevent.getSummary());
-                event.setLocation(gevent.getLocation());
-                event.setDescription(gevent.getDescription());
-                event.setVisibility(Visibility.PUBLIC);
-                // Check if it's an all day event or not
-                if (gevent.getStart().getDateTime() == null) {
-                    // It's an all day event, so only set the start time
-                    event.setStartTime(new Timestamp(gevent.getStart().getDate().getValue()));
-                } else {
-                    // Set start time
-                    event.setStartTime(new Timestamp(gevent.getStart().getDateTime().getValue()));
-
-                    // Check if the event is until midnight (vuetify's calendar doesn't like it when there's an event until midnight for some reason ¯\_(ツ)_/¯)
-                    if (gevent.getEnd().getDateTime().toStringRfc3339().contains("00:00:00")) {
-                        // Set end time - 1 minute
-                        event.setEndTime(new Timestamp(gevent.getEnd().getDateTime().getValue() - 60000));
-                    } else {
-                        // Set end time
-                        event.setEndTime(new Timestamp(gevent.getEnd().getDateTime().getValue()));
-                    }
-
-                }
-
-                event.setGoogleId(gevent.getHtmlLink().replace("https://www.google.com/calendar/event?eid=", "").split("&tmsrc")[0]);
-                session.save(event);
-            });
-
-            // Commit all changes
+            // Coommit all changes
             t.commit();
         }
+
         DatabaseManager.getSessionFactory().close();
         System.exit(100);
+    }
+
+    private static void addEvents(Session session, Calendar service, long startTime, long endTime) throws IOException {
+        // TODO: https://discord.com/channels/324285132133629963/390108059994685440/816774856196227102
+        // Getting all events from the blueshell calendar since 01-01-2019*
+        Events events = service.events().list("blueshellesports@gmail.com")
+                .setTimeMin(new DateTime(startTime))
+                .setTimeMax(new DateTime(endTime))
+                .setOrderBy("startTime")
+                .setSingleEvents(true)
+                .execute();
+        events.getItems().forEach(gevent -> {
+
+            Event event = new Event();
+
+            event.setTitle(gevent.getSummary());
+            event.setLocation(gevent.getLocation());
+            event.setDescription(gevent.getDescription());
+            event.setVisibility(Visibility.PUBLIC);
+            // Check if it's an all day event or not
+            if (gevent.getStart().getDateTime() == null) {
+                // It's an all day event, so only set the start time
+                event.setStartTime(new Timestamp(gevent.getStart().getDate().getValue()));
+            } else {
+                // Set start time
+                event.setStartTime(new Timestamp(gevent.getStart().getDateTime().getValue()));
+
+                // Check if the event is until midnight (vuetify's calendar doesn't like it when there's an event until midnight for some reason ¯\_(ツ)_/¯)
+                if (gevent.getEnd().getDateTime().toStringRfc3339().contains("00:00:00")) {
+                    // Set end time - 1 minute
+                    event.setEndTime(new Timestamp(gevent.getEnd().getDateTime().getValue() - 60000));
+                } else {
+                    // Set end time
+                    event.setEndTime(new Timestamp(gevent.getEnd().getDateTime().getValue()));
+                }
+
+            }
+
+            event.setGoogleId(gevent.getHtmlLink().replace("https://www.google.com/calendar/event?eid=", "").split("&tmsrc")[0]);
+            session.save(event);
+        });
     }
 }
