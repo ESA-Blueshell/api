@@ -72,8 +72,14 @@ public class CalendarQuickstart {
         try (Session session = DatabaseManager.getSession()) {
             Transaction t = session.beginTransaction();
 
+//            long startTime = 1514764800000L; //01-01-2019
+//            long startTime = 1514764800000L; //01-01-2018
+
+            long currentTime = System.currentTimeMillis();
+            long startTime = currentTime - 2629800000L; //one month ago
+
             // Remove all events that could be updated (now it's events 1 month ago)
-            session.createSQLQuery("delete from events where events.start_time > DATE_SUB(NOW(), INTERVAL 1 MONTH)").executeUpdate();
+            session.createSQLQuery("delete from events where UNIX_TIMESTAMP(events.start_time) > " + startTime / 1000).executeUpdate();
 
             // Setting up connection to the google calendar
             final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -81,13 +87,10 @@ public class CalendarQuickstart {
                     .setApplicationName(APPLICATION_NAME)
                     .build();
 
-//            long startTime = 1514764800000L; //01-01-2019
-            long currentTime = System.currentTimeMillis();
             long lastTime = currentTime + 15778800000L; //6 months ahead
-            long startTime = currentTime - 2629800000L; //one month ago
 
             while (startTime < lastTime) {
-                long endTime = startTime + 2629800000L;
+                long endTime = startTime + 2629800000L; // add a month
                 addEvents(session, service, startTime, endTime);
                 startTime = endTime;
             }
