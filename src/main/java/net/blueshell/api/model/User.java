@@ -3,9 +3,14 @@ package net.blueshell.api.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -13,7 +18,7 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @Data
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -119,6 +124,16 @@ public class User {
     public User() {
     }
 
+    public User(String username, String password, String firstName, String lastName, String email) {
+        this();
+        createdAt = Timestamp.from(Instant.now());
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+
     public long getId() {
         return id;
     }
@@ -202,4 +217,38 @@ public class User {
         return getRoles().stream().anyMatch(r -> r.matchesRole(role));
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+
+        var auths = new HashSet<GrantedAuthority>();
+        if (getRoles() == null) {
+            return auths;
+        }
+
+        for (var role : getRoles()) {
+            auths.add(new SimpleGrantedAuthority(role.getReprString()));
+        }
+
+        return auths;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return getDeletedAt() != null && getDeletedAt().before(Timestamp.from(Instant.now()));
+    }
 }

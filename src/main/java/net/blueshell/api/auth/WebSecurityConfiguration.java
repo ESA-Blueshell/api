@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
@@ -57,11 +58,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
-//                .antMatchers("/", "/login").permitAll()
-//                .anyRequest().authenticated()
+                .antMatchers("/", "/login", "/oauth", "/api/oauth/token").permitAll()
+                .anyRequest().authenticated()
                 .anyRequest().permitAll()
                 .and()
-                .formLogin().permitAll()
+                .httpBasic().disable()
         ;
     }
 
@@ -90,6 +91,5 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         }
         return passwordEncoder;
     }
-
 
 }
