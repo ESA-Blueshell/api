@@ -1,7 +1,5 @@
 package net.blueshell.api.daos;
 
-import net.blueshell.api.model.Picture;
-
 import java.util.List;
 
 public interface Dao<T> {

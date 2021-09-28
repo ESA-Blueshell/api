@@ -1,21 +1,23 @@
 package net.blueshell.api.db;
 
-import net.blueshell.api.model.*;
+import net.blueshell.api.business.billable.Billable;
+import net.blueshell.api.business.committee.Committee;
+import net.blueshell.api.business.committee.CommitteeMembership;
+import net.blueshell.api.business.event.Event;
+import net.blueshell.api.business.event.EventFeedback;
+import net.blueshell.api.business.news.News;
+import net.blueshell.api.business.picture.Picture;
+import net.blueshell.api.business.registration.Registration;
+import net.blueshell.api.business.sponsor.Sponsor;
+import net.blueshell.api.business.user.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.query.Query;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created on 12/12/2017.

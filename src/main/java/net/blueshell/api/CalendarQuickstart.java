@@ -15,8 +15,8 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Events;
 import net.blueshell.api.db.DatabaseManager;
-import net.blueshell.api.model.Event;
-import net.blueshell.api.model.Visibility;
+import net.blueshell.api.business.event.Event;
+import net.blueshell.api.business.event.Visibility;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
