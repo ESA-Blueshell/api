@@ -1,13 +1,11 @@
-package net.blueshell.api.event;
+package net.blueshell.api.schedule;
 
 import java.util.concurrent.*;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created on 12/12/2017.
  */
-public class EventManager {
+public class ScheduleManager {
 
     private static final ScheduledExecutorService scheduler = new CatchingScheduledThreadPoolExecutor(50);
     private static final int STACKFRAME_FOR_DEBUG = 4;
@@ -153,11 +151,11 @@ public class EventManager {
     }
 
     private static void startEndingTimer() {
-        addEvent(EventManager::fin, 10000);
+        addEvent(ScheduleManager::fin, 10000);
     }
 
     public static void main(String[] args) {
-        addEvent(EventManager::a, 1000);
+        addEvent(ScheduleManager::a, 1000);
         startEndingTimer();
         System.out.println("Exit");
     }

@@ -1,4 +1,4 @@
-package net.blueshell.api.event;
+package net.blueshell.api.schedule;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.log4j.Logger;

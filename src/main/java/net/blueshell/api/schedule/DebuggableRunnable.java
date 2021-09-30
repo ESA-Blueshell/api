@@ -1,4 +1,4 @@
-package net.blueshell.api.event;
+package net.blueshell.api.schedule;
 
 import net.swordie.ms.util.Util;
 

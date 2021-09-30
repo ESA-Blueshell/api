@@ -10,8 +10,8 @@ import java.sql.Timestamp;
 
 public class EventDTO {
 
-    CommitteeDao committeeDao = new CommitteeDao();
-    PictureDao pictureDao = new PictureDao();
+    private static final CommitteeDao committeeDao = new CommitteeDao();
+    private static final PictureDao pictureDao = new PictureDao();
 
     @JsonProperty("committeeId")
     private String committeeId;
