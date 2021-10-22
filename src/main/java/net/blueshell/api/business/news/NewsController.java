@@ -1,13 +1,19 @@
 package net.blueshell.api.business.news;
 
+import com.google.j2objc.annotations.AutoreleasePool;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
 import net.blueshell.api.daos.Dao;
 import net.blueshell.api.business.user.UserDao;
 import net.blueshell.api.business.user.Role;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,6 +22,14 @@ public class NewsController extends AuthorizationController {
 
     private final Dao<News> dao = new NewsDao();
     private final UserDao userDao = new UserDao();
+
+    @Autowired
+    private NewsRepository newsRepository;
+
+    @GetMapping(value = "/newsPageable")
+    Page newsPageable(Pageable pageable) {
+        return newsRepository.findAll(pageable);
+    }
 
     @GetMapping(value = "/news")
     public List<NewsDTO> getNews() {
@@ -27,6 +41,8 @@ public class NewsController extends AuthorizationController {
         }
         return newsList;
     }
+
+
 
     @PreAuthorize("hasAuthority('BOARD')")
     @PostMapping(value = "/news")
