@@ -1,12 +1,12 @@
 package net.blueshell.api.schedule;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import org.apache.log4j.Logger;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 /**
  * @author Sjonnie
@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * http://code.nomad-labs.com/2011/12/09/mother-fk-the-scheduledexecutorservice/
  */
 public class CatchingScheduledThreadPoolExecutor extends ScheduledThreadPoolExecutor {
-    private static final Logger log = Logger.getLogger(CatchingScheduledThreadPoolExecutor.class);
+    private static final Logger log = Logger.getLogger(CatchingScheduledThreadPoolExecutor.class.toString());
     private static final int STACKFRAME_FOR_DEBUG = 5;
 
     public CatchingScheduledThreadPoolExecutor(int corePoolSize) {
@@ -33,19 +33,19 @@ public class CatchingScheduledThreadPoolExecutor extends ScheduledThreadPoolExec
 
     @Override
     public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) {
-        command = new net.swordie.ms.handlers.executors.DebuggableRunnable(wrapRunnable(command), STACKFRAME_FOR_DEBUG);
+        command = new DebuggableRunnable(wrapRunnable(command), STACKFRAME_FOR_DEBUG);
         return super.schedule(command, delay, unit);
     }
 
     @Override
     public ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
-        command = new net.swordie.ms.handlers.executors.DebuggableRunnable(wrapRunnable(command), STACKFRAME_FOR_DEBUG);
+        command = new DebuggableRunnable(wrapRunnable(command), STACKFRAME_FOR_DEBUG);
         return super.scheduleAtFixedRate(command, initialDelay, period, unit);
     }
 
     @Override
     public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
-        command = new net.swordie.ms.handlers.executors.DebuggableRunnable(wrapRunnable(command), STACKFRAME_FOR_DEBUG);
+        command = new DebuggableRunnable(wrapRunnable(command), STACKFRAME_FOR_DEBUG);
         return super.scheduleWithFixedDelay(command, initialDelay, delay, unit);
     }
 
@@ -71,7 +71,7 @@ public class CatchingScheduledThreadPoolExecutor extends ScheduledThreadPoolExec
             try {
                 runnable.run();
             } catch (Exception e) {
-                log.warn(String.format("error in executing: %s. It will no longer be run!", runnable));
+//                log.warn(String.format("error in executing: %s. It will no longer be run!", runnable));
                 e.printStackTrace();
 
                 // and re throw it so that the Executor also gets this error so that it can do what it would
@@ -94,7 +94,7 @@ public class CatchingScheduledThreadPoolExecutor extends ScheduledThreadPoolExec
             try {
                 return callable.call();
             } catch (Exception e) {
-                log.warn(String.format("error in executing: %s. It will no longer be run!", callable));
+//                log.warn(String.format("error in executing: %s. It will no longer be run!", callable));
                 e.printStackTrace();
 
                 // and re throw it so that the Executor also gets this error so that it can do what it would

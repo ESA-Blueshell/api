@@ -175,12 +175,14 @@ public class Event {
         // internal: members only
         // private: committee only
         if (user == null) {
-            return vis == Visibility.PUBLIC;
+            return vis == null || vis == Visibility.PUBLIC;
         }
+
         boolean canSee = vis == Visibility.PUBLIC || user.hasRole(Role.MEMBER);
         if (canSee && vis == Visibility.PRIVATE) {
-            canSee = user.hasRole(Role.BOARD) || getCommittee().hasMember(user);
+            canSee = user.hasRole(Role.BOARD) || (getCommittee() != null && getCommittee().hasMember(user));
         }
+
         return canSee;
     }
 

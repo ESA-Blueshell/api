@@ -1,6 +1,6 @@
 package net.blueshell.api.schedule;
 
-import net.swordie.ms.util.Util;
+import net.blueshell.api.util.Util;
 
 public class DebuggableRunnable implements Runnable {
 
