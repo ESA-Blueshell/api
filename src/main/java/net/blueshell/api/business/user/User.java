@@ -73,7 +73,7 @@ public class User implements UserDetails {
 
     private String discord;
 
-    private String steamId;
+    private String steamid;
 
     private boolean newsletter;
 
