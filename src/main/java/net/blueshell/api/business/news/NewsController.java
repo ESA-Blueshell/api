@@ -1,6 +1,5 @@
 package net.blueshell.api.business.news;
 
-import com.google.j2objc.annotations.AutoreleasePool;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
 import net.blueshell.api.daos.Dao;
@@ -11,10 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RestController
@@ -28,7 +26,8 @@ public class NewsController extends AuthorizationController {
 
     @GetMapping(value = "/newsPageable")
     Page newsPageable(Pageable pageable) {
-        return newsRepository.findAll(pageable);
+        Page<News> newsPag = newsRepository.findAll(pageable);
+        return newsPag.map(this::from);
     }
 
     @GetMapping(value = "/news")
@@ -72,11 +71,12 @@ public class NewsController extends AuthorizationController {
     public Object getNewsById(
             @PathVariable(name = "id")
                     String id) {
-        NewsDTO news = from(dao.getById(Long.parseLong(id)));
+        News news = dao.getById(Long.parseLong(id));
         if (news == null) {
             return StatusCodes.NOT_FOUND;
         }
-        return news;
+        NewsDTO newsDTO = from(dao.getById(Long.parseLong(id)));
+        return newsDTO;
     }
 
     @PreAuthorize("hasAuthority('BOARD')")

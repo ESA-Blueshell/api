@@ -21,6 +21,7 @@ import net.blueshell.api.daos.Dao;
 import net.blueshell.api.business.user.UserDao;
 import net.blueshell.api.business.user.Role;
 import net.blueshell.api.business.user.User;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.FileInputStream;
@@ -152,5 +153,32 @@ public class EventController extends AuthorizationController {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    //TODO: TEST THIS SHIT
+    @PreAuthorize(("hasAuthority('BOARD')"))
+    @DeleteMapping(value = "/events/{id}")
+    public Object deleteEventById(@PathVariable("id") String id) {
+        Event event = dao.getById(Long.parseLong(id));
+        if(event == null) {
+            return StatusCodes.NOT_FOUND;
+        }
+        com.google.api.services.calendar.model.Event googleEvent = new com.google.api.services.calendar.model.Event();
+        googleEvent.remove(event.getGoogleId(), event);
+        dao.delete(Long.parseLong(id));
+        return StatusCodes.OK;
+    }
 
+    //TODO: TEST THIS SHIT
+    @PreAuthorize(("hasAuthority('BOARD')"))
+    @PutMapping(value = "/events/{id}")
+    public Object createOrUpdateEvent(@RequestBody EventDTO eventDTO) {
+        Event evnt = dao.getById(eventDTO.toEvent().getId());
+        if(evnt == null) {
+            // create new event
+            return createEvent(eventDTO);
+        } else {
+            dao.update(evnt);
+
+        }
+        return StatusCodes.OK;
+    }
 }
