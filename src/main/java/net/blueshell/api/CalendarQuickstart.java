@@ -106,7 +106,7 @@ public class CalendarQuickstart {
     private static void addEvents(Session session, Calendar service, long startTime, long endTime) throws IOException {
         // TODO: https://discord.com/channels/324285132133629963/390108059994685440/816774856196227102
         // Getting all events from the blueshell calendar since 01-01-2019*
-        Events events = service.events().list("blueshellesports@gmail.com")
+        Events events = service.events().list("87r5v7ep7k9ronlrg8n2q9033s@group.calendar.google.com")
                 .setTimeMin(new DateTime(startTime))
                 .setTimeMax(new DateTime(endTime))
                 .setOrderBy("startTime")
