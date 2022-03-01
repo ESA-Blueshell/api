@@ -57,7 +57,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/login", "/oauth", "/api/oauth/token").permitAll()
+//                .antMatchers("/", "/login", "/oauth", "/api/oauth/token").permitAll() // Change back once we decide to go from basic auth to something more proper
                 .anyRequest().authenticated()
                 .anyRequest().permitAll()
                 .and()

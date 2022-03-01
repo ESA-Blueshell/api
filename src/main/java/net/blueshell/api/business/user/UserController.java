@@ -44,6 +44,7 @@ public class UserController extends AuthorizationController {
         return StatusCodes.OK;
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = "/users/{id}")
     public Object getUserById(
             @ApiParam(name = "Id of the user")
