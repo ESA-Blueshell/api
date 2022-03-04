@@ -1,6 +1,7 @@
 package net.blueshell.api.auth;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import net.blueshell.api.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,7 +45,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             } catch (ExpiredJwtException e) {
                 logger.error("JWT Token has expired");
             }
-        } else {
+        } else if (!Util.isNullOrEmpty(requestTokenHeader)) {
             logger.warn("JWT Token does not begin with Bearer String");
         }
 
