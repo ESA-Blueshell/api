@@ -3,15 +3,15 @@ package net.blueshell.api.business.user;
 import java.util.Arrays;
 
 public enum Role {
-    GUEST("Guest"),
-    COMPANY("Company"),
-    MEMBER("Member", GUEST),
-    VEGAN("Vegan", MEMBER),
+    GUEST("GUEST"),
+    COMPANY("COMPANY"),
+    MEMBER("MEMBER", GUEST),
+    VEGAN("VEGAN", MEMBER),
     EHBO("EHBO", MEMBER),
     BHV("BHV", MEMBER),
-    BOARD("Board", MEMBER),
-    TREASURER("Treasurer", BOARD),
-    ADMIN("Admin", TREASURER),
+    BOARD("BOARD", MEMBER),
+    TREASURER("TREASURER", BOARD),
+    ADMIN("ADMIN", TREASURER),
     ;
 
     private String reprString;

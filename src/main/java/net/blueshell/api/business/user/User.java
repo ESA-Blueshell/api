@@ -8,6 +8,7 @@ import net.blueshell.api.business.committee.Committee;
 import net.blueshell.api.business.committee.CommitteeMembership;
 import net.blueshell.api.business.picture.Picture;
 import net.blueshell.api.business.registration.Registration;
+import net.blueshell.api.util.TimeUtil;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -116,14 +117,14 @@ public class User implements UserDetails {
     @JsonIgnore
     private Set<Billable> billables;
 
-//    @JoinTable(
-//            name = "authorizations",
-//            joinColumns = @JoinColumn(name = "user_id")
-//    )
-//    @ElementCollection(targetClass = Role.class)
-//    @Enumerated(EnumType.STRING)
-//    @JsonIgnore
-    @Transient
+    @JoinTable(
+            name = "authorities",
+            joinColumns = @JoinColumn(name = "user_id")
+    )
+    @ElementCollection(targetClass = Role.class)
+    @Enumerated(EnumType.STRING)
+    @JsonIgnore
+    @Column(name = "authority")
     private Set<Role> roles;
 
     public User() {
@@ -224,7 +225,6 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
         var auths = new HashSet<GrantedAuthority>();
         if (getRoles() == null) {
             return auths;
@@ -254,6 +254,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return getDeletedAt() != null && getDeletedAt().before(Timestamp.from(Instant.now()));
+        return getDeletedAt() == null || !TimeUtil.hasExpired(getDeletedAt());
     }
+
 }

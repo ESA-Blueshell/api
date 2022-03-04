@@ -11,4 +11,8 @@ public class Util {
         return caller;
     }
 
+    public static boolean isNullOrEmpty(String s) {
+        return s == null || s.trim().isEmpty();
+    }
+
 }

@@ -74,7 +74,7 @@ public class EventController extends AuthorizationController {
 
     @PostMapping(value = "/events")
     public Object createEvent(@RequestBody EventDTO eventDTO) {
-        User authedUser = getAuthedUser();
+        User authedUser = getPrincipal();
         if (authedUser == null) {
             return StatusCodes.FORBIDDEN;
         }
@@ -135,7 +135,7 @@ public class EventController extends AuthorizationController {
         if (event == null) {
             return StatusCodes.NOT_FOUND;
         }
-        if (!event.canSee(getAuthedUser())) {
+        if (!event.canSee(getPrincipal())) {
             return StatusCodes.NOT_FOUND;
         }
         return event;
