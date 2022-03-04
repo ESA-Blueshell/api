@@ -1,5 +1,7 @@
 package net.blueshell.api.auth;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -86,13 +88,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     public void configure(final AuthorizationServerSecurityConfigurer oauthServer) {
         oauthServer.passwordEncoder(this.passwordEncoder).tokenKeyAccess("permitAll()")
                 .checkTokenAccess("isAuthenticated()");
-    }
-
-    @Bean(name = DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
-    public DispatcherServlet dispatcherServlet() {
-        DispatcherServlet dispatcherServlet = new DispatcherServlet();
-        dispatcherServlet.setDispatchOptionsRequest(true);
-        return dispatcherServlet;
     }
 
 }
