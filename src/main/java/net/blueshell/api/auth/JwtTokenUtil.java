@@ -16,7 +16,7 @@ import java.util.function.Function;
 @Component
 public class JwtTokenUtil implements Serializable {
 
-    public static final long JWT_TOKEN_VALIDITY = 72 * 60 * 60; // 72 hours, 3 days
+    public static final long JWT_TOKEN_VALIDITY = 72 * 60 * 60 * 1000; // 72 hours, 3 days
 
     private static final String secret = "secret"; // TODO: Change on prod
 
@@ -58,7 +58,7 @@ public class JwtTokenUtil implements Serializable {
     //   compaction of the JWT to a URL-safe string
     private String doGenerateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
