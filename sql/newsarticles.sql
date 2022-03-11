@@ -35,3 +35,114 @@ INSERT INTO blueshell.news (creator_id, last_editor_id, news_type, title, conten
 <h5><strong></strong></h5>
 </div>
 </div></div></div>', '2020-09-19 21:45:15');
+INSERT INTO blueshell.news (creator_id, last_editor_id, news_type, title, content, posted_at) VALUES (6, 6, 'Interview', 'Meet Willow: Enschede’s Finest and Most Influential Cosplayer in the Gaming Community', '<div>
+  <img src="https://esa-blueshell.nl/api/download/willow1.jpg" class="ma-4"
+       style="max-width: 40%;float: right" alt="Cosplay photo"/>
+  <p class="body-1">From Illidan Stormrage to Mewtwo, with full-body suits and gigantic props, she
+    does it all.
+    Willow is a professional cosplayer, someone who has dedicated their entire life to the arts
+    and crafts of cosplay: a performance art in which people dress up as their favorite characters
+    from games, movies, or comics. She lives in Enschede and runs her own cosplay business called
+    Willow Creative. With no less than 96.000 followers on Instagram, she makes a big impact in
+    the cosplay world with her creative outfits.
+  </p>
+
+
+  <p class="text-h5">Who is Willow?</p>
+  <p class="body-1">
+    I am Merel Eisink, 28 years old and I live in Enschede and I am a professional cosplayer. I
+    sell cosplay accessories such as masks or costumes. I started this venture three years ago
+    with my own company Willow Creative.
+  </p>
+  <p class="body-1">
+    When I was 20 years old, I studied Creative Media and Game Technologies at HBO Saxion
+    Hogeschool Enschede. During my study time, I was already involved in cosplay, gaming and was a
+    huge fan of League of Legends. I chose this study based on my hobbies and interests (cosplay
+    and gaming).
+  </p>
+  <p class="body-1">
+    During my study, I had a small side hustle where I 3D-printed my own designed masks. I posted
+    it online and people liked my cosplay, how they are being built or how the design processes
+    are done. They can see how their favorite game characters are coming to life, from 3D
+    sketching towards a realistic and physical design.
+  </p>
+  <p class="quote">
+    "I am really trying to bring the fantasy of the game and characters into our reality."
+  </p>
+  <p class="body-1">
+    You also learn how to develop and design a game with my study, but that was a bit superficial:
+    everything is either a big flat screen or in code. With cosplay, you can do more than only
+    visual design on-screen: moving parts, LED lights, and robotics. I am really trying to bring
+    the fantasy of the game into our reality. This is probably the most fun and challenging aspect
+    of cosplay.
+  </p>
+
+
+  <p class="text-h5">What kinds of techniques do you use to create your cosplays?</p>
+  <p class="body-1">
+    My toolkit has grown over the last couple of years. Obviously, in the beginning, you only have
+    a precision knife, glue, and some paper material. Nowadays, I have multiple 3D printers to
+    create my work. I also got a laser cutter that I use for cutting foam or vinyl more easily. I
+    make my own 2D and 3D patterns for sewing and cutting.
+  </p>
+  <p class="quote">
+    "I created my entire body in 3D so I can easily make cosplay for myself."
+  </p>
+  <p class="body-1">
+    One technique that I myself have created for creating my cosplays, is that I created my entire
+    body in 3D so that I can easily make cosplay for myself. Normally, you take scissors and try
+    to cut cloth and material until it fits. Now I can do this all digitally. This saves more time
+    for me to create new designs or cosplays.
+  </p>
+
+
+  <p class="text-h5">How did you make cosplaying your profession and what were the obstacles?</p>
+
+  <img src="https://esa-blueshell.nl/api/download/willow2.jpg" class="ma-4"
+       style="max-width: 40%;float: left" alt="Cosplay photo"/>
+  <p class="body-1">
+    While I was studying at Saxion, some people were interested in my cosplay
+    props via friends or social media. Back then, I made a pistol from D.Va from Overwatch for
+    someone. I discovered through my study that I enjoyed making physical props rather than
+    becoming a game designer. I also like to work on my own.
+  </p>
+  <p class="body-1">
+    One big obstacle to going professional is the time investment in tailor-made props. Once you
+    spend a lot of time on the designing and prototyping of such props, you only made it for one
+    person, which is economically inefficient.
+  </p>
+  <p class="body-1">
+    With the advent of 3D printing machines, I can now easily design horns and masks and sell them
+    en masse. I sell hundreds of them every year. This made me decide to make my hobby a full-time
+    job.
+  </p>
+
+  <p class="text-h5">What are the advantages and disadvantages of being a cosplayer?</p>
+  <p class="body-1">
+    Before corona, I would attend conventions once or twice a month. There are a lot of
+    disadvantages when you are wearing big and bulky cosplay. Dragging along all the equipment all
+    day long is a hassle. Also, visitors that don’t know how to behave near cosplay outfits,
+    thinking that they are allowed to touch our costumes or don’t know some parts are vulnerable.
+  </p>
+  <p class="quote">
+    "I sometimes make props for gaming companies such as Jagex (Runescape), Blizzard (World of
+    Warcraft), and Riot Games (League of Legends)."
+  </p>
+  <p class="body-1">
+    Connecting with other people on the internet with a passion for cosplay is also really fun and
+    great. With that exposure, lots of big companies are contacting me for promotion campaigns and
+    to sponsor products. I sometimes make props for gaming companies such as Jagex (Runescape),
+    Blizzard (World of Warcraft). Also, doing this work individually offers me the freedom that I
+    like. I mostly have three or four projects running at the same time, picking up projects
+    whenever I feel like it.
+  </p>
+
+  <p class="text-h5">What is your favorite type of costume to create? </p>
+  <p class="body-1">
+    It’s hard to say because I like to craft or create something new. If I am making the same sort
+    of body armor or pauldrons, then the fun’s gone. I prefer always designing something new. It
+    can be anything: wings, suits, etc. Sometimes I stick to one aspect, but after a few versions
+    or variations, I will challenge myself and look towards other new components that I can make.
+  </p>
+</div>
+', '2022-03-06 14:50:03');
