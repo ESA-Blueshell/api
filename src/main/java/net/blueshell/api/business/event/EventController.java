@@ -9,19 +9,15 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.DateTime;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.services.calendar.model.EventDateTime;
 import com.wordnik.swagger.annotations.ApiParam;
+import net.blueshell.api.business.user.Role;
+import net.blueshell.api.business.user.User;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
 import net.blueshell.api.daos.Dao;
-import net.blueshell.api.business.user.UserDao;
-import net.blueshell.api.business.user.Role;
-import net.blueshell.api.business.user.User;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.FileInputStream;
@@ -39,8 +35,13 @@ import java.util.stream.Collectors;
 @RestController
 public class EventController extends AuthorizationController {
 
+
+    //TODO: CHANGE TO BLUESHELL CALENDAR!!!!!!!!!1!!!!!111!!
+    //TODO: This is now the sitecie calendar lol
+    private static final String GOOGLE_CALENDAR_ID = "9cugc57n2rc43p6o1r0povepe0@group.calendar.google.com";
+
     private final Dao<Event> dao = new EventDao();
-    private final UserDao userDao = new UserDao();
+
     private Calendar service;
 
     {
@@ -74,57 +75,29 @@ public class EventController extends AuthorizationController {
 
     @PostMapping(value = "/events")
     public Object createEvent(@RequestBody EventDTO eventDTO) {
+        Event event = eventDTO.toEvent();
         User authedUser = getPrincipal();
         if (authedUser == null) {
             return StatusCodes.FORBIDDEN;
         }
-        Set<Long> authedUserCommitteeIds = authedUser.getCommitteeIds();
-        Event event = eventDTO.toEvent();
-        try {
-            if (authedUserCommitteeIds.contains(event.getCommitteeId()) || hasAuthorization(Role.BOARD)) {
-                try {
-                    String googleId = addToGoogleCalendar(event);
-                    event.setGoogleId(googleId);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return StatusCodes.INTERNAL_SERVER_ERROR;
-                }
-                dao.create(event);
-            } else {
-                System.out.println(authedUserCommitteeIds);
-                System.out.println(event.getCommitteeId());
-                return StatusCodes.FORBIDDEN;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return StatusCodes.BAD_REQUEST;
+        // Check if user is part of the event's committee or is board
+        if (!authedUser.getCommitteeIds().contains(event.getCommitteeId()) && !hasAuthorization(Role.BOARD)) {
+            return StatusCodes.FORBIDDEN;
         }
+        // Add to google calendar
+        try {
+            com.google.api.services.calendar.model.Event googleEvent = event.toGoogleEvent();
+            googleEvent = service.events().insert(GOOGLE_CALENDAR_ID, googleEvent).execute();
+            event.setGoogleId(googleEvent.getId());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return StatusCodes.INTERNAL_SERVER_ERROR;
+        }
+        // Add to database
+        event.setCreator(authedUser);
+        event.setLastEditor(authedUser);
+        dao.create(event);
         return event;
-    }
-
-    private String addToGoogleCalendar(Event event) throws IOException {
-        com.google.api.services.calendar.model.Event googleEvent = new com.google.api.services.calendar.model.Event();
-        googleEvent.setSummary(event.getTitle())
-                .setDescription(event.getDescription())
-                .setLocation(event.getLocation());
-
-        //TODO: check if timezones are correct!!
-        DateTime startDateTime = new DateTime(event.getStartTime().getTime());
-        EventDateTime start = new EventDateTime()
-                .setDateTime(startDateTime)
-                .setTimeZone("Europe/Amsterdam");
-        googleEvent.setStart(start);
-
-        DateTime endDateTime = new DateTime(event.getEndTime().getTime());
-        EventDateTime end = new EventDateTime()
-                .setDateTime(endDateTime)
-                .setTimeZone("Europe/Amsterdam");
-        googleEvent.setEnd(end);
-        //TODO: CHANGE TO BLUESHELL CALENDAR!!!!!!!!!1!!!!!111!!
-        //TODO: This is now live
-        String calendarId = "c_kqp2ru792pn7ghnra32802b3mg@group.calendar.google.com";
-        googleEvent = service.events().insert(calendarId, googleEvent).execute();
-        return googleEvent.getHtmlLink().replace("https://www.google.com/calendar/event?eid=", "").split("&tmsrc")[0];
     }
 
     @GetMapping(value = "/events/{id}")
@@ -133,9 +106,6 @@ public class EventController extends AuthorizationController {
             @PathVariable("id") String id) {
         Event event = dao.getById(Long.parseLong(id));
         if (event == null) {
-            return StatusCodes.NOT_FOUND;
-        }
-        if (!event.canSee(getPrincipal())) {
             return StatusCodes.NOT_FOUND;
         }
         return event;
@@ -153,32 +123,61 @@ public class EventController extends AuthorizationController {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    //TODO: TEST THIS SHIT
-    @PreAuthorize(("hasAuthority('BOARD')"))
     @DeleteMapping(value = "/events/{id}")
     public Object deleteEventById(@PathVariable("id") String id) {
         Event event = dao.getById(Long.parseLong(id));
-        if(event == null) {
+        if (event == null) {
             return StatusCodes.NOT_FOUND;
         }
-        com.google.api.services.calendar.model.Event googleEvent = new com.google.api.services.calendar.model.Event();
-        googleEvent.remove(event.getGoogleId(), event);
+        // Check if user is part of the event's committee or is board
+        User authedUser = getPrincipal();
+        if (!authedUser.getCommitteeIds().contains(event.getCommitteeId()) && !hasAuthorization(Role.BOARD)) {
+            return StatusCodes.FORBIDDEN;
+        }
+        // Delete the event in the google calendar
+        try {
+            service.events().delete(GOOGLE_CALENDAR_ID, event.getGoogleId()).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return StatusCodes.INTERNAL_SERVER_ERROR;
+        }
+        // Delete the event in the database
         dao.delete(Long.parseLong(id));
         return StatusCodes.OK;
     }
 
-    //TODO: TEST THIS SHIT
-    @PreAuthorize(("hasAuthority('BOARD')"))
     @PutMapping(value = "/events/{id}")
-    public Object createOrUpdateEvent(@RequestBody EventDTO eventDTO) {
-        Event evnt = dao.getById(eventDTO.toEvent().getId());
-        if(evnt == null) {
-            // create new event
-            return createEvent(eventDTO);
-        } else {
-            dao.update(evnt);
-
+    public Object createOrUpdateEvent(@PathVariable("id") String id, @RequestBody EventDTO eventDTO) {
+        Event oldEvent = dao.getById(Long.parseLong(id));
+        Event newEvent = eventDTO.toEvent();
+        // Check if event exists
+        if (oldEvent == null) {
+            return StatusCodes.NOT_FOUND;
         }
+        // Check if user is allowed to edit the old and new event
+        User lastEditor = getPrincipal();
+        Set<Long> committeeIds = lastEditor.getCommitteeIds();
+        if (!(committeeIds.contains(oldEvent.getCommitteeId()) || committeeIds.contains(newEvent.getCommitteeId()))) {
+            if (!hasAuthorization(Role.BOARD)) {
+                return StatusCodes.FORBIDDEN;
+            }
+        }
+
+        // Update event in googel calendar
+        String googleId = oldEvent.getGoogleId();
+        newEvent.setGoogleId(googleId);
+        try {
+            com.google.api.services.calendar.model.Event googleEvent = newEvent.toGoogleEvent();
+            service.events().update(GOOGLE_CALENDAR_ID, googleId, googleEvent).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return StatusCodes.INTERNAL_SERVER_ERROR;
+        }
+
+        // Update event in database
+        newEvent.setId(Long.parseLong(id));
+        newEvent.setLastEditor(lastEditor);
+        dao.update(newEvent);
         return StatusCodes.OK;
     }
 }

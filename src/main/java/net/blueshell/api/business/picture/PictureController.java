@@ -57,7 +57,7 @@ public class PictureController extends AuthorizationController {
             return StatusCodes.NOT_FOUND;
         }
         Event event = eventDao.getById(pic.getEventId());
-        if (event != null && event.canSee(userDao.getByUsername(getAuthorizedUsername()))) {
+        if (event != null) {
             return pic;
         } else {
             return StatusCodes.FORBIDDEN;

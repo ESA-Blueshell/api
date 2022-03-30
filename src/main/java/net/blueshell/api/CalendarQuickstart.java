@@ -16,7 +16,6 @@ import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Events;
 import net.blueshell.api.db.DatabaseManager;
 import net.blueshell.api.business.event.Event;
-import net.blueshell.api.business.event.Visibility;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -39,7 +38,7 @@ public class CalendarQuickstart {
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
     private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR_READONLY);
-    private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
+    private static final String CREDENTIALS_FILE_PATH = "credentials.json";
 
     /**
      * Creates an authorized Credential object.
@@ -50,7 +49,7 @@ public class CalendarQuickstart {
      */
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         // Load client secrets.
-        InputStream in = new FileInputStream("credentials.json");
+        InputStream in = new FileInputStream(CREDENTIALS_FILE_PATH);
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
         // Build flow and trigger user authorization request.
@@ -119,7 +118,9 @@ public class CalendarQuickstart {
             event.setTitle(gevent.getSummary());
             event.setLocation(gevent.getLocation());
             event.setDescription(gevent.getDescription());
-            event.setVisibility(Visibility.PUBLIC);
+            event.setVisible(true);
+            event.setMembersOnly(false);
+            event.setSignUp(false);
             // Check if it's an all day event or not
             if (gevent.getStart().getDateTime() == null) {
                 // It's an all day event, so only set the start time
@@ -139,7 +140,7 @@ public class CalendarQuickstart {
 
             }
 
-            event.setGoogleId(gevent.getHtmlLink().replace("https://www.google.com/calendar/event?eid=", "").split("&tmsrc")[0]);
+            event.setGoogleId(gevent.getId());
             session.save(event);
         });
     }

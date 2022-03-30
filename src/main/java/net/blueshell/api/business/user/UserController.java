@@ -44,7 +44,6 @@ public class UserController extends AuthorizationController {
         return StatusCodes.OK;
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = "/users/{id}")
     public Object getUserById(
             @ApiParam(name = "Id of the user")
@@ -56,7 +55,7 @@ public class UserController extends AuthorizationController {
         if (!isAuthedForUser(user)) {
             return StatusCodes.FORBIDDEN;
         }
-        return user;
+        return new SimpleUserDTO(user);
     }
 
     @DeleteMapping(value = "/users/{id}")

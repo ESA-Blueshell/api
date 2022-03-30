@@ -81,12 +81,15 @@ create table events
   committee_id   bigint,                # committee
   title          varchar(255) not null,
   description    varchar(255) not null,
-  visibility     varchar(255) not null, # Enum
   location       varchar(255),
   start_time     datetime,
-  banner_id      bigint,                # picture
+  image_id       bigint,                # promo pic
   price_member   double,
   price_public   double,
+  visible        bool not null,
+  members_only   bool,
+  sign_up        bool not null,
+  sign_up_form   json,
   primary key (id),
   foreign key (creator_id) references users (id),
   foreign key (last_editor_id) references users (id),

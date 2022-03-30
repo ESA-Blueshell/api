@@ -2,11 +2,12 @@ package net.blueshell.api.business.event;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.model.EventDateTime;
 import lombok.Data;
 import net.blueshell.api.business.billable.Billable;
 import net.blueshell.api.business.committee.Committee;
 import net.blueshell.api.business.picture.Picture;
-import net.blueshell.api.business.user.Role;
 import net.blueshell.api.business.user.User;
 
 import javax.persistence.*;
@@ -42,13 +43,13 @@ public class Event {
     @JsonIgnore
     private Committee committee;
 
+    @JoinColumn(name = "title")
     private String title;
 
+    @JoinColumn(name = "description")
     private String description;
 
-    @Enumerated(EnumType.STRING)
-    private Visibility visibility;
-
+    @JoinColumn(name = "location")
     private String location;
 
     @Column(name = "start_time")
@@ -83,20 +84,36 @@ public class Event {
     @Column(name = "google_id")
     private String googleId;
 
+    @Column(name = "visible")
+    private boolean visible;
+
+    @Column(name = "members_only")
+    private boolean membersOnly;
+
+    @Column(name = "sign_up")
+    private boolean signUp;
+
+    @Column(name = "sign_up_form")
+    private String signUpForm;
+
+
     public Event() {
     }
 
-    public Event(Committee committee, String title, String description, Visibility visibility, String location, Timestamp startTime, Timestamp endTime, Picture banner, String memberPrice, String publicPrice) {
+    public Event(Committee committee, String title, String description, String location, Timestamp startTime, Timestamp endTime, Picture banner, String memberPrice, String publicPrice, boolean visible, boolean membersOnly, boolean signUp, String signUpForm) {
         this.committee = committee;
         this.title = title;
         this.description = description;
-        this.visibility = visibility;
         this.location = location;
         this.startTime = startTime;
         this.endTime = endTime;
         this.banner = banner;
         this.memberPrice = Double.parseDouble(memberPrice);
         this.publicPrice = Double.parseDouble(publicPrice);
+        this.visible = visible;
+        this.membersOnly = membersOnly;
+        this.signUp = signUp;
+        this.signUpForm = signUpForm;
     }
 
     /**
@@ -169,23 +186,6 @@ public class Event {
         return Objects.hash(id);
     }
 
-    public boolean canSee(User user) {
-        Visibility vis = getVisibility();
-        // public: available to everyone
-        // internal: members only
-        // private: committee only
-        if (user == null) {
-            return vis == null || vis == Visibility.PUBLIC;
-        }
-
-        boolean canSee = vis == Visibility.PUBLIC || user.hasRole(Role.MEMBER);
-        if (canSee && vis == Visibility.PRIVATE) {
-            canSee = user.hasRole(Role.BOARD) || (getCommittee() != null && getCommittee().hasMember(user));
-        }
-
-        return canSee;
-    }
-
     /**
      * Checks if this Event is in the given month
      *
@@ -212,5 +212,26 @@ public class Event {
             e.printStackTrace();
             return false;
         }
+    }
+
+    com.google.api.services.calendar.model.Event toGoogleEvent() {
+        com.google.api.services.calendar.model.Event googleEvent = new com.google.api.services.calendar.model.Event();
+        googleEvent.setSummary(title)
+                .setDescription(description)
+                .setLocation(location);
+
+        //TODO: check if timezones are correct!!
+        DateTime startDateTime = new DateTime(startTime.getTime());
+        EventDateTime start = new EventDateTime()
+                .setDateTime(startDateTime)
+                .setTimeZone("Europe/Amsterdam");
+        googleEvent.setStart(start);
+
+        DateTime endDateTime = new DateTime(endTime.getTime());
+        EventDateTime end = new EventDateTime()
+                .setDateTime(endDateTime)
+                .setTimeZone("Europe/Amsterdam");
+        googleEvent.setEnd(end);
+        return googleEvent;
     }
 }

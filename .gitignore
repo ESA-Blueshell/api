@@ -32,3 +32,5 @@
 .cfg.xml
 
 /uploads
+
+credentials.json

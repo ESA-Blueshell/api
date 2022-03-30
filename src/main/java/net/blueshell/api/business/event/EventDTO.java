@@ -1,10 +1,10 @@
 package net.blueshell.api.business.event;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import net.blueshell.api.business.committee.CommitteeDao;
-import net.blueshell.api.business.picture.PictureDao;
 import net.blueshell.api.business.committee.Committee;
+import net.blueshell.api.business.committee.CommitteeDao;
 import net.blueshell.api.business.picture.Picture;
+import net.blueshell.api.business.picture.PictureDao;
 
 import java.sql.Timestamp;
 
@@ -21,9 +21,6 @@ public class EventDTO {
 
     @JsonProperty("description")
     private String description;
-
-    @JsonProperty("visibility")
-    private String visibility;
 
     @JsonProperty("location")
     private String location;
@@ -43,15 +40,28 @@ public class EventDTO {
     @JsonProperty("publicPrice")
     private String publicPrice;
 
+    @JsonProperty("visible")
+    private boolean visible;
+
+    @JsonProperty("membersOnly")
+    private boolean membersOnly;
+
+    @JsonProperty("signUp")
+    private boolean signUp;
+
+    @JsonProperty("signUpForm")
+    private String signUpForm;
+
 
     public Event toEvent() {
         Committee committee = committeeDao.getById(Integer.parseInt(committeeId));
-        Visibility visibility = Visibility.valueOf(this.visibility);
         Timestamp startTime = Timestamp.valueOf(this.startTime);
         Timestamp endTime = Timestamp.valueOf(this.endTime);
-        Picture banner = pictureDao.getById(Integer.parseInt(bannerId));
-        return new Event(committee, title, description, visibility,
-                location, startTime, endTime, banner, memberPrice, publicPrice);
+        //TODO: Promo picture currently disabled
+//        Picture banner = pictureDao.getById(Integer.parseInt(bannerId));
+        Picture banner = null;
+        return new Event(committee, title, description,
+                location, startTime, endTime, banner, memberPrice, publicPrice, visible, membersOnly, signUp, signUpForm);
     }
 
 }

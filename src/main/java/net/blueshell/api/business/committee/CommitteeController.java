@@ -1,24 +1,31 @@
 package net.blueshell.api.business.committee;
 
 import com.wordnik.swagger.annotations.ApiParam;
+import net.blueshell.api.business.user.Role;
+import net.blueshell.api.business.user.User;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
 import net.blueshell.api.daos.Dao;
-import net.blueshell.api.business.user.Role;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 public class CommitteeController extends AuthorizationController {
 
     private final Dao<Committee> dao = new CommitteeDao();
 
-    @PreAuthorize("hasAuthority('BOARD')")
     @GetMapping(value = "/committees")
-    public List<Committee> getCommittees() {
-        return dao.list();
+    public Object getCommittees() {
+        User authedUser = getPrincipal();
+        if (authedUser == null) {
+            return StatusCodes.FORBIDDEN;
+        }
+        Set<Long> authedUserCommitteeIds = authedUser.getCommitteeIds();
+        return dao.list().stream().filter(committee -> authedUserCommitteeIds.contains(committee.getId())).collect(Collectors.toList());
+
     }
 
     @PreAuthorize("hasAuthority('BOARD')")
