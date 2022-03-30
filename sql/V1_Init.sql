@@ -83,7 +83,7 @@ create table events
   description    varchar(255) not null,
   location       varchar(255),
   start_time     datetime,
-  image_id       bigint,                # promo pic
+  banner_id      bigint,                # promo pic
   price_member   double,
   price_public   double,
   visible        bool not null,
