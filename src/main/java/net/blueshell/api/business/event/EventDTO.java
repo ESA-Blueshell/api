@@ -6,7 +6,10 @@ import net.blueshell.api.business.committee.CommitteeDao;
 import net.blueshell.api.business.picture.Picture;
 import net.blueshell.api.business.picture.PictureDao;
 
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.TimeZone;
 
 public class EventDTO {
 
@@ -55,8 +58,28 @@ public class EventDTO {
 
     public Event toEvent() {
         Committee committee = committeeDao.getById(Integer.parseInt(committeeId));
-        Timestamp startTime = Timestamp.valueOf(this.startTime);
-        Timestamp endTime = Timestamp.valueOf(this.endTime);
+
+//        long startTimeLong = Timestamp.valueOf(this.startTime).getTime();
+//        long endTimeLong = Timestamp.valueOf(this.endTime).getTime();
+//
+//        TimeZone timeZone = TimeZone.getTimeZone("Europe/Amsterdam");
+//
+//        startTimeLong += timeZone.getRawOffset();
+//        if (timeZone.inDaylightTime(Date.valueOf(this.startTime.split(" ")[0]))) {
+//            startTimeLong += timeZone.getDSTSavings();
+//        }
+//        Timestamp startTime = new Timestamp(startTimeLong);
+//
+//        endTimeLong += timeZone.getRawOffset();
+//        if (timeZone.inDaylightTime(Date.valueOf(this.endTime.split(" ")[0]))) {
+//            endTimeLong += timeZone.getDSTSavings();
+//        }
+//        Timestamp endTime = new Timestamp(endTimeLong);
+
+        LocalDateTime startTime = LocalDateTime.parse(this.startTime.replace(' ','T'));
+        LocalDateTime endTime = LocalDateTime.parse(this.endTime.replace(' ','T'));
+
+
         //TODO: Promo picture currently disabled
 //        Picture banner = pictureDao.getById(Integer.parseInt(bannerId));
         Picture banner = null;

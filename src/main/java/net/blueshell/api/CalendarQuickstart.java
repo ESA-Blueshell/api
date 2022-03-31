@@ -14,8 +14,8 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Events;
-import net.blueshell.api.db.DatabaseManager;
 import net.blueshell.api.business.event.Event;
+import net.blueshell.api.db.DatabaseManager;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -24,9 +24,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CalendarQuickstart {
     private static final String APPLICATION_NAME = "Google Calendar API Java Quickstart";
@@ -37,7 +40,7 @@ public class CalendarQuickstart {
      * Global instance of the scopes required by this quickstart.
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
-    private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR_READONLY);
+    private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR);
     private static final String CREDENTIALS_FILE_PATH = "credentials.json";
 
     /**
@@ -87,6 +90,7 @@ public class CalendarQuickstart {
                     .build();
 
             long lastTime = currentTime + 15778800000L; //6 months ahead
+//            long lastTime = currentTime + 31557600000L; //12 months ahead
 
             while (startTime < lastTime) {
                 long endTime = startTime + 2629800000L; // add a month
@@ -124,20 +128,15 @@ public class CalendarQuickstart {
             // Check if it's an all day event or not
             if (gevent.getStart().getDateTime() == null) {
                 // It's an all day event, so only set the start time
-                event.setStartTime(new Timestamp(gevent.getStart().getDate().getValue()));
+
+                // Date toString is yyyy-mm-dd, so split on "-" and turn all of them into ints
+                List<Integer> splitStartDate = Arrays.stream(gevent.getStart().getDate().toString().split("-")).map(Integer::parseInt).collect(Collectors.toList());
+                event.setStartTime(LocalDateTime.of(splitStartDate.get(0), splitStartDate.get(1), splitStartDate.get(2), 0, 0));
             } else {
                 // Set start time
-                event.setStartTime(new Timestamp(gevent.getStart().getDateTime().getValue()));
-
-                // Check if the event is until midnight (vuetify's calendar doesn't like it when there's an event until midnight for some reason ¯\_(ツ)_/¯)
-                if (gevent.getEnd().getDateTime().toStringRfc3339().contains("00:00:00")) {
-                    // Set end time - 1 minute
-                    event.setEndTime(new Timestamp(gevent.getEnd().getDateTime().getValue() - 60000));
-                } else {
-                    // Set end time
-                    event.setEndTime(new Timestamp(gevent.getEnd().getDateTime().getValue()));
-                }
-
+                event.setStartTime(LocalDateTime.parse(gevent.getStart().getDateTime().toString(), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+                //TODO: Check if this is still relevant ---> Check if the event is until midnight (vuetify's calendar doesn't like it when there's an event until midnight for some reason ¯\_(ツ)_/¯)
+                event.setEndTime(LocalDateTime.parse(gevent.getEnd().getDateTime().toString(), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
             }
 
             event.setGoogleId(gevent.getId());

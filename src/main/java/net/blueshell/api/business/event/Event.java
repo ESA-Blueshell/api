@@ -9,11 +9,14 @@ import net.blueshell.api.business.billable.Billable;
 import net.blueshell.api.business.committee.Committee;
 import net.blueshell.api.business.picture.Picture;
 import net.blueshell.api.business.user.User;
+import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -53,10 +56,10 @@ public class Event {
     private String location;
 
     @Column(name = "start_time")
-    private Timestamp startTime;
+    private LocalDateTime startTime;
 
     @Column(name = "end_time")
-    private Timestamp endTime;
+    private LocalDateTime endTime;
 
     @OneToOne
     @JoinColumn(name = "banner_id")
@@ -100,7 +103,7 @@ public class Event {
     public Event() {
     }
 
-    public Event(Committee committee, String title, String description, String location, Timestamp startTime, Timestamp endTime, Picture banner, String memberPrice, String publicPrice, boolean visible, boolean membersOnly, boolean signUp, String signUpForm) {
+    public Event(Committee committee, String title, String description, String location, LocalDateTime startTime, LocalDateTime endTime, Picture banner, String memberPrice, String publicPrice, boolean visible, boolean membersOnly, boolean signUp, String signUpForm) {
         this.committee = committee;
         this.title = title;
         this.description = description;
@@ -204,14 +207,11 @@ public class Event {
      * @return true if the Event is in the range
      */
     public boolean inRange(String from, String to) {
-        try {
-            Timestamp fromTimestamp = new Timestamp(new SimpleDateFormat("yyyy-MM").parse(from).getTime());
-            Timestamp toTimestamp = new Timestamp(new SimpleDateFormat("yyyy-MM").parse(to).getTime());
-            return startTime.after(fromTimestamp) && startTime.before(toTimestamp);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return false;
-        }
+        String[] fromSplit = from.split("-");
+        LocalDateTime fromDateTime = LocalDateTime.of(Integer.parseInt(fromSplit[0]),Integer.parseInt(fromSplit[1]),1,0,0);
+        String[] toSplit = to.split("-");
+        LocalDateTime toDateTime = LocalDateTime.of(Integer.parseInt(toSplit[0]),Integer.parseInt(toSplit[1]),1,0,0);
+        return startTime.isAfter(fromDateTime) && startTime.isBefore(toDateTime);
     }
 
     com.google.api.services.calendar.model.Event toGoogleEvent() {
@@ -220,14 +220,13 @@ public class Event {
                 .setDescription(description)
                 .setLocation(location);
 
-        //TODO: check if timezones are correct!!
-        DateTime startDateTime = new DateTime(startTime.getTime());
+        DateTime startDateTime = new DateTime(startTime.atZone(ZoneId.systemDefault()).toEpochSecond() * 1000);
         EventDateTime start = new EventDateTime()
                 .setDateTime(startDateTime)
                 .setTimeZone("Europe/Amsterdam");
         googleEvent.setStart(start);
 
-        DateTime endDateTime = new DateTime(endTime.getTime());
+        DateTime endDateTime = new DateTime(endTime.atZone(ZoneId.systemDefault()).toEpochSecond() * 1000);
         EventDateTime end = new EventDateTime()
                 .setDateTime(endDateTime)
                 .setTimeZone("Europe/Amsterdam");
