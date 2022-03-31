@@ -91,6 +91,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers(HttpMethod.GET, "/news/**").permitAll().and()
                 .authorizeRequests().antMatchers(HttpMethod.GET, "/event**").permitAll().and()
                 .authorizeRequests().antMatchers(HttpMethod.GET, "/download/**").permitAll().and()
+                .authorizeRequests().antMatchers(HttpMethod.GET, "/newsPageable**").permitAll().and()
 
                 // all other requests need to be authenticated
                 .authorizeRequests().anyRequest().authenticated()
