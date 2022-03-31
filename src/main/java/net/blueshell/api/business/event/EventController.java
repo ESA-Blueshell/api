@@ -81,7 +81,7 @@ public class EventController extends AuthorizationController {
             return StatusCodes.FORBIDDEN;
         }
         // Check if user is part of the event's committee or is board
-        if (!authedUser.getCommitteeIds().contains(event.getCommitteeId()) && !hasAuthorization(Role.BOARD)) {
+        if (!event.canEdit(authedUser)) {
             return StatusCodes.FORBIDDEN;
         }
         // Add to google calendar
