@@ -25,10 +25,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -115,11 +115,29 @@ public class EventController extends AuthorizationController {
     public List<Event> getEvents(
             @RequestParam(required = false) String from,
             @RequestParam(required = false) String to) {
-        Predicate<Event> timePredicate = event -> from == null || (to == null ? event.inMonth(from) : event.inRange(from, to));
+        User authedUser = getPrincipal();
+
+        Predicate<Event> predicate = event -> event.canSee(authedUser)
+                && from == null || (to == null ? event.inMonth(from) : event.inRange(from, to));
 
         return dao.list().stream()
-                .filter(timePredicate)
-//                .filter(event -> event.canSee(userDao.getByUsername(getAuthorizedUsername())))
+                .filter(predicate)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    @GetMapping(value = "/events/upcoming")
+    public List<Event> getUpcomingEvents(@RequestParam(required = false) boolean editable) {
+        Predicate<Event> predicate;
+
+        if (editable) {
+            User authedUser = getPrincipal();
+            predicate = event -> event.getStartTime().isAfter(LocalDateTime.now()) && event.canEdit(authedUser);
+        } else {
+            predicate = event -> event.getStartTime().isAfter(LocalDateTime.now());
+        }
+
+        return dao.list().stream()
+                .filter(predicate)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -131,7 +149,7 @@ public class EventController extends AuthorizationController {
         }
         // Check if user is part of the event's committee or is board
         User authedUser = getPrincipal();
-        if (!authedUser.getCommitteeIds().contains(event.getCommitteeId()) && !hasAuthorization(Role.BOARD)) {
+        if (!event.canEdit(authedUser)) {
             return StatusCodes.FORBIDDEN;
         }
         // Delete the event in the google calendar
@@ -155,12 +173,9 @@ public class EventController extends AuthorizationController {
             return StatusCodes.NOT_FOUND;
         }
         // Check if user is allowed to edit the old and new event
-        User lastEditor = getPrincipal();
-        Set<Long> committeeIds = lastEditor.getCommitteeIds();
-        if (!(committeeIds.contains(oldEvent.getCommitteeId()) || committeeIds.contains(newEvent.getCommitteeId()))) {
-            if (!hasAuthorization(Role.BOARD)) {
-                return StatusCodes.FORBIDDEN;
-            }
+        User authedUser = getPrincipal();
+        if (!(oldEvent.canEdit(authedUser) || newEvent.canEdit(authedUser))) {
+            return StatusCodes.FORBIDDEN;
         }
 
         // Update event in googel calendar
@@ -176,7 +191,7 @@ public class EventController extends AuthorizationController {
 
         // Update event in database
         newEvent.setId(Long.parseLong(id));
-        newEvent.setLastEditor(lastEditor);
+        newEvent.setLastEditor(authedUser);
         dao.update(newEvent);
         return StatusCodes.OK;
     }

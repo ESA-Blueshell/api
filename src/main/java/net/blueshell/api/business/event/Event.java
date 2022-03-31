@@ -8,13 +8,10 @@ import lombok.Data;
 import net.blueshell.api.business.billable.Billable;
 import net.blueshell.api.business.committee.Committee;
 import net.blueshell.api.business.picture.Picture;
+import net.blueshell.api.business.user.Role;
 import net.blueshell.api.business.user.User;
-import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashSet;
@@ -208,9 +205,9 @@ public class Event {
      */
     public boolean inRange(String from, String to) {
         String[] fromSplit = from.split("-");
-        LocalDateTime fromDateTime = LocalDateTime.of(Integer.parseInt(fromSplit[0]),Integer.parseInt(fromSplit[1]),1,0,0);
+        LocalDateTime fromDateTime = LocalDateTime.of(Integer.parseInt(fromSplit[0]), Integer.parseInt(fromSplit[1]), 1, 0, 0);
         String[] toSplit = to.split("-");
-        LocalDateTime toDateTime = LocalDateTime.of(Integer.parseInt(toSplit[0]),Integer.parseInt(toSplit[1]),1,0,0);
+        LocalDateTime toDateTime = LocalDateTime.of(Integer.parseInt(toSplit[0]), Integer.parseInt(toSplit[1]), 1, 0, 0);
         return startTime.isAfter(fromDateTime) && startTime.isBefore(toDateTime);
     }
 
@@ -232,5 +229,13 @@ public class Event {
                 .setTimeZone("Europe/Amsterdam");
         googleEvent.setEnd(end);
         return googleEvent;
+    }
+
+    public boolean canSee(User user) {
+        return visible || canEdit(user);
+    }
+
+    public boolean canEdit(User user) {
+        return user.getCommitteeIds().contains(committee.getId()) || user.getAuthorities().contains(Role.BOARD);
     }
 }
