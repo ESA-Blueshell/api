@@ -6,13 +6,13 @@ public interface Dao<T> {
 
     List<T> list();
 
-    T getById(long id);
+    T getById(Object id);
 
     // .save() generates an ID, .persists() doesn't
     T create(T t);
 
     void update(T t);
 
-    void delete(long id);
+    void delete(Object id);
 
 }

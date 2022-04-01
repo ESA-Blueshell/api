@@ -39,7 +39,7 @@ public class SessionWrapper<T> {
         return list;
     }
 
-    public T getById(long id) {
+    public T getById(Object id) {
         T obj = null;
         boolean done = false;
         while (!done) {
@@ -49,6 +49,7 @@ public class SessionWrapper<T> {
                 t.commit();
                 done = true;
             } catch (Exception e) {
+                e.printStackTrace();
                 System.out.println("Well that didn't work, let's try again");
             }
         }
@@ -64,6 +65,7 @@ public class SessionWrapper<T> {
                 t.commit();
                 done = true;
             } catch (Exception e) {
+                e.printStackTrace();
                 System.out.println("Well that didn't work, let's try again");
             }
         }
@@ -84,7 +86,7 @@ public class SessionWrapper<T> {
         }
     }
 
-    public void delete(long id) {
+    public void delete(Object id) {
         boolean done = false;
         while (!done) {
             try (Session session = sessionFactory.openSession()) {

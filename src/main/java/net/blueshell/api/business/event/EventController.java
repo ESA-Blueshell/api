@@ -129,11 +129,11 @@ public class EventController extends AuthorizationController {
     public List<Event> getUpcomingEvents(@RequestParam(required = false) boolean editable) {
         Predicate<Event> predicate;
 
+        User authedUser = getPrincipal();
         if (editable) {
-            User authedUser = getPrincipal();
             predicate = event -> event.getStartTime().isAfter(LocalDateTime.now()) && event.canEdit(authedUser);
         } else {
-            predicate = event -> event.getStartTime().isAfter(LocalDateTime.now());
+            predicate = event -> event.getStartTime().isAfter(LocalDateTime.now()) && event.canSee(authedUser);
         }
 
         return dao.list().stream()

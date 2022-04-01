@@ -5,6 +5,7 @@ import net.blueshell.api.business.committee.Committee;
 import net.blueshell.api.business.committee.CommitteeMembership;
 import net.blueshell.api.business.event.Event;
 import net.blueshell.api.business.event.EventFeedback;
+import net.blueshell.api.business.event.EventSignUp;
 import net.blueshell.api.business.news.News;
 import net.blueshell.api.business.picture.Picture;
 import net.blueshell.api.business.registration.Registration;
@@ -36,6 +37,7 @@ public class DatabaseManager {
                 Billable.class,
                 Committee.class,
                 Event.class,
+                EventSignUp.class,
                 EventFeedback.class,
                 Picture.class,
                 Registration.class,

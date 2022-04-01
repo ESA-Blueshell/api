@@ -236,6 +236,8 @@ public class Event {
     }
 
     public boolean canEdit(User user) {
-        return user.getCommitteeIds().contains(committee.getId()) || user.getAuthorities().contains(Role.BOARD);
+        // Check if user has board authority OR if user is in the event's committee
+        return user != null && (user.getAuthorities().stream().anyMatch(auth -> Role.valueOf(auth.getAuthority()).matchesRole(Role.BOARD))
+                || (committee != null && user.getCommitteeIds().contains(committee.getId())));
     }
 }
