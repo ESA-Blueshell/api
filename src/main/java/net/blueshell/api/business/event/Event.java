@@ -10,13 +10,14 @@ import net.blueshell.api.business.committee.Committee;
 import net.blueshell.api.business.picture.Picture;
 import net.blueshell.api.business.user.Role;
 import net.blueshell.api.business.user.User;
+import org.apache.tomcat.util.json.JSONParser;
+import org.apache.tomcat.util.json.ParseException;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "events")
@@ -239,5 +240,91 @@ public class Event {
         // Check if user has board authority OR if user is in the event's committee
         return user != null && (user.getAuthorities().stream().anyMatch(auth -> Role.valueOf(auth.getAuthority()).matchesRole(Role.BOARD))
                 || (committee != null && user.getCommitteeIds().contains(committee.getId())));
+    }
+
+
+    /**
+     * Check if this Event's sign up form is formatted properly
+     *
+     * @return true if all's good
+     */
+    public boolean validateSignUpForm() {
+        if (signUpForm == null) {
+            return false;
+        }
+        try {
+            JSONParser eventFormParser = new JSONParser(signUpForm);
+            ArrayList<Object> eventSignUpForm = eventFormParser.list();
+            eventFormParser.ensureEOF();
+
+            for (Object questionObj : eventSignUpForm) {
+                LinkedHashMap<String, Object> question = (LinkedHashMap<String, Object>) questionObj;
+
+                if (!question.containsKey("prompt") || !question.containsKey("type")) return false;
+
+                String type = (String) question.get("type");
+                if (!type.equals("open") && !type.equals("radio") && !type.equals("checkbox"))
+                    return false;
+
+                if ("radio".equals(type) || "checkbox".equals(type)) {
+                    // Schizo checking
+                    if (!question.containsKey("options") ||
+                            !(question.get("options") instanceof List) ||
+                            !(((List) question.get("options")).stream().allMatch(opt -> opt instanceof String))) {
+                        return false;
+                    }
+                }
+            }
+        } catch (ParseException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if the given answers string is compatible with this event's sign up form
+     *
+     * @param answers answers to this event's sign up form, formatted as a json array, with entries of type string, int or array<int> (example: ["hello",3,[0,2]])
+     * @return true if all's good
+     */
+    public boolean validateAnswers(String answers) {
+        if (signUpForm == null || answers == null || answers.equals("")) {
+            return false;
+        }
+        try {
+            JSONParser eventFormParser = new JSONParser(signUpForm);
+            ArrayList<Object> signUpFormList = eventFormParser.list();
+            eventFormParser.ensureEOF();
+
+            JSONParser answersParser = new JSONParser(answers);
+            ArrayList<Object> answersList = answersParser.list();
+            answersParser.ensureEOF();
+
+            if (signUpFormList.size() != answersList.size()) {
+                return false;
+            }
+            for (int i = 0; i < signUpFormList.size(); i++) {
+                Object questionObj = signUpFormList.get(i);
+                LinkedHashMap<String, Object> question = (LinkedHashMap<String, Object>) questionObj;
+                switch ((String) question.get("type")) {
+                    case "open":
+                        if (!(answersList.get(i) instanceof String)) return false;
+                        break;
+                    case "radio":
+                        if (!(answersList.get(i) instanceof BigInteger)) return false;
+                        break;
+                    case "checkbox":
+                        if (!(answersList.get(i) instanceof List) ||
+                                !(((List) answersList.get(i)).stream().allMatch(opt -> opt instanceof BigInteger)))
+                            return false;
+                        break;
+                }
+            }
+        } catch (ParseException e) {
+            return false;
+        }
+
+        return true;
     }
 }

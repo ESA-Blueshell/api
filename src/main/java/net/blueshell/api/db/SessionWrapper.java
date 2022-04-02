@@ -39,7 +39,7 @@ public class SessionWrapper<T> {
         return list;
     }
 
-    public T getById(Object id) {
+    public T getById(long id) {
         T obj = null;
         boolean done = false;
         while (!done) {
@@ -86,7 +86,7 @@ public class SessionWrapper<T> {
         }
     }
 
-    public void delete(Object id) {
+    public void delete(long id) {
         boolean done = false;
         while (!done) {
             try (Session session = sessionFactory.openSession()) {

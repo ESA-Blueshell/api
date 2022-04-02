@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
 @RestController
 public class EventSignUpController extends AuthorizationController {
     private final Dao<Event> eventDao = new EventDao();
-    private final Dao<EventSignUp> signUpDao = new EventSignUpDao();
+    private final EventSignUpDao signUpDao = new EventSignUpDao();
 
 
-    @GetMapping(value = "/events/signup")
+    @GetMapping(value = "/events/signups")
     public Object getMySignUps() {
         User authedUser = getPrincipal();
         if (authedUser == null) {
@@ -24,14 +24,14 @@ public class EventSignUpController extends AuthorizationController {
         return signUpDao.list().stream().filter(signUp -> signUp.getUserId() == authedUser.getId()).collect(Collectors.toList());
     }
 
-    @GetMapping(value = "/events/signup/{id}")
+    @GetMapping(value = "/events/signups/{id}")
     public Object getSignUp(@PathVariable("id") String eventId) {
         User authedUser = getPrincipal();
         Event event = eventDao.getById(Long.parseLong(eventId));
-        if (event == null) {
+        if (event == null || !event.canSee(authedUser)) {
             return StatusCodes.NOT_FOUND;
         }
-        if (!event.isSignUp() || !event.canEdit(authedUser)) {
+        if (!event.isSignUp()) {
             return StatusCodes.FORBIDDEN;
         }
         EventSignUpId id = new EventSignUpId(authedUser, event);
@@ -42,11 +42,11 @@ public class EventSignUpController extends AuthorizationController {
         return signUp;
     }
 
-    @GetMapping(value = "/events/signup/all/{id}")
+    @GetMapping(value = "/events/signups/all/{id}")
     public Object getAllSignUps(@PathVariable("id") String eventId) {
         User authedUser = getPrincipal();
         Event event = eventDao.getById(Long.parseLong(eventId));
-        if (event == null) {
+        if (event == null || !event.canSee(authedUser)) {
             return StatusCodes.NOT_FOUND;
         }
         if (!event.isSignUp() || !event.canEdit(authedUser)) {
@@ -55,28 +55,44 @@ public class EventSignUpController extends AuthorizationController {
         return signUpDao.list().stream().filter(signUp -> signUp.getEvent().getId() == event.getId()).collect(Collectors.toList());
     }
 
-    @PostMapping(value = "/events/signup/{id}")
-    public Object createSignUp(@PathVariable("id") String eventId, @RequestBody(required = false) String signUpForm) {
+    @PostMapping(value = "/events/signups/{id}")
+    public Object createSignUp(@PathVariable("id") String eventId, @RequestBody(required = false) String formAnswers) {
         User authedUser = getPrincipal();
         if (authedUser == null) {
             return StatusCodes.UNAUTHORIZED;
         }
 
         Event event = eventDao.getById(Long.parseLong(eventId));
-        if (!event.isSignUp() || !event.isVisible()) {
+        if (event == null || !event.canSee(authedUser)) {
+            return StatusCodes.NOT_FOUND;
+        }
+        if (!event.isSignUp()) {
             return StatusCodes.FORBIDDEN;
         }
-        if (event.getSignUpForm() != null && (signUpForm == null || signUpForm.equals(""))) {
+
+
+        // Check if the formAnswers are formatted correctly
+        if (event.getSignUpForm() != null && !event.validateAnswers(formAnswers)) {
             return StatusCodes.BAD_REQUEST;
         }
-        LocalDateTime signedUpAt = LocalDateTime.now();
 
-        EventSignUp signUp = new EventSignUp(authedUser, event, signUpForm, signedUpAt);
+        // Check if we're updating an existing sign-up or not
+        EventSignUp oldSignUp = signUpDao.getById(new EventSignUpId(authedUser, event));
+        if (oldSignUp != null) {
+            LocalDateTime signedUpAt = oldSignUp.getSignedUpAt();
+            EventSignUp signUp = new EventSignUp(authedUser, event, formAnswers, signedUpAt);
+            signUpDao.update(signUp);
+            return StatusCodes.OK;
+        }
+
+        // Create new sign-up
+        LocalDateTime signedUpAt = LocalDateTime.now();
+        EventSignUp signUp = new EventSignUp(authedUser, event, formAnswers, signedUpAt);
         signUpDao.create(signUp);
         return StatusCodes.CREATED;
     }
 
-    @DeleteMapping(value = "/events/signup/{id}")
+    @DeleteMapping(value = "/events/signups/{id}")
     public Object removeSignUp(@PathVariable("id") String eventId) {
         User authedUser = getPrincipal();
         if (authedUser == null) {

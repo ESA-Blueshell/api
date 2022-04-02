@@ -57,24 +57,7 @@ public class EventDTO {
 
 
     public Event toEvent() {
-        Committee committee = committeeDao.getById(Integer.parseInt(committeeId));
-
-//        long startTimeLong = Timestamp.valueOf(this.startTime).getTime();
-//        long endTimeLong = Timestamp.valueOf(this.endTime).getTime();
-//
-//        TimeZone timeZone = TimeZone.getTimeZone("Europe/Amsterdam");
-//
-//        startTimeLong += timeZone.getRawOffset();
-//        if (timeZone.inDaylightTime(Date.valueOf(this.startTime.split(" ")[0]))) {
-//            startTimeLong += timeZone.getDSTSavings();
-//        }
-//        Timestamp startTime = new Timestamp(startTimeLong);
-//
-//        endTimeLong += timeZone.getRawOffset();
-//        if (timeZone.inDaylightTime(Date.valueOf(this.endTime.split(" ")[0]))) {
-//            endTimeLong += timeZone.getDSTSavings();
-//        }
-//        Timestamp endTime = new Timestamp(endTimeLong);
+        Committee committee = committeeDao.getById(Long.parseLong(committeeId));
 
         LocalDateTime startTime = LocalDateTime.parse(this.startTime.replace(' ','T'));
         LocalDateTime endTime = LocalDateTime.parse(this.endTime.replace(' ','T'));

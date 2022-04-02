@@ -13,7 +13,6 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.wordnik.swagger.annotations.ApiParam;
-import net.blueshell.api.business.user.Role;
 import net.blueshell.api.business.user.User;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
@@ -77,12 +76,13 @@ public class EventController extends AuthorizationController {
     public Object createEvent(@RequestBody EventDTO eventDTO) {
         Event event = eventDTO.toEvent();
         User authedUser = getPrincipal();
-        if (authedUser == null) {
+        // Check if user is part of the event's committee or is board
+        if (authedUser == null || !event.canEdit(authedUser)) {
             return StatusCodes.FORBIDDEN;
         }
-        // Check if user is part of the event's committee or is board
-        if (!event.canEdit(authedUser)) {
-            return StatusCodes.FORBIDDEN;
+        // If the event has a sign-up, check if the new event's form is properly formatted
+        if (event.getSignUpForm() != null && !event.validateSignUpForm()) {
+            return StatusCodes.BAD_REQUEST;
         }
         // Add to google calendar
         try {
@@ -168,14 +168,18 @@ public class EventController extends AuthorizationController {
     public Object createOrUpdateEvent(@PathVariable("id") String id, @RequestBody EventDTO eventDTO) {
         Event oldEvent = dao.getById(Long.parseLong(id));
         Event newEvent = eventDTO.toEvent();
+        User authedUser = getPrincipal();
         // Check if event exists
-        if (oldEvent == null) {
+        if (oldEvent == null || !oldEvent.canSee(authedUser)) {
             return StatusCodes.NOT_FOUND;
         }
         // Check if user is allowed to edit the old and new event
-        User authedUser = getPrincipal();
         if (!(oldEvent.canEdit(authedUser) || newEvent.canEdit(authedUser))) {
             return StatusCodes.FORBIDDEN;
+        }
+        // If the event has a sign-up, check if the new event's form is properly formatted
+        if (newEvent.getSignUpForm() != null && !newEvent.validateSignUpForm()) {
+            return StatusCodes.BAD_REQUEST;
         }
 
         // Update event in googel calendar
@@ -191,6 +195,7 @@ public class EventController extends AuthorizationController {
 
         // Update event in database
         newEvent.setId(Long.parseLong(id));
+        newEvent.setCreator(oldEvent.getCreator());
         newEvent.setLastEditor(authedUser);
         dao.update(newEvent);
         return StatusCodes.OK;
