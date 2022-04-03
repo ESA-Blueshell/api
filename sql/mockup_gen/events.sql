@@ -1,101 +1,47 @@
-insert into events (id, creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, visible, members_only, sign_up) values
-(1, 27, 35, 10, 'Svengali', 'Synergized upward-trending application', 'SmartXP', '2020-02-24 07:32:37', 99, 1, 4, 1, 0, 0),
-(2, 20, 43, 12, 'Barney''s Version', 'Front-line multi-tasking interface', 'Educafe', '2019-10-18 07:11:37', 60, 2, 2, 1, 0, 0),
-(3, 25, 58, 9, 'In the Land of Blood and Honey', 'Multi-channelled incremental adapter', 'Vrijhof', '2019-07-21 17:15:16', 96, 3, 4, 1, 0, 0),
-(4, 80, 96, 16, 'Desert Bloom', 'Seamless bandwidth-monitored leverage', 'Educafe', '2020-02-18 23:59:28', 75, 0, 3, 1, 0, 0),
-(5, 5, 17, 5, 'Man Who Never Was, The', 'Open-architected modular groupware', 'Vrijhof', '2019-09-29 21:02:11', 9, 2, 2, 1, 0, 0),
-(6, 54, 63, 1, 'Crime Story (Zhong an zu)', 'Innovative system-worthy access', 'Vrijhof', '2020-04-06 22:09:36', 80, 1, 4, 1, 0, 0),
-(7, 2, 84, 20, 'How the West Was Fun', 'Monitored background algorithm', 'Global Lounge', '2020-01-15 19:31:01', 6, 0, 5, 1, 0, 0),
-(8, 73, 36, 3, 'Megaforce', 'Switchable zero administration architecture', 'HT1100', '2019-04-18 22:53:54', 34, 0, 5, 1, 0, 0),
-(9, 92, 8, 13, 'Man with No Shadow, The (Homme sans ombre, L'')', 'Distributed 6th generation product', 'Global Lounge', '2019-11-05 12:46:18', 6, 2, 5, 1, 0, 0),
-(10, 69, 31, 2, 'Jack the Giant Killer', 'Monitored explicit groupware', 'Vrijhof', '2019-08-03 15:52:26', 61, 2, 2, 1, 0, 0),
-(11, 68, 53, 11, 'Taking of Power by Louis XIV, The (Prise de pouvoir par Louis XIV, La)', 'Enterprise-wide discrete approach', 'Global Lounge', '2020-01-14 22:58:16', 90, 3, 5, 1, 0, 0),
-(12, 70, 5, 15, 'Unreal Dream: The Michael Morton Story, An', 'Configurable composite monitoring', 'Educafe', '2019-10-18 15:26:11', 3, 2, 5, 1, 0, 0),
-(13, 93, 64, 7, 'Oranges, The', 'Future-proofed composite adapter', 'HT1100', '2019-05-03 18:40:03', 72, 1, 4, 1, 0, 0),
-(14, 13, 99, 2, 'Pan', 'Sharable local open system', 'De Stek', '2019-05-03 13:11:31', 9, 3, 3, 1, 0, 0),
-(15, 58, 37, 9, 'Dragon Ball: Mystical Adventure (Doragon bôru: Makafushigi dai bôken)', 'Public-key eco-centric benchmark', 'HT1100', '2019-09-06 00:37:27', 88, 3, 2, 1, 0, 0),
-(16, 21, 84, 7, 'White Christmas', 'Innovative multi-tasking database', 'HT1100', '2019-06-12 03:15:23', 42, 3, 4, 1, 0, 0),
-(17, 32, 67, 16, 'Two Arabian Knights', 'Object-based exuding budgetary management', 'Global Lounge', '2020-03-12 18:06:49', 51, 3, 2, 1, 0, 0),
-(18, 95, 74, 4, 'Fantastic Planet, The (Planète sauvage, La)', 'Advanced national extranet', 'Vrijhof', '2019-08-10 19:43:07', 76, 2, 3, 1, 0, 0),
-(19, 22, 78, 11, 'Babylon 5: In the Beginning', 'Exclusive hybrid paradigm', 'De Stek', '2020-01-12 16:47:06', 9, 0, 5, 1, 0, 0),
-(20, 63, 8, 1, 'On the Silver Globe (Na srebrnym globie)', 'Up-sized 24/7 moderator', 'Global Lounge', '2020-04-13 01:46:48', 96, 2, 5, 1, 0, 0),
-(21, 72, 83, 8, 'Private Benjamin', 'Adaptive cohesive standardization', 'De Stek', '2019-10-06 01:13:28', 12, 0, 4, 1, 0, 0),
-(22, 26, 9, 10, 'Old Man and the Sea, The', 'Innovative client-driven pricing structure', 'De Stek', '2019-05-06 11:03:13', 90, 2, 3, 1, 0, 0),
-(23, 15, 13, 15, 'Out of Time', 'Intuitive optimal firmware', 'Vrijhof', '2020-03-16 00:56:39', 36, 0, 3, 1, 0, 0),
-(24, 57, 30, 18, 'Flower of My Secret, The (La flor de mi secreto)', 'User-friendly context-sensitive Graphic Interface', 'SmartXP', '2019-08-21 06:12:06', 2, 1, 5, 1, 0, 0),
-(25, 26, 36, 12, 'Hey Bartender', 'Inverse local secured line', 'Global Lounge', '2019-12-24 16:54:34', 60, 2, 5, 1, 0, 0),
-(26, 12, 22, 4, 'Puff, Puff, Pass', 'Adaptive multimedia workforce', 'HT1100', '2020-02-01 05:24:48', 34, 1, 2, 1, 0, 0),
-(27, 10, 87, 7, 'Pendulum', 'Self-enabling intangible infrastructure', 'Vrijhof', '2019-09-29 15:51:29', 9, 2, 3, 1, 0, 0),
-(28, 9, 35, 14, 'Postman Blues', 'Compatible high-level website', 'Vrijhof', '2019-11-08 19:35:12', 5, 3, 3, 1, 0, 0),
-(29, 57, 32, 3, 'Next Three Days, The', 'Centralized methodical emulation', 'De Stek', '2020-02-21 08:08:36', 29, 2, 2, 1, 0, 0),
-(30, 63, 96, 12, 'Crime Story (Zhong an zu)', 'Multi-lateral motivating installation', 'Global Lounge', '2019-11-01 01:23:41', 71, 1, 5, 1, 0, 0),
-(31, 19, 39, 16, 'Right Kind of Wrong, The', 'Grass-roots real-time methodology', 'Vrijhof', '2019-12-06 01:17:25', 65, 1, 5, 1, 0, 0),
-(32, 82, 59, 19, 'Red River', 'Centralized methodical access', 'Vrijhof', '2020-01-27 18:35:01', 93, 1, 4, 1, 0, 0),
-(33, 88, 51, 4, 'Great Day in the Morning', 'Multi-lateral mobile superstructure', 'Global Lounge', '2019-08-01 03:26:29', 31, 1, 4, 1, 0, 0),
-(34, 53, 12, 17, 'Too Many Cooks', 'Streamlined next generation conglomeration', 'Educafe', '2019-11-03 06:18:50', 18, 3, 2, 1, 0, 0),
-(35, 27, 61, 17, 'Melancholia', 'Extended zero tolerance installation', 'Global Lounge', '2019-09-29 16:26:04', 50, 2, 3, 1, 0, 0),
-(36, 20, 22, 15, 'Hangover Square', 'Enterprise-wide executive frame', 'Global Lounge', '2020-02-06 03:53:06', 63, 1, 2, 1, 0, 0),
-(37, 15, 1, 13, 'Sorrow and Joy (Sorg og glæde)', 'Stand-alone neutral application', 'HT1100', '2020-04-11 18:59:54', 74, 2, 4, 1, 0, 0),
-(38, 61, 90, 11, 'Phone Call from a Stranger', 'Synergistic foreground matrices', 'Educafe', '2020-01-14 22:59:09', 62, 0, 2, 1, 0, 0),
-(39, 2, 59, 14, 'Onechanbara - Zombie Bikini Squad (a.k.a. Oneechanbara: The Movie)', 'Stand-alone 6th generation system engine', 'HT1100', '2019-10-13 06:29:35', 85, 0, 3, 1, 0, 0),
-(40, 90, 68, 10, 'Man in the Wilderness', 'Versatile demand-driven budgetary management', 'Educafe', '2019-05-01 23:46:15', 48, 3, 3, 1, 0, 0),
-(41, 32, 58, 7, 'Forgiveness of Blood, The (Falja e gjakut)', 'Up-sized scalable matrices', 'Vrijhof', '2019-12-01 08:33:40', 49, 3, 3, 1, 0, 0),
-(42, 75, 30, 18, 'Daddy Long Legs', 'Automated exuding database', 'De Stek', '2019-09-15 01:06:01', 77, 0, 3, 1, 0, 0),
-(43, 16, 25, 18, 'Gentleman''s Agreement', 'Multi-tiered uniform matrices', 'SmartXP', '2019-05-05 10:00:28', 43, 0, 4, 1, 0, 0),
-(44, 51, 91, 10, 'Abbott and Costello in the Foreign Legion', 'Managed national workforce', 'De Stek', '2019-12-12 01:12:53', 68, 0, 2, 1, 0, 0),
-(45, 86, 50, 4, 'Comanche Station', 'Reduced tertiary middleware', 'Vrijhof', '2019-08-30 06:07:18', 21, 3, 4, 1, 0, 0),
-(46, 93, 52, 18, 'Moonbase', 'Networked radical pricing structure', 'Global Lounge', '2019-06-12 12:28:48', 31, 1, 2, 1, 0, 0),
-(47, 79, 100, 8, 'Heiress, The', 'Proactive hybrid policy', 'Vrijhof', '2019-10-08 18:48:01', 73, 2, 4, 1, 0, 0),
-(48, 66, 7, 5, 'Charlie Chan and the Curse of the Dragon Queen', 'Virtual coherent software', 'SmartXP', '2019-06-07 15:21:44', 88, 1, 3, 1, 0, 0),
-(49, 70, 38, 19, 'Certified Copy (Copie conforme)', 'Profound scalable throughput', 'Educafe', '2019-12-05 15:13:42', 4, 2, 3, 1, 0, 0),
-(50, 86, 55, 5, 'Not for or Against (Quite the Contrary) (Ni pour, ni contre (bien au contraire))', 'Mandatory neutral synergy', 'De Stek', '2020-01-07 08:36:00', 12, 3, 5, 1, 0, 0),
-(51, 82, 8, 15, 'Frozen', 'Re-engineered tangible implementation', 'De Stek', '2019-12-19 05:21:23', 17, 0, 4, 1, 0, 0),
-(52, 67, 43, 19, 'Wild Card', 'Public-key logistical customer loyalty', 'SmartXP', '2019-10-18 04:14:47', 77, 2, 3, 1, 0, 0),
-(53, 56, 40, 4, 'Night of the Day of the Dawn of the Son of the Bride of the Return of the Terror', 'Multi-lateral multi-state middleware', 'Vrijhof', '2020-02-19 12:48:06', 92, 2, 2, 1, 0, 0),
-(54, 86, 54, 16, 'Like Stars on Earth (Taare Zameen Par)', 'Upgradable clear-thinking leverage', 'SmartXP', '2020-03-02 14:52:56', 12, 1, 4, 1, 0, 0),
-(55, 71, 19, 7, 'Take Aim at the Police Van (Sono gosôsha wo nerae: ''Jûsangô taihisen'' yori)', 'Monitored mission-critical moderator', 'HT1100', '2020-03-05 00:44:51', 58, 2, 2, 1, 0, 0),
-(56, 5, 14, 2, 'Smoke', 'Optimized explicit task-force', 'Global Lounge', '2019-10-30 13:30:54', 50, 2, 2, 1, 0, 0),
-(57, 79, 85, 8, 'Open Range', 'Cloned bifurcated open system', 'Global Lounge', '2019-06-20 15:02:55', 65, 3, 3, 1, 0, 0),
-(58, 56, 47, 7, 'Morsian yllättää', 'Decentralized next generation orchestration', 'De Stek', '2020-03-26 12:54:37', 64, 0, 3, 1, 0, 0),
-(59, 49, 65, 10, 'Chocolat', 'Optional 24/7 alliance', 'Vrijhof', '2020-02-14 06:42:29', 16, 3, 2, 1, 0, 0),
-(60, 8, 11, 11, 'District 13 (Banlieue 13)', 'Grass-roots zero tolerance hub', 'De Stek', '2019-04-24 17:37:01', 96, 1, 4, 1, 0, 0),
-(61, 94, 85, 5, 'Sleepwalkers', 'Assimilated optimizing workforce', 'SmartXP', '2019-05-08 06:08:58', 70, 1, 5, 1, 0, 0),
-(62, 52, 91, 3, 'Bellissima', 'Implemented homogeneous core', 'Educafe', '2019-10-21 12:30:27', 30, 0, 2, 1, 0, 0),
-(63, 3, 50, 4, 'Cashback', 'Automated zero administration emulation', 'De Stek', '2019-09-23 20:43:52', 39, 3, 5, 1, 0, 0),
-(64, 82, 82, 12, 'After...', 'Organic bandwidth-monitored data-warehouse', 'Global Lounge', '2019-07-19 05:24:39', 79, 3, 5, 1, 0, 0),
-(65, 70, 72, 19, 'Outfoxed: Rupert Murdoch''s War on Journalism', 'Horizontal national structure', 'HT1100', '2019-05-25 02:09:37', 43, 1, 3, 1, 0, 0),
-(66, 27, 66, 7, 'Barefoot Executive, The', 'Re-engineered analyzing structure', 'HT1100', '2019-07-12 15:47:49', 59, 2, 4, 1, 0, 0),
-(67, 56, 64, 18, 'Kids of Survival', 'Proactive user-facing focus group', 'SmartXP', '2019-11-19 22:29:12', 73, 2, 4, 1, 0, 0),
-(68, 20, 37, 1, 'Dirty Pretty Things', 'Ameliorated systemic emulation', 'Educafe', '2019-12-09 17:31:20', 73, 1, 2, 1, 0, 0),
-(69, 48, 88, 1, 'Krush Groove', 'Profound radical architecture', 'Global Lounge', '2019-12-15 07:57:27', 22, 0, 3, 1, 0, 0),
-(70, 39, 98, 5, 'Thy Womb (Sinapupunan)', 'Ameliorated even-keeled analyzer', 'SmartXP', '2019-08-31 21:15:59', 19, 2, 5, 1, 0, 0),
-(71, 8, 87, 9, 'Musketeers of Pig Alley, The', 'Profit-focused contextually-based help-desk', 'HT1100', '2020-02-10 18:06:58', 66, 2, 5, 1, 0, 0),
-(72, 73, 6, 11, 'Harvey Girls, The', 'Pre-emptive bandwidth-monitored toolset', 'De Stek', '2019-07-11 14:28:11', 62, 2, 5, 1, 0, 0),
-(73, 78, 36, 10, 'Boom!', 'Mandatory reciprocal frame', 'SmartXP', '2019-08-09 07:02:38', 40, 2, 5, 1, 0, 0),
-(74, 85, 15, 5, 'Starting Over', 'Implemented static contingency', 'HT1100', '2020-03-12 07:50:59', 6, 3, 2, 1, 0, 0),
-(75, 81, 80, 14, 'Little Boy Blue', 'Distributed client-driven success', 'De Stek', '2019-05-15 17:40:51', 93, 1, 3, 1, 0, 0),
-(76, 18, 66, 15, 'Babbitt', 'Distributed bottom-line knowledge user', 'SmartXP', '2020-04-02 08:25:40', 89, 0, 2, 1, 0, 0),
-(77, 99, 43, 11, 'Valley of Head Hunters', 'Open-architected fresh-thinking frame', 'Vrijhof', '2020-03-29 19:30:01', 36, 0, 5, 1, 0, 0),
-(78, 8, 5, 14, 'Another Happy Day', 'Devolved multi-state knowledge base', 'Vrijhof', '2019-05-31 04:04:51', 51, 3, 2, 1, 0, 0),
-(79, 34, 65, 18, 'Under the Bridges (Unter den Brücken)', 'Horizontal stable budgetary management', 'Vrijhof', '2019-09-13 11:16:03', 74, 0, 3, 1, 0, 0),
-(80, 5, 81, 17, 'Lonely Passion of Judith Hearne, The', 'Cross-platform object-oriented data-warehouse', 'SmartXP', '2019-08-17 22:09:12', 73, 1, 5, 1, 0, 0),
-(81, 68, 89, 8, 'Fast Food, Fast Women', 'Quality-focused zero defect concept', 'Global Lounge', '2019-06-04 06:58:43', 97, 1, 3, 1, 0, 0),
-(82, 37, 6, 3, 'Joe Strummer: The Future Is Unwritten', 'Vision-oriented multimedia approach', 'SmartXP', '2020-03-13 00:55:28', 55, 0, 5, 1, 0, 0),
-(83, 92, 13, 16, 'The Forgotten Space', 'Reduced user-facing superstructure', 'De Stek', '2019-07-24 15:52:14', 98, 3, 2, 1, 0, 0),
-(84, 57, 91, 18, 'That Day, on the Beach (Hai tan de yi tian)', 'User-centric grid-enabled info-mediaries', 'De Stek', '2019-10-26 07:21:28', 95, 0, 5, 1, 0, 0),
-(85, 65, 67, 5, 'Carandiru', 'Ergonomic fresh-thinking interface', 'Educafe', '2019-11-16 09:01:39', 47, 3, 2, 1, 0, 0),
-(86, 77, 42, 5, 'Living Dead Girl, The (Morte Vivante, La)', 'Multi-layered mission-critical instruction set', 'HT1100', '2019-04-29 13:51:03', 17, 0, 3, 1, 0, 0),
-(87, 77, 69, 2, 'Is It Easy to be Young?', 'Balanced solution-oriented pricing structure', 'Educafe', '2019-05-30 17:34:33', 92, 0, 2, 1, 0, 0),
-(88, 90, 79, 12, 'Resident Evil: Afterlife', 'Innovative clear-thinking collaboration', 'SmartXP', '2019-09-10 06:02:38', 100, 1, 3, 1, 0, 0),
-(89, 93, 3, 11, 'Line King: The Al Hirschfeld Story, The', 'Stand-alone multi-tasking orchestration', 'De Stek', '2019-10-31 20:40:40', 67, 3, 2, 1, 0, 0),
-(90, 85, 23, 14, 'Jönssonligan på Mallorca', 'Up-sized 5th generation open system', 'SmartXP', '2019-09-17 21:09:00', 76, 2, 3, 1, 0, 0),
-(91, 3, 82, 18, 'Good Man, A (Un buen hombre)', 'Mandatory reciprocal concept', 'SmartXP', '2019-07-04 03:42:06', 100, 1, 2, 1, 0, 0),
-(92, 22, 21, 13, 'It''s a Disaster', 'Organized coherent initiative', 'Global Lounge', '2019-07-22 07:37:20', 75, 0, 2, 1, 0, 0),
-(93, 99, 13, 5, 'Grave Halloween', 'Function-based object-oriented focus group', 'De Stek', '2019-07-25 17:31:53', 32, 1, 3, 1, 0, 0),
-(94, 49, 79, 7, 'River, The (Joki)', 'Self-enabling web-enabled ability', 'Educafe', '2019-12-04 12:03:15', 93, 1, 4, 1, 0, 0),
-(95, 90, 50, 10, 'Girl', 'Multi-channelled eco-centric approach', 'Global Lounge', '2019-06-07 07:05:38', 2, 3, 5, 1, 0, 0),
-(96, 57, 96, 14, 'I Don''t Know How She Does It', 'Synergistic composite instruction set', 'De Stek', '2019-05-18 17:41:55', 90, 2, 3, 1, 0, 0),
-(97, 64, 45, 15, 'Education of Little Tree, The', 'Robust dedicated middleware', 'De Stek', '2019-05-16 14:23:35', 49, 1, 5, 1, 0, 0),
-(98, 7, 93, 18, 'Summer Hours (Heure d''été, L'')', 'Operative heuristic local area network', 'Global Lounge', '2020-01-02 23:59:27', 47, 1, 3, 1, 0, 0),
-(99, 71, 2, 18, 'On_Line (a.k.a. On Line)', 'Devolved logistical neural-net', 'HT1100', '2019-09-01 00:49:24', 79, 2, 5, 1, 0, 0),
-(100, 30, 86, 16, 'How to Lose Friends & Alienate People', 'Optional systematic synergy', 'Global Lounge', '2020-01-05 04:56:51', 41, 2, 2, 1, 0, 0);
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, '4FunCie IceSkating', null, null, '2022-03-02 19:00:00', null, 0, 0, '2022-03-02 21:00:00', '2vt80h8ldvqpjhklsfql2ai5gc', 1, 0, 1, null);
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, 'SiteCie meeting', null, 'blue hell discord', '2022-03-04 18:00:00', null, 0, 0, '2022-03-04 19:00:00', '5jrm33g2nhjsn8h9vol115119l', 1, 0, 0, null);
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, 'SiteCie work evening', null, 'BS rrom', '2022-03-08 18:00:00', null, 0, 0, '2022-03-08 21:00:00', '6pdg8usb2dlc76ej2fq1s22dfl', 1, 0, 0, null);
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, 'cool meme', '<b>BOLD!</b> not bold <b>BOLD!</b> not bold <b>BOLD!</b> not bold ', 'very epic', '2022-03-10 08:00:00', null, 0, 0, '2022-03-10 09:00:00', '5gh0s6udvtc8jdsvpj45i96op8', 1, 0, 1, null);
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, 'Capture the Wool', '<span>Heya there crafters</span><span>,<br>After barely made it out alive of the skulk hunt, it is now time to team up together to play some Capture the Wool. The objective here is simple: get the wool that is present around the map, simple right? Come and find out yourself if that is indeed the case on the 10th of March, 20:00! During this evening we will find out if you have what it takes to complete various challenges and be the first to complete the ''oh so simple'' objective <br></span><span>IP: 54.36.164.213:25579</span>', 'Discord', '2022-03-10 19:00:00', null, 0, 0, '2022-03-10 21:00:00', '0jc484g23lhe8dcgak34j4p1qb', 1, 0, 1, null);
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, 'League 5v5 tournament', null, null, '2022-03-11 18:00:00', null, 0, 0, '2022-03-12 00:00:00', '582p2p41646u8o5jb7qvf3g724', 1, 0, 1, null);
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, 'Gamenight', 'It is time for yet another Gamenight! We''re back with the March themed gamenight with the theme: games! Yeah, March isn''t really special and doing our missed Christmas would be tad late. So if you just want some  games and drink a few beers, come round and play Just Dance like this spinning cube!', null, '2022-03-15 18:00:00', null, 0, 0, '2022-03-15 21:00:00', '0kst8r8grleb89h9n0hq53qql3', 1, 0, 0, null);
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, 'Chesstised: Chug and Mate', '<br><br><br>During the last offline ChessCie event we promised there would come more and better. Now has come the time when we stay true to our word. After the success of <em><i>Sip &amp; Check</i></em> we have decided to take things up a notch and present to you; <em><i><strong><b><br>Chesstised: Chug &amp; Mate</b></strong></i></em>. <br>This will be an evening full of mating your opponent while chugging down some tea and munching on some snacks. In short, an evening so great you will not want to miss it. This lovely occasion will take place on <strong><b>March 16th</b></strong> from <strong><b>19:30</b></strong> until 22:30 at Global Lounge. Make sure you fill in the google forms and don’t forget to bring your own mug or you will be left thirsty.<br>Sign-up form (Necessary): <a href="https://forms.gle/DHKVRpVHb59cVzzc9">https://forms.gle/DHKVRpVHb59cVzzc9</a>', 'Bastille, De Hems 10, 7522 NL Enschede, Nederland', '2022-03-16 18:30:00', null, 0, 0, '2022-03-16 20:30:00', '53kgmsmbcrpgp40gohdaedb8pi', 1, 0, 0, null);
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, 'Board interest drink', '<span>The time has come that the current board starts looking at their successors. Are you one of those people that have an interest in running the best association of the UT? With the esports lounge coming up you would be looking at the best year of Blueshell yet to come. Are you already certain to apply or not certain at all, do not worry. We as board will host a Board interest drink where we will go over all information that you might need to make a good decision. The drink will take place at the Vluchte and will start around 19:00. (board will feed you, no extra cost). We will contact those who signed up before the drink to discuss the food options.</span>', 'De Vluchte, Oldenzaalsestraat 153a, 7523 AA Enschede, Nederland', '2022-03-17 18:00:00', null, 0, 0, '2022-03-17 21:00:00', 'sprrm9d01dngd80nu5gmiia2l5_20220317T190000Z', 1, 0, 1, null);
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, 'Smashfest', null, null, '2022-03-22 19:00:00', null, 0, 0, '2022-03-22 22:00:00', '74p38dhl6ko3cb9l68ojcb9kckom4b9p65h36bb6cdi38eb6c4q3gcj26o', 1, 0, 1, null);
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, 'Trouble in Terrorist Town', '<span>G-Day Miners!One evening in Terrorist Town, the citizens (you) were just going quietly min(d)ing your own business when a fellow townie just flops on the ground! You hear a faint scream that says ''He is here!''. Will you run in fright or make all of this madness stop by acting quickly?On March 23rd, 20:00 this scenario can become a reality (in minecraft), during which you will have to find out who the terrorists in Terrorist Town are and uncover them! Will you be able to figure out who is acting suspiciously and punish them for it or will your fellow townies be the unintended victims? Come and test your detective skills during an evening in Terrorist Town!</span>', 'Discord', '2022-03-23 19:00:00', null, 0, 0, '2022-03-23 21:00:00', '0bv6tmr3jeithgn00uhh2oueib', 1, 0, 0, null);
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, 'Sitecie work evening', null, 'bs room', '2022-03-31 17:00:00', null, 0, 0, '2022-03-31 20:00:00', '4noi7o9qemjh690uhqdlkv6hap', 1, 0, 0, null);
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, 'Blueshell GMM', null, null, '2022-04-04 17:00:00', null, 0, 0, '2022-04-04 20:00:00', '_6dj32oj2cph6cb9g68rmab9k64r62b9o70o6abb46hi3echlc8o3iohh6k', 1, 0, 0, null);
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, 'TFT carrousel evening', null, null, '2022-04-05 18:00:00', null, 0, 0, '2022-04-05 20:00:00', '_74qj4db569ij6b9j74q3eb9k6so6cb9p64rm2b9p6cp38p1iclgmap3460', 1, 0, 0, null);
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, '4FunCie LaCubanita Dinner', 'Me hungry, you hungry, we all hungry! Hence it is about time the 4FunCie
+organizes a Blueshell Dinner and you are invited. Join all your fellow Blueshell
+members. On Thursday the 17th of February at 18:30, we will gather at the gates
+of La Cubanita to feast on delicious cocktails and tapas. All you have to do to
+join is fill in the sign-up form below and we will see you there.', 'BS room', '2022-04-06 16:30:00', null, 0, 0, '2022-04-06 18:30:00', '_6oqmcob56gsmcb9k6lj62b9k6pgjibb1clh38bb3c4p3ep1hc5ij0c1l6s', 1, 0, 1, '[{"type":"open","prompt":"How much money do you have?"},{"type":"radio","prompt":"Which shrek movie is your favorite?","options":["Shrek","Shrek the Third","Shrek Forever After"]},{"type":"checkbox","prompt":"Select each object you have in your house","options":["pipe bomb","crack pipe","cracked glass"]}]');
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, 'League 1v1 tournament', 'Are you tired of having junglers gank your lane? Have you ever wanted toplane to
+actually be the island that it is made out to be? Or do you want to crush the
+egos of your friends by beating them one on one while playing yuumi? Then come
+to the LoLcie 1v1 tournament and show everyone who is the best solo laner around.', 'Discord', '2022-04-07 18:00:00', null, 0, 0, '2022-04-07 21:00:00', '_64sm8cpo6limab9n6or3eb9k68qjgb9oc4pjebb569h64d9ic4p3ap9lc8', 1, 0, 1, null);
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, 'Super Smash Bros Ultimate Tournament', '<span>Are you ready for Blueshells first local smash tournament since the pandemic?Did you hone your skill online? Perhaps have not played in a while? It does not matter!We welcome anyone who is willing to bring a controller and wants to have some fun smashing.This tournament is in collaboration with the Dutch Student League and Esports Team Twente,lets all celebrate what Super Smash Bros Ultimate has become in the past three years!The tournament will be a double elimination bracket, with the Dutch ruleset (can be found in the link). Time: 11:00-20:00 (tournament starts at 12!)Sign up now at: </span><a href="https://play.dutchstudentleague.nl/nl/tournaments/blueshell-esports-colosseum-clash/info">https://play.dutchstudentleague.nl/nl/tournaments/blueshell-esports-colosseum-clash/info</a>', 'Utwente', '2022-04-09 09:00:00', null, 0, 0, '2022-04-09 18:00:00', '2ltj8o84so7gec2bptubh2sbi5', 1, 0, 1, null);
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, 'Blueshell Gamenight', 'Hello people of blueshell,I have come with an important message: GAMENIGHT IS
+BACK BAYBEEEAfter a gruesome winter break LegaCie is back in business. Due to
+popular demand we have brought it back and it''s more gaming than ever. All the
+classics such as Smash, Jackbox, Just dance and other general gaming is here.
+Feel free to bring your own console, games and/or controllers :)As you may
+already know our usual location is in an unusable state, which is why we turn to
+Designlab™️©️ to host this event. Don''t worry, even without the Stek this will
+be a beautiful night of gaming. Also, we celebrate the occasion by giving out
+fuck you with a maximum of three per person. Unfortunately we cannot sell
+any drinks, so if you want more you have to
+BYOD.https://forms.gle/t5kQRSvdfbmH5Noy6Fill in the form if you are planning to
+attend, as there is a maximum number of people we can seat. It is mandatory to
+wear a mask, since there will not be a QR code check at the entrance. Image
+below unrelated.', 'DesignLab University of Twente, Hengelosestraat 500, 7521 AN Enschede, Netherlands', '2022-04-12 17:00:00', null, 0, 0, '2022-04-12 20:00:00', '_c4qjce9pc9j34b9kcgqmcb9k6hj62bb2cgs3gbb26ksj4opp6soj4pj26k', 1, 0, 1, null);
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, 'Overwatch custom games', null, 'Discord', '2022-04-13 18:00:00', null, 0, 0, '2022-04-13 20:00:00', '_71h6ccpn6ksm2b9hccq3ib9kcoq38bb170sj6bb66oom6e9icgq34e9k60', 1, 0, 0, null);
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, 'Minecraft building game', 'Dear Minecraft builder,
+
+The Mcie is once again back with one of your favorites: The Building Game. On
+Thursday the 10th of February 8PM, we invite all of the builders, talented or
+not, to show your creativity or funniness.
+Join us for a chaotic evening where we explore the wildest guesses for each
+others builds.', 'Discord', '2022-04-14 18:00:00', null, 0, 0, '2022-04-14 20:30:00', '_6tim6opl60rjcb9k60s62b9k6kpjeb9pcgojab9jccp34c1lcgr34c316o', 1, 0, 0, null);
+INSERT INTO blueshell.events (creator_id, last_editor_id, committee_id, title, description, location, start_time, banner_id, price_member, price_public, end_time, google_id, visible, members_only, sign_up, sign_up_form) VALUES (1, 1, 1, 'asjn', 'a', 'j', '2022-04-21 08:00:00', null, 0, 0, '2022-04-21 19:00:00', 'mmda8t33m6t7q10um8cvmbr3jg', 1, 0, 0, null);

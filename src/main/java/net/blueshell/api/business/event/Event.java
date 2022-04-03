@@ -257,6 +257,8 @@ public class Event {
             ArrayList<Object> eventSignUpForm = eventFormParser.list();
             eventFormParser.ensureEOF();
 
+            if (eventSignUpForm.size() == 0) return false;
+
             for (Object questionObj : eventSignUpForm) {
                 LinkedHashMap<String, Object> question = (LinkedHashMap<String, Object>) questionObj;
 
@@ -268,9 +270,9 @@ public class Event {
 
                 if ("radio".equals(type) || "checkbox".equals(type)) {
                     // Schizo checking
-                    if (!question.containsKey("options") ||
-                            !(question.get("options") instanceof List) ||
-                            !(((List) question.get("options")).stream().allMatch(opt -> opt instanceof String))) {
+                    if (!question.containsKey("formAnswers") ||
+                            !(question.get("formAnswers") instanceof List) ||
+                            !(((List) question.get("formAnswers")).stream().allMatch(opt -> opt instanceof String))) {
                         return false;
                     }
                 }

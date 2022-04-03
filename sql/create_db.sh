@@ -10,7 +10,7 @@ password="patat"
 echo $password
 
 # Run the .sql files in sequential order ensuring forein keys constrained are fullfilled.
-mysql -u $username --password=$password $database < newsarticles.sql
-mysql -u $username --password=$password $database < committees.sql
-mysql -u $username --password=$password $database < events.sql
+mysql -u $username --password=$password $database < V1_Init.sql
+mysql -u $username --password=$password $database < V1_update.sql
+mysql -u $username --password=$password $database < V20220403_events.sql
 

@@ -28,8 +28,8 @@ public class EventSignUp implements Serializable {
     @JsonIgnore
     private Event event;
 
-    @Column(name = "options")
-    private String options;
+    @Column(name = "form_answers")
+    private String formAnswers;
 
     @Column(name = "signed_up_at")
     private LocalDateTime signedUpAt;
@@ -37,10 +37,10 @@ public class EventSignUp implements Serializable {
     public EventSignUp() {
     }
 
-    public EventSignUp(User user, Event event, String options, LocalDateTime signedUpAt) {
+    public EventSignUp(User user, Event event, String formAnswers, LocalDateTime signedUpAt) {
         this.user = user;
         this.event = event;
-        this.options = options;
+        this.formAnswers = formAnswers;
         this.signedUpAt = signedUpAt;
     }
 
