@@ -52,7 +52,10 @@ public class EventSignUpController extends AuthorizationController {
         if (!event.isSignUp() || !event.canEdit(authedUser)) {
             return StatusCodes.FORBIDDEN;
         }
-        return signUpDao.list().stream().filter(signUp -> signUp.getEvent().getId() == event.getId()).collect(Collectors.toList());
+        return signUpDao.list().stream()
+                .filter(signUp -> signUp.getEvent().getId() == event.getId())
+                .map(EventSignUpDTO::fromSignUp)
+                .collect(Collectors.toList());
     }
 
     @PostMapping(value = "/events/signups/{id}")
