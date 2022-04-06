@@ -270,9 +270,9 @@ public class Event {
 
                 if ("radio".equals(type) || "checkbox".equals(type)) {
                     // Schizo checking
-                    if (!question.containsKey("formAnswers") ||
-                            !(question.get("formAnswers") instanceof List) ||
-                            !(((List) question.get("formAnswers")).stream().allMatch(opt -> opt instanceof String))) {
+                    if (!question.containsKey("options") ||
+                            !(question.get("options") instanceof List) ||
+                            !(((List) question.get("options")).stream().allMatch(opt -> opt instanceof String))) {
                         return false;
                     }
                 }
