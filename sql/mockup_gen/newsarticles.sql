@@ -146,3 +146,131 @@ INSERT INTO blueshell.news (creator_id, last_editor_id, news_type, title, conten
   </p>
 </div>
 ', '2022-03-06 14:50:03');
+INSERT INTO blueshell.news (creator_id, last_editor_id, news_type, title, content, posted_at) VALUES (6, 6, 'Interview', 'All Grand Masters Play Chess on Enschede Chessboards','<div>
+  <p class="body-1">
+    Enschede is a very humble and rural city. Away from the busy Randstad with Amsterdam and The
+    Hague as pillars of internationalization and globalization and close to the German border,
+    Enschede is not well-known for having such ambitions.
+  </p>
+
+  <img src="https://esa-blueshell.nl/api/download/dgt1.jpg" class="ma-4"
+       style="max-width: 40%;float: left" alt="big chess game"/>
+
+  <p class="body-1">
+    However, we play a very important role in the world of chess with Digital Game Technology (DGT).
+    If you travel from the campus to the city centre or vice-versa, you can see their unapparent
+    logo on a sign behind a white building. They are the company providing chessboards and digital
+    clocks for the world’s largest chess events in the world such as the Tata Steel tournaments.
+    Every grandmaster chess player plays on a board from Enschede.
+  </p>
+  <p class="body-1">
+    We sit with Hans Pees, who is the CEO of DGT. We ask him how a small company located in Enschede
+    plays an important role on the world stage of chess.
+  </p>
+
+  <p class="text-h5">
+    Who is Hans Pees?
+  </p>
+  <p class="body-1">
+    I am Hans Pees and am current CEO of Digital Game Technologies. Before I took over this company,
+    I graduated in Mathematics, lived in England, worked in the transport industry, and have lived a
+    couple years in Spain. When I decided to return to the Netherlands, I was looking for a job, any
+    job.
+  </p>
+
+
+  <img src="https://esa-blueshell.nl/api/download/dgt2.jpg" class="mb-2"
+       style="width: 100%;" alt="Picture of Hans Pees"/>
+  <p class="quote">
+    After buying 10 clocks, I spoke the legendary words: “You guys got any job applications open?”
+  </p>
+  <p class="body-1">
+    In the meantime, I was playing for Chess Club Wierden. They asked if someone could buy a bundle
+    of digital clocks for the association. I said: I could do that. I drove to Enschede – I also
+    didn''t know DGT was in Enschede! – and after buying 10 clocks, I spoke the legendary words: “You
+    guys got any job applications open?”. The rest was history.
+  </p>
+
+  <p class="text-h5">
+    How did DGT become so big and important? And what technological innovations are made to stay
+    ahead of the competition?
+  </p>
+  <p class="body-1">
+    The founders started their venture when they were UT students. They have worked well over 20
+    years in close contact with grand chess organisations. When they made the digital clocks and
+    chessboards, we were in early age of digitalization and had the first mover advantage. That’s
+    how DGT became the market leader.
+  </p>
+
+
+  <img src="https://esa-blueshell.nl/api/download/dgt3.jpg" class="mb-4"
+       style="width": 100%;" alt="Workplace"/>
+  <p class="quote">
+    Where the magic happens!
+  </p>
+  <p class="body-1">
+    When I took over the company, I was more focused on professionalization the company’s brand.
+    When the firm started as a group of friends, you could also see this apparent in the business
+    structure: nice, easy, and organic – which is okay! But here I saw possibilities to really
+    improve, professionalize, and focus our business.
+  </p>
+  <p class="body-1">
+    Together with our Technology Team, we are searching for new techniques that we can use to
+    improve our clocks and boards. We also are looking at what people want and their demand, rather
+    than using the newest technologies to create a product.
+  </p>
+  <p class="body-1">
+    Having this first position all boils down innovations. The digital clock: it was so
+    revolutionary back in the day that we still hold the advantage. There is not much innovation
+    into anymore, however. In 1998, we produced and sold digital chessboards for the competitive
+    market. Before the age of the Internet, you could subscribe to a “chess informator” that would
+    send you a book every 3 months where you can all the parties and positions played. Now you can
+    see live tournaments directly from your phone. This is possible because of the Internet and us!
+  </p>
+  Are you also involved in local initiatives such as the UT or Twente region?
+  <p class="body-1">
+    We sometimes are involved. This year we sponsored the national youth chess tournaments. But most
+    of all, we are globally promoting chess. It is more ideological in the sense that everyone
+    should play chess! For students, we do have internships here, oftentimes technical students and
+    sometimes marketing students from both the UT and Saxion Hogeschool. Ever since I have
+    professionalized the firm, we have three managers now (innovation, sales, operations). Together,
+    we try to run the business
+  </p>
+
+  <p class="text-h5">
+    What do you think about the digitalization of chess taking place and Grand Chessmasters becoming
+    member of Esports associations? Is chess an Esports?
+  </p>
+  <p class="body-1">
+    Of course it is an Esports! Next to the physical chess that we call Over the Board (OTB)¸ there
+    is a whole online world where people play chess. We from the OTB side because we make hardware.
+    Ultimately for me, chess is a board where you sit opposite of each other, look each other into
+    the eyes, do some psychology.
+  </p>
+  <p class="body-1">
+    But with the rise of the PC and mobile, you can play chess against anyone online. That’s good
+    for chess, because you can''t do that with many sports. Those two worlds don''t bite. With Corona
+    a lot of people were drawn to it, because chess was the only sport that was still played. You
+    couldn''t watch soccer matches but you could still watch chess matches.
+  </p>
+
+
+  <img src="https://esa-blueshell.nl/api/download/dgt4.jpg" class="mb-2"
+       style="width: 100%;" alt="Bob vs Hans"/>
+  <p class="quote">
+    Our own champion Bob Even battling with the CEO of Chess! (spoiler: he won!)
+  </p>
+  <p class="text-h5">
+    How did the pandemic affected DGT?
+  </p>
+  <p class="body-1">
+    When corona erupted, all tournaments were cancelled worldwide, and all chess clubs closed as
+    well. When those were all closed, it affected our sales of chess clocks. That''s a big market for
+    us. The clocks and the electronic chess boards also declined in sales. Until at the end of the
+    year Queen''s Gambit was released on Netflix. That did have huge impact on chess in general and
+    people wanted to pick up chess clocks again. Chess is not for nerds, but you can see a
+    rejuvenation worldwide: chess is cool!
+  </p>
+</div>', '2022-04-06 18:42:33');
+
+
