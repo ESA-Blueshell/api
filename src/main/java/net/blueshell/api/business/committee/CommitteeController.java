@@ -20,36 +20,37 @@ public class CommitteeController extends AuthorizationController {
     @GetMapping(value = "/committees")
     public Object getCommittees() {
         User authedUser = getPrincipal();
-        if (authedUser == null) {
+        if (hasAuthorization(Role.MEMBER)) {
             return StatusCodes.FORBIDDEN;
         }
         Set<Long> authedUserCommitteeIds = authedUser.getCommitteeIds();
-        return dao.list().stream().filter(committee -> authedUserCommitteeIds.contains(committee.getId())).collect(Collectors.toList());
-
+        return dao.list().stream()
+                .filter(committee -> authedUserCommitteeIds.contains(committee.getId()))
+                .map(CommitteeDTO::fromCommittee)
+                .collect(Collectors.toList());
     }
 
     @PreAuthorize("hasAuthority('BOARD')")
     @PostMapping(value = "/committees")
-    public Object createCommittee(Committee committee) {
-        try {
-            return dao.create(committee);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return StatusCodes.BAD_REQUEST;
-        }
+    public Object createCommittee(CommitteeDTO committeeDTO) {
+        Committee committee = committeeDTO.toCommittee();
+        return dao.create(committee);
     }
 
     @PutMapping(value = "/committees/{id}")
-    public Object createOrUpdateCommittee(Committee committee) {
-        Committee com = dao.getById(committee.getId());
-        if (com == null && hasAuthorization(Role.BOARD)) {
-            // create new committee
-            return createCommittee(committee);
-        } else if (com != null && com.hasMember(getAuthorizedUsername())) {
-            dao.update(com);
-        } else {
+    public Object createOrUpdateCommittee(@PathVariable String id, CommitteeDTO committeeDTO) {
+        Committee oldCommittee = dao.getById(Long.parseLong(id));
+        Committee newCommittee = committeeDTO.toCommittee();
+        User authedUser = getPrincipal();
+        // Check if committee exists
+        if (oldCommittee == null) {
             return StatusCodes.NOT_FOUND;
         }
+        // Check is user is part of committee or is board
+        if (!oldCommittee.hasMember(authedUser) && !hasAuthorization(Role.BOARD)) {
+            return StatusCodes.NOT_FOUND;
+        }
+        dao.update(newCommittee);
         return StatusCodes.OK;
     }
 
@@ -61,10 +62,10 @@ public class CommitteeController extends AuthorizationController {
         if (committee == null) {
             return StatusCodes.NOT_FOUND;
         }
-        if (!committee.hasMember(getAuthorizedUsername())) {
-            return StatusCodes.FORBIDDEN;
+        if (!committee.hasMember(getAuthorizedUsername()) && !hasAuthorization(Role.BOARD)) {
+            return StatusCodes.NOT_FOUND;
         }
-        return committee;
+        return CommitteeDTO.fromCommittee(committee);
     }
 
     @PreAuthorize("hasAuthority('BOARD')")

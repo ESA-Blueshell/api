@@ -55,7 +55,7 @@ public class UserController extends AuthorizationController {
         if (!isAuthedForUser(user)) {
             return StatusCodes.FORBIDDEN;
         }
-        return new SimpleUserDTO(user);
+        return user;
     }
 
     @DeleteMapping(value = "/users/{id}")

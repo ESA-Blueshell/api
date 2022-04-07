@@ -104,15 +104,6 @@ public class User implements UserDetails {
     @JsonIgnore
     private Set<CommitteeMembership> committeeMemberships;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "subscriptions",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "committee_id")
-    )
-    @JsonIgnore
-    private Set<Committee> subscriptions;
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "source")
     @JsonIgnore
     private Set<Billable> billables;
@@ -166,18 +157,6 @@ public class User implements UserDetails {
         }
         for (CommitteeMembership cm : getCommitteeMemberships()) {
             set.add(cm.getUserId());
-        }
-        return set;
-    }
-
-    @JsonProperty("subscriptions")
-    public Set<Long> getSubscriptionIds() {
-        Set<Long> set = new HashSet<>();
-        if (getSubscriptions() == null) {
-            return set;
-        }
-        for (Committee sub : getSubscriptions()) {
-            set.add(sub.getId());
         }
         return set;
     }
@@ -255,6 +234,13 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return getDeletedAt() == null || !TimeUtil.hasExpired(getDeletedAt());
+    }
+
+    public String getFullName() {
+        if (prefix == null) {
+            return firstName + " " + lastName;
+        }
+        return firstName + " " + prefix + " " + lastName;
     }
 
 }

@@ -1,41 +1,33 @@
 package net.blueshell.api.business.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class SimpleUserDTO {
 
-    @JsonIgnore
-    private User user;
+    public static final UserDao dao = new UserDao();
 
-    public SimpleUserDTO(User user) {
-        this.user = user;
+    @JsonProperty("username")
+    private String username;
+
+    @JsonProperty("discord")
+    private String discord;
+
+    @JsonProperty("fullName")
+    private String fullName;
+
+
+    private SimpleUserDTO() {
     }
 
-    @JsonIgnore
-    public User getUser() {
-        return user;
+    public User toUser() {
+        return dao.getByUsername(username);
     }
 
-    @JsonProperty("email")
-    public String getEmail() {
-        return user.getEmail();
+    public static SimpleUserDTO fromUser(User user) {
+        SimpleUserDTO res = new SimpleUserDTO();
+        res.username = user.getUsername();
+        res.discord = user.getDiscord();
+        res.fullName = user.getFullName();
+        return res;
     }
-
-    @JsonProperty("firstName")
-    public String getFirstName() {
-        return user.getFirstName();
-    }
-
-    @JsonProperty("lastName")
-    public String getLastName() {
-        return user.getLastName();
-    }
-
-    @JsonProperty("profilePicture")
-    public long getProfilePicture() {
-        return user.getProfilePictureId();
-    }
-
-
 }

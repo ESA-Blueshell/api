@@ -21,19 +21,19 @@ public class EventSignUpDTO implements Serializable {
     @JsonProperty("signedUpAt")
     private LocalDateTime signedUpAt;
 
+    private EventSignUpDTO() {
+    }
+
 
     public static EventSignUpDTO fromSignUp(EventSignUp signUp) {
         EventSignUpDTO res = new EventSignUpDTO();
 
         User user = signUp.getUser();
 
-        if (user.getPrefix() != null) {
-            //TODO: when sign-up is implemented, check if user.prefix can even be null
-            res.fullName = user.getFirstName() + " " + user.getPrefix() + " " + user.getLastName();
-        } else {
-            res.fullName = user.getFirstName() + " " + user.getLastName();
-        }
+        //TODO: use SimpleUserDTO
+        res.fullName = signUp.getUser().getFullName();
         res.discord = user.getDiscord();
+
         res.formAnswers = signUp.getFormAnswers();
         res.signedUpAt = signUp.getSignedUpAt();
 
