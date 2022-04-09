@@ -1,6 +1,5 @@
 package net.blueshell.api.business.committee;
 
-import com.wordnik.swagger.annotations.ApiParam;
 import net.blueshell.api.business.user.Role;
 import net.blueshell.api.business.user.User;
 import net.blueshell.api.constants.StatusCodes;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RestController
@@ -20,18 +20,21 @@ public class CommitteeController extends AuthorizationController {
     private final CommitteeMembershipDao membershipDao = new CommitteeMembershipDao();
 
     @GetMapping(value = "/committees")
-    public Object getCommittees() {
-        //TODO: add editable
-        User authedUser = getPrincipal();
-        if (!hasAuthorization(Role.MEMBER)) {
-            return StatusCodes.FORBIDDEN;
+    public Object getCommittees(@RequestParam(required = false) boolean fullCommittees) {
+        Function<Committee, Object> fromCommittee;
+        if (fullCommittees) {
+            if (!hasAuthorization(Role.BOARD)) {
+                return StatusCodes.FORBIDDEN;
+            }
+            fromCommittee = CommitteeDTO::fromCommittee;
+        } else {
+            fromCommittee = SimpleCommitteeDTO::fromCommittee;
         }
-        Set<Long> authedUserCommitteeIds = authedUser.getCommitteeIds();
         return dao.list().stream()
-                .filter(committee -> authedUserCommitteeIds.contains(committee.getId()) || hasAuthorization(Role.BOARD))
-                .map(CommitteeDTO::fromCommittee)
+                .map(fromCommittee)
                 .collect(Collectors.toList());
     }
+
 
     @PreAuthorize("hasAuthority('BOARD')")
     @PostMapping(value = "/committees")
@@ -40,6 +43,7 @@ public class CommitteeController extends AuthorizationController {
         return dao.create(committee);
     }
 
+    @PreAuthorize("hasAuthority('BOARD')")
     @PutMapping(value = "/committees/{id}")
     public Object createOrUpdateCommittee(@PathVariable String id, @RequestBody CommitteeDTO committeeDTO) {
         Committee oldCommittee = dao.getById(Long.parseLong(id));
@@ -62,20 +66,6 @@ public class CommitteeController extends AuthorizationController {
             membershipDao.delete(new CommitteeMembershipId(membership.getUser(), membership.getCommittee()));
         }
         return StatusCodes.OK;
-    }
-
-    @GetMapping(value = "/committees/{id}")
-    public Object getCommitteeById(
-            @ApiParam(name = "Id of the committee")
-            @PathVariable("id") String id) {
-        Committee committee = dao.getById(Long.parseLong(id));
-        if (committee == null) {
-            return StatusCodes.NOT_FOUND;
-        }
-        if (!committee.hasMember(getAuthorizedUsername()) && !hasAuthorization(Role.BOARD)) {
-            return StatusCodes.NOT_FOUND;
-        }
-        return CommitteeDTO.fromCommittee(committee);
     }
 
     @PreAuthorize("hasAuthority('BOARD')")
