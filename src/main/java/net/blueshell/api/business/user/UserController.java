@@ -8,11 +8,20 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class UserController extends AuthorizationController {
 
     private final Dao<User> dao = new UserDao();
+
+
+
+    @PreAuthorize("hasAuthority('BOARD')")
+    @GetMapping(value = "/users/members")
+    public List<SimpleUserDTO> getMembers() {
+        return dao.list().stream().filter(user -> user.hasRole(Role.MEMBER)).map(SimpleUserDTO::fromUser).collect(Collectors.toList());
+    }
 
     @PreAuthorize("hasAuthority('BOARD')")
     @GetMapping(value = "/users")

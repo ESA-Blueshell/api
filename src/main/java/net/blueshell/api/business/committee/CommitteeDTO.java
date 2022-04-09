@@ -7,6 +7,9 @@ import java.util.stream.Collectors;
 
 public class CommitteeDTO {
 
+    @JsonProperty("id")
+    private Long id;
+
     @JsonProperty("name")
     private String name;
 
@@ -23,15 +26,16 @@ public class CommitteeDTO {
         Committee res = new Committee();
         res.setName(name);
         res.setDescription(description);
-        res.setMembers(members.stream().map(CommitteeMembershipDTO::toMembership).collect(Collectors.toSet()));
+        res.setMembers(members.stream().map(membershipDTO -> membershipDTO.toMembership(res)).collect(Collectors.toSet()));
         return res;
     }
 
     public static CommitteeDTO fromCommittee(Committee committee) {
         CommitteeDTO res = new CommitteeDTO();
+        res.id = committee.getId();
         res.name = committee.getName();
         res.description = committee.getDescription();
-        res.members = committee.getMembers().stream().map(CommitteeMembershipDTO::fromCommittee).collect(Collectors.toList());
+        res.members = committee.getMembers().stream().map(CommitteeMembershipDTO::fromMembership).collect(Collectors.toList());
         return res;
     }
 }

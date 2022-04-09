@@ -14,14 +14,15 @@ public class CommitteeMembershipDTO {
     private CommitteeMembershipDTO() {
     }
 
-    public CommitteeMembership toMembership() {
+    public CommitteeMembership toMembership(Committee committee) {
         CommitteeMembership res = new CommitteeMembership();
+        res.setCommittee(committee);
         res.setRole(role);
         res.setUser(user.toUser());
         return res;
     }
 
-    public static CommitteeMembershipDTO fromCommittee(CommitteeMembership membership) {
+    public static CommitteeMembershipDTO fromMembership(CommitteeMembership membership) {
         CommitteeMembershipDTO res = new CommitteeMembershipDTO();
         res.role = membership.getRole();
         res.user = SimpleUserDTO.fromUser(membership.getUser());
