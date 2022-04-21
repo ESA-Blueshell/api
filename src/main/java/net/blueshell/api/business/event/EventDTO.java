@@ -61,8 +61,18 @@ public class EventDTO {
     public Event toEvent(StorageService storageService, User uploader) {
         Committee committee = committeeDao.getById(Long.parseLong(committeeId));
 
-        LocalDateTime startTime = LocalDateTime.parse(this.startTime.replace(' ', 'T'));
-        LocalDateTime endTime = LocalDateTime.parse(this.endTime.replace(' ', 'T'));
+        LocalDateTime startTime;
+        if (this.startTime != null && !this.startTime.isEmpty()) {
+            startTime = LocalDateTime.parse(this.startTime.replace(' ', 'T'));
+        } else {
+            startTime = null;
+        }
+        LocalDateTime endTime;
+        if (this.endTime != null && !this.endTime.isEmpty()) {
+            endTime = LocalDateTime.parse(this.endTime.replace(' ', 'T'));
+        } else {
+            endTime = null;
+        }
 
         Picture promo;
         if (base64Image == null || fileExtension == null) {

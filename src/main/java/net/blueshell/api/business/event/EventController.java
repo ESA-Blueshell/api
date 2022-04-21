@@ -13,6 +13,7 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.wordnik.swagger.annotations.ApiParam;
+import net.blueshell.api.business.user.Role;
 import net.blueshell.api.business.user.User;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
@@ -27,7 +28,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -88,18 +88,23 @@ public class EventController extends AuthorizationController {
         if (!event.canEdit(authedUser)) {
             return StatusCodes.FORBIDDEN;
         }
+        // Check if the user is allowed to edit public events (only board should be able to do this)
+        if (event.isVisible() && !hasAuthorization(Role.BOARD)) {
+            return StatusCodes.FORBIDDEN;
+        }
         // If the event has a sign-up, check if the new event's form is properly formatted
         if (event.getSignUpForm() != null && !event.validateSignUpForm()) {
             return StatusCodes.BAD_REQUEST;
         }
-        // Add to google calendar
-        try {
-            com.google.api.services.calendar.model.Event googleEvent = event.toGoogleEvent();
-            googleEvent = service.events().insert(GOOGLE_CALENDAR_ID, googleEvent).execute();
-            event.setGoogleId(googleEvent.getId());
-        } catch (IOException e) {
-            e.printStackTrace();
-            return StatusCodes.INTERNAL_SERVER_ERROR;
+        if (event.isVisible()) {
+            // If event is visible, add to google calendar
+            try {
+                String googleId = addToGoogleCalendar(event);
+                event.setGoogleId(googleId);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return StatusCodes.INTERNAL_SERVER_ERROR;
+            }
         }
         // Add to database
         event.setCreator(authedUser);
@@ -125,13 +130,13 @@ public class EventController extends AuthorizationController {
             @RequestParam(required = false) String to) {
         User authedUser = getPrincipal();
 
-        Predicate<Event> predicate = event -> event.canSee(authedUser)
-                && from == null || (to == null ? event.inMonth(from) : event.inRange(from, to));
+        Predicate<Event> predicate = event -> event.canSee(authedUser) &&
+                (from == null || (to == null ? event.inMonth(from) : event.inRange(from, to)));
 
         return dao.list().stream()
                 .filter(predicate)
                 .sorted(Comparator.comparing(Event::getStartTime))
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toList());
     }
 
     @GetMapping(value = "/events/upcoming")
@@ -148,7 +153,7 @@ public class EventController extends AuthorizationController {
         return dao.list().stream()
                 .filter(predicate)
                 .sorted(Comparator.comparing(Event::getStartTime))
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toList());
     }
 
     @DeleteMapping(value = "/events/{id}")
@@ -164,7 +169,7 @@ public class EventController extends AuthorizationController {
         }
         // Delete the event in the google calendar
         try {
-            service.events().delete(GOOGLE_CALENDAR_ID, event.getGoogleId()).execute();
+            removeFromGoogleCalendar(event.getGoogleId());
         } catch (IOException e) {
             e.printStackTrace();
             return StatusCodes.INTERNAL_SERVER_ERROR;
@@ -187,17 +192,33 @@ public class EventController extends AuthorizationController {
         if (!(oldEvent.canEdit(authedUser) || newEvent.canEdit(authedUser))) {
             return StatusCodes.FORBIDDEN;
         }
+        // Check if the user is allowed to edit public events (only board should be able to do this)
+        if ((oldEvent.isVisible() || newEvent.isVisible()) && !hasAuthorization(Role.BOARD)) {
+            return StatusCodes.FORBIDDEN;
+        }
         // If the event has a sign-up, check if the new event's form is properly formatted
         if (newEvent.getSignUpForm() != null && !newEvent.validateSignUpForm()) {
             return StatusCodes.BAD_REQUEST;
         }
 
-        // Update event in googel calendar
-        String googleId = oldEvent.getGoogleId();
-        newEvent.setGoogleId(googleId);
+        // Handle event visibility
         try {
-            com.google.api.services.calendar.model.Event googleEvent = newEvent.toGoogleEvent();
-            service.events().update(GOOGLE_CALENDAR_ID, googleId, googleEvent).execute();
+            if (newEvent.isVisible()) {
+                String googleId;
+                if (oldEvent.isVisible()) {
+                    // Update event in googel calendar
+                    googleId = oldEvent.getGoogleId();
+                    updateGoogleCalendar(googleId, newEvent);
+                } else {
+                    // Add to google calendar
+                    googleId = addToGoogleCalendar(newEvent);
+                }
+                newEvent.setGoogleId(googleId);
+
+            } else if (oldEvent.getGoogleId() != null) {
+                // Old event was on google calendar and new event is not visible, so remove it from google calendar
+                removeFromGoogleCalendar(oldEvent.getGoogleId());
+            }
         } catch (IOException e) {
             e.printStackTrace();
             return StatusCodes.INTERNAL_SERVER_ERROR;
@@ -213,4 +234,23 @@ public class EventController extends AuthorizationController {
         dao.update(newEvent);
         return StatusCodes.OK;
     }
+
+    private void updateGoogleCalendar(String googleId, Event newEvent) throws IOException {
+        com.google.api.services.calendar.model.Event googleEvent = newEvent.toGoogleEvent();
+        service.events().update(GOOGLE_CALENDAR_ID, googleId, googleEvent).execute();
+    }
+
+
+    private String addToGoogleCalendar(Event event) throws IOException {
+        com.google.api.services.calendar.model.Event googleEvent = event.toGoogleEvent();
+        googleEvent = service.events().insert(GOOGLE_CALENDAR_ID, googleEvent).execute();
+        return googleEvent.getId();
+    }
+
+
+    private void removeFromGoogleCalendar(String googleId) throws IOException {
+        service.events().delete(GOOGLE_CALENDAR_ID, googleId).execute();
+    }
+
+
 }
