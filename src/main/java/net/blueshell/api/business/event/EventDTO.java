@@ -5,11 +5,10 @@ import net.blueshell.api.business.committee.Committee;
 import net.blueshell.api.business.committee.CommitteeDao;
 import net.blueshell.api.business.picture.Picture;
 import net.blueshell.api.business.picture.PictureDao;
+import net.blueshell.api.business.user.User;
+import net.blueshell.api.storage.StorageService;
 
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.TimeZone;
 
 public class EventDTO {
 
@@ -34,9 +33,6 @@ public class EventDTO {
     @JsonProperty("endTime")
     private String endTime;
 
-    @JsonProperty("bannerId")
-    private String bannerId;
-
     @JsonProperty("memberPrice")
     private String memberPrice;
 
@@ -52,22 +48,35 @@ public class EventDTO {
     @JsonProperty("signUp")
     private boolean signUp;
 
+    @JsonProperty("base64Image")
+    private String base64Image;
+
+    @JsonProperty("fileExtension")
+    private String fileExtension;
+
     @JsonProperty("signUpForm")
     private String signUpForm;
 
 
-    public Event toEvent() {
+    public Event toEvent(StorageService storageService, User uploader) {
         Committee committee = committeeDao.getById(Long.parseLong(committeeId));
 
-        LocalDateTime startTime = LocalDateTime.parse(this.startTime.replace(' ','T'));
-        LocalDateTime endTime = LocalDateTime.parse(this.endTime.replace(' ','T'));
+        LocalDateTime startTime = LocalDateTime.parse(this.startTime.replace(' ', 'T'));
+        LocalDateTime endTime = LocalDateTime.parse(this.endTime.replace(' ', 'T'));
 
+        Picture promo;
+        if (base64Image == null || fileExtension == null) {
+            promo = null;
+        } else {
+            String filename = storageService.store(base64Image, fileExtension);
+            String downloadURL = StorageService.getDownloadURI(filename);
 
-        //TODO: Promo picture currently disabled
-//        Picture banner = pictureDao.getById(Integer.parseInt(bannerId));
-        Picture banner = null;
+            promo = new Picture(filename, downloadURL, uploader);
+            pictureDao.create(promo);
+        }
+
         return new Event(committee, title, description,
-                location, startTime, endTime, banner, memberPrice, publicPrice, visible, membersOnly, signUp, signUpForm);
+                location, startTime, endTime, promo, memberPrice, publicPrice, visible, membersOnly, signUp, signUpForm);
     }
 
 }

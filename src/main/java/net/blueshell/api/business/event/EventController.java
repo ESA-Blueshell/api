@@ -17,6 +17,8 @@ import net.blueshell.api.business.user.User;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
 import net.blueshell.api.daos.Dao;
+import net.blueshell.api.storage.StorageService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.FileInputStream;
@@ -27,6 +29,7 @@ import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -40,7 +43,7 @@ public class EventController extends AuthorizationController {
     private static final String GOOGLE_CALENDAR_ID = "9cugc57n2rc43p6o1r0povepe0@group.calendar.google.com";
 
     private final Dao<Event> dao = new EventDao();
-
+    private final StorageService storageService;
     private Calendar service;
 
     {
@@ -72,12 +75,17 @@ public class EventController extends AuthorizationController {
         }
     }
 
+    public EventController(StorageService storageService) {
+        this.storageService = storageService;
+    }
+
+    @PreAuthorize("hasAuthority('COMMITTEE')")
     @PostMapping(value = "/events")
     public Object createEvent(@RequestBody EventDTO eventDTO) {
-        Event event = eventDTO.toEvent();
         User authedUser = getPrincipal();
+        Event event = eventDTO.toEvent(storageService, authedUser);
         // Check if user is part of the event's committee or is board
-        if (authedUser == null || !event.canEdit(authedUser)) {
+        if (!event.canEdit(authedUser)) {
             return StatusCodes.FORBIDDEN;
         }
         // If the event has a sign-up, check if the new event's form is properly formatted
@@ -122,6 +130,7 @@ public class EventController extends AuthorizationController {
 
         return dao.list().stream()
                 .filter(predicate)
+                .sorted(Comparator.comparing(Event::getStartTime))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -138,6 +147,7 @@ public class EventController extends AuthorizationController {
 
         return dao.list().stream()
                 .filter(predicate)
+                .sorted(Comparator.comparing(Event::getStartTime))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -166,13 +176,13 @@ public class EventController extends AuthorizationController {
 
     @PutMapping(value = "/events/{id}")
     public Object createOrUpdateEvent(@PathVariable("id") String id, @RequestBody EventDTO eventDTO) {
-        Event oldEvent = dao.getById(Long.parseLong(id));
-        Event newEvent = eventDTO.toEvent();
         User authedUser = getPrincipal();
+        Event oldEvent = dao.getById(Long.parseLong(id));
         // Check if event exists
         if (oldEvent == null || !oldEvent.canSee(authedUser)) {
             return StatusCodes.NOT_FOUND;
         }
+        Event newEvent = eventDTO.toEvent(storageService, authedUser);
         // Check if user is allowed to edit the old and new event
         if (!(oldEvent.canEdit(authedUser) || newEvent.canEdit(authedUser))) {
             return StatusCodes.FORBIDDEN;
@@ -197,6 +207,9 @@ public class EventController extends AuthorizationController {
         newEvent.setId(Long.parseLong(id));
         newEvent.setCreator(oldEvent.getCreator());
         newEvent.setLastEditor(authedUser);
+        if (newEvent.getBanner() == null) {
+            newEvent.setBanner(oldEvent.getBanner());
+        }
         dao.update(newEvent);
         return StatusCodes.OK;
     }

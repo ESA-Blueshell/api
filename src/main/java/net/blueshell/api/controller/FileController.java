@@ -10,7 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * yoinked from <a href="https://attacomsian.com/blog/uploading-files-spring-boot">https://attacomsian.com/blog/uploading-files-spring-boot</a>
@@ -52,17 +51,12 @@ public class FileController {
     @PreAuthorize("hasAuthority('COMMITTEE')")
     @ResponseBody
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
-        storageService.store(file);
+        String filename = storageService.store(file);
 
-        String name = file.getResource().getFilename();
+        assert filename != null;
+        String uri = StorageService.getDownloadURI(filename);
 
-        assert name != null;
-        String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/download/")
-                .path(name)
-                .toUriString();
-
-        return new UploadFileResponse(name, uri, file.getContentType(), file.getSize());
+        return new UploadFileResponse(filename, uri, file.getContentType(), file.getSize());
     }
 
 
