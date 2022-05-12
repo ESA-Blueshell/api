@@ -18,9 +18,9 @@ public class UserDao extends SessionWrapper<User> implements Dao<User> {
         User obj;
         try (Session session = getSessionFactory().openSession()) {
             Transaction t = session.beginTransaction();
-            Query query = session.createQuery("from User where username = :name");
+            var query = session.createQuery("from User where username = :name");
             query.setParameter("name", username);
-            List objs = query.list();
+            var objs = query.list();
             obj = objs.size() == 0 ? null : (User) objs.get(0);
             t.commit();
         }

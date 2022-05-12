@@ -46,8 +46,13 @@ public class Event {
 
     private String description;
 
-    @Enumerated(EnumType.STRING)
-    private Visibility visibility;
+    private boolean visible;
+
+    @Column(name = "members_only")
+    private boolean membersOnly;
+
+    @Column(name = "sign_up")
+    private boolean signup;
 
     private String location;
 
@@ -58,9 +63,9 @@ public class Event {
     private Timestamp endTime;
 
     @OneToOne
-    @JoinColumn(name = "banner_id")
+    @JoinColumn(name = "image_id")
     @JsonIgnore
-    private Picture banner;
+    private Picture image;
 
     @Column(name = "price_member")
     private Double memberPrice;
@@ -86,15 +91,17 @@ public class Event {
     public Event() {
     }
 
-    public Event(Committee committee, String title, String description, Visibility visibility, String location, Timestamp startTime, Timestamp endTime, Picture banner, String memberPrice, String publicPrice) {
+    public Event(Committee committee, String title, String description, boolean visible, boolean membersOnly, boolean signup, String location, Timestamp startTime, Timestamp endTime, Picture banner, String memberPrice, String publicPrice) {
         this.committee = committee;
         this.title = title;
         this.description = description;
-        this.visibility = visibility;
+        this.visible = visible;
+        this.membersOnly = membersOnly;
+        this.signup = signup;
         this.location = location;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.banner = banner;
+        this.image = banner;
         this.memberPrice = Double.parseDouble(memberPrice);
         this.publicPrice = Double.parseDouble(publicPrice);
     }
@@ -129,7 +136,7 @@ public class Event {
 
     @JsonProperty("banner")
     public String getBannerId() {
-        return getBanner() == null ? null : getBanner().getUrl();
+        return this.getImage() == null ? null : this.getImage().getUrl();
     }
 
     @JsonProperty("feedbacks")
@@ -156,6 +163,30 @@ public class Event {
         return set;
     }
 
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public boolean isSignup() {
+        return signup;
+    }
+
+    public void setSignup(boolean signup) {
+        this.signup = signup;
+    }
+
+    public boolean isMembersOnly() {
+        return membersOnly;
+    }
+
+    public void setMembersOnly(boolean membersOnly) {
+        this.membersOnly = membersOnly;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -170,20 +201,14 @@ public class Event {
     }
 
     public boolean canSee(User user) {
-        Visibility vis = getVisibility();
+        var visible = isVisible();
         // public: available to everyone
-        // internal: members only
-        // private: committee only
-        if (user == null) {
-            return vis == null || vis == Visibility.PUBLIC;
+        // private: committee/board only
+        if (visible) {
+            return true;
         }
 
-        boolean canSee = vis == Visibility.PUBLIC || user.hasRole(Role.MEMBER);
-        if (canSee && vis == Visibility.PRIVATE) {
-            canSee = user.hasRole(Role.BOARD) || (getCommittee() != null && getCommittee().hasMember(user));
-        }
-
-        return canSee;
+        return user.hasRole(Role.BOARD) || (getCommittee() != null && getCommittee().hasMember(user));
     }
 
     /**

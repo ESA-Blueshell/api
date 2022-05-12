@@ -22,8 +22,14 @@ public class EventDTO {
     @JsonProperty("description")
     private String description;
 
-    @JsonProperty("visibility")
-    private String visibility;
+    @JsonProperty
+    private boolean visible;
+
+    @JsonProperty
+    private boolean membersOnly;
+
+    @JsonProperty
+    private boolean signUp;
 
     @JsonProperty("location")
     private String location;
@@ -43,14 +49,12 @@ public class EventDTO {
     @JsonProperty("publicPrice")
     private String publicPrice;
 
-
     public Event toEvent() {
         Committee committee = committeeDao.getById(Integer.parseInt(committeeId));
-        Visibility visibility = Visibility.valueOf(this.visibility);
         Timestamp startTime = Timestamp.valueOf(this.startTime);
         Timestamp endTime = Timestamp.valueOf(this.endTime);
         Picture banner = pictureDao.getById(Integer.parseInt(bannerId));
-        return new Event(committee, title, description, visibility,
+        return new Event(committee, title, description, visible, membersOnly, signUp,
                 location, startTime, endTime, banner, memberPrice, publicPrice);
     }
 

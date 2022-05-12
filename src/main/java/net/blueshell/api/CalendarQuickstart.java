@@ -119,7 +119,7 @@ public class CalendarQuickstart {
             event.setTitle(gevent.getSummary());
             event.setLocation(gevent.getLocation());
             event.setDescription(gevent.getDescription());
-            event.setVisibility(Visibility.PUBLIC);
+            event.setVisible(true);
             // Check if it's an all day event or not
             if (gevent.getStart().getDateTime() == null) {
                 // It's an all day event, so only set the start time

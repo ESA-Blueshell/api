@@ -30,6 +30,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column
     private String username;
 
     @JsonIgnore
@@ -41,10 +42,13 @@ public class User implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
 
+    @Column
     private String prefix;
 
+    @Column
     private String initials;
 
+    @Column
     private String address;
 
     @Column(name = "house_number")
@@ -53,11 +57,13 @@ public class User implements UserDetails {
     @Column(name = "postal_code")
     private String postalCode;
 
+    @Column
     private String city;
 
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Column
     private String email;
 
     @Column(name = "student_number")
@@ -72,11 +78,29 @@ public class User implements UserDetails {
     @Column(name = "member_since")
     private Timestamp memberSince;
 
+    @Column
     private String discord;
 
+    @Column
     private String steamid;
 
+    @Column
     private boolean newsletter;
+
+    @Column
+    private boolean enabled;
+
+    @Column
+    @JsonIgnore
+    private String resetKey;
+
+    @Column
+    @JsonIgnore
+    private Timestamp resetKeyValidUntil;
+
+    @Enumerated(EnumType.STRING)
+    @JsonIgnore
+    private ResetType resetType;
 
     @Column(name = "contribution_paid")
     private boolean contributionPaid;
@@ -254,7 +278,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return getDeletedAt() == null || !TimeUtil.hasExpired(getDeletedAt());
+        return enabled && (getDeletedAt() == null || !TimeUtil.hasExpired(getDeletedAt()));
     }
 
 }

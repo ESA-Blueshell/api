@@ -155,8 +155,8 @@ public class ScheduleManager {
     }
 
     public static void main(String[] args) {
-        addEvent(ScheduleManager::a, 1000);
-        startEndingTimer();
-        System.out.println("Exit");
+//        addEvent(ScheduleManager::a, 1000);
+//        startEndingTimer();
+//        System.out.println("Exit");
     }
 }
