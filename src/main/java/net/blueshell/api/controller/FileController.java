@@ -1,14 +1,15 @@
 package net.blueshell.api.controller;
 
 import net.blueshell.api.storage.StorageService;
+import net.blueshell.api.storage.UploadFileResponse;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * yoinked from <a href="https://attacomsian.com/blog/uploading-files-spring-boot">https://attacomsian.com/blog/uploading-files-spring-boot</a>
@@ -45,6 +46,19 @@ public class FileController {
                 .headers(headers)
                 .body(resource);
     }
+
+    @PostMapping("/upload")
+    @PreAuthorize("hasAuthority('COMMITTEE')")
+    @ResponseBody
+    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
+        String filename = storageService.store(file);
+
+        assert filename != null;
+        String uri = StorageService.getDownloadURI(filename);
+
+        return new UploadFileResponse(filename, uri, file.getContentType(), file.getSize());
+    }
+
 
     @GetMapping("/bazinga")
     @ResponseBody

@@ -17,6 +17,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.TemporalUnit;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class UserController extends AuthorizationController {
@@ -26,6 +27,14 @@ public class UserController extends AuthorizationController {
     private static final long PASSWORD_RESET_KEY_VALID_SECONDS = 3600 * 2; // 2 hours
 
     private final UserDao dao = new UserDao();
+
+
+
+    @PreAuthorize("hasAuthority('BOARD')")
+    @GetMapping(value = "/users/members")
+    public List<SimpleUserDTO> getMembers() {
+        return dao.list().stream().filter(user -> user.hasRole(Role.MEMBER)).map(SimpleUserDTO::fromUser).collect(Collectors.toList());
+    }
 
     @PreAuthorize("hasAuthority('BOARD')")
     @GetMapping(value = "/users")
@@ -62,7 +71,6 @@ public class UserController extends AuthorizationController {
         return StatusCodes.OK;
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = "/users/{id}")
     public Object getUserById(
             @ApiParam(name = "Id of the user")

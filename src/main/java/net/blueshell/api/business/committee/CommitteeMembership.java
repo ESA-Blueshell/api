@@ -3,6 +3,7 @@ package net.blueshell.api.business.committee;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import net.blueshell.api.business.event.EventSignUpId;
 import net.blueshell.api.business.user.User;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "committee_members")
 @Data
+@IdClass(CommitteeMembershipId.class)
 public class CommitteeMembership implements Serializable {
 
     @Id

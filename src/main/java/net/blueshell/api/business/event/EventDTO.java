@@ -1,12 +1,14 @@
 package net.blueshell.api.business.event;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import net.blueshell.api.business.committee.CommitteeDao;
-import net.blueshell.api.business.picture.PictureDao;
 import net.blueshell.api.business.committee.Committee;
+import net.blueshell.api.business.committee.CommitteeDao;
 import net.blueshell.api.business.picture.Picture;
+import net.blueshell.api.business.picture.PictureDao;
+import net.blueshell.api.business.user.User;
+import net.blueshell.api.storage.StorageService;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class EventDTO {
 
@@ -22,15 +24,6 @@ public class EventDTO {
     @JsonProperty("description")
     private String description;
 
-    @JsonProperty
-    private boolean visible;
-
-    @JsonProperty
-    private boolean membersOnly;
-
-    @JsonProperty
-    private boolean signUp;
-
     @JsonProperty("location")
     private String location;
 
@@ -40,22 +33,60 @@ public class EventDTO {
     @JsonProperty("endTime")
     private String endTime;
 
-    @JsonProperty("bannerId")
-    private String bannerId;
-
     @JsonProperty("memberPrice")
     private String memberPrice;
 
     @JsonProperty("publicPrice")
     private String publicPrice;
 
-    public Event toEvent() {
-        Committee committee = committeeDao.getById(Integer.parseInt(committeeId));
-        Timestamp startTime = Timestamp.valueOf(this.startTime);
-        Timestamp endTime = Timestamp.valueOf(this.endTime);
-        Picture banner = pictureDao.getById(Integer.parseInt(bannerId));
-        return new Event(committee, title, description, visible, membersOnly, signUp,
-                location, startTime, endTime, banner, memberPrice, publicPrice);
+    @JsonProperty("visible")
+    private boolean visible;
+
+    @JsonProperty("membersOnly")
+    private boolean membersOnly;
+
+    @JsonProperty("signUp")
+    private boolean signUp;
+
+    @JsonProperty("base64Image")
+    private String base64Image;
+
+    @JsonProperty("fileExtension")
+    private String fileExtension;
+
+    @JsonProperty("signUpForm")
+    private String signUpForm;
+
+
+    public Event toEvent(StorageService storageService, User uploader) {
+        Committee committee = committeeDao.getById(Long.parseLong(committeeId));
+
+        LocalDateTime startTime;
+        if (this.startTime != null && !this.startTime.isEmpty()) {
+            startTime = LocalDateTime.parse(this.startTime.replace(' ', 'T'));
+        } else {
+            startTime = null;
+        }
+        LocalDateTime endTime;
+        if (this.endTime != null && !this.endTime.isEmpty()) {
+            endTime = LocalDateTime.parse(this.endTime.replace(' ', 'T'));
+        } else {
+            endTime = null;
+        }
+
+        Picture promo;
+        if (base64Image == null || fileExtension == null) {
+            promo = null;
+        } else {
+            String filename = storageService.store(base64Image, fileExtension);
+            String downloadURL = StorageService.getDownloadURI(filename);
+
+            promo = new Picture(filename, downloadURL, uploader);
+            pictureDao.create(promo);
+        }
+
+        return new Event(committee, title, description,
+                location, startTime, endTime, promo, memberPrice, publicPrice, visible, membersOnly, signUp, signUpForm);
     }
 
 }

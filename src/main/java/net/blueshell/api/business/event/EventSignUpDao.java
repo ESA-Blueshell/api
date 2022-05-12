@@ -1,29 +1,29 @@
-package net.blueshell.api.business.committee;
+package net.blueshell.api.business.event;
 
 import net.blueshell.api.daos.Dao;
 import net.blueshell.api.db.SessionWrapper;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-public class CommitteeMembershipDao extends SessionWrapper<CommitteeMembership> implements Dao<CommitteeMembership> {
+public class EventSignUpDao extends SessionWrapper<EventSignUp> implements Dao<EventSignUp> {
 
-    public CommitteeMembershipDao() {
-        super(CommitteeMembership.class);
+    public EventSignUpDao() {
+        super(EventSignUp.class);
     }
 
     @Override
-    public CommitteeMembership getById(long id) {
-        System.err.println("THIS METHOD SHOULD NOT BE USED, AS CommitteeMembership DOES NOT HAVE AN ID OF TYPE LONG");
+    public EventSignUp getById(long id) {
+        System.err.println("THIS METHOD SHOULD NOT BE USED, AS EventSignUp DOES NOT HAVE AN ID OF TYPE LONG");
         return null;
     }
 
-    public CommitteeMembership getById(CommitteeMembershipId id) {
-        CommitteeMembership obj = null;
+    public EventSignUp getById(EventSignUpId id) {
+        EventSignUp obj = null;
         boolean done = false;
         while (!done) {
             try (Session session = getSessionFactory().openSession()) {
                 Transaction t = session.beginTransaction();
-                obj = session.find(CommitteeMembership.class, id);
+                obj = session.find(EventSignUp.class, id);
                 t.commit();
                 done = true;
             } catch (Exception e) {
@@ -36,10 +36,10 @@ public class CommitteeMembershipDao extends SessionWrapper<CommitteeMembership> 
 
     @Override
     public void delete(long id) {
-        System.err.println("THIS METHOD SHOULD NOT BE USED, AS CommitteeMembership DOES NOT HAVE AN ID OF TYPE LONG");
+        System.err.println("THIS METHOD SHOULD NOT BE USED, AS EventSignUp DOES NOT HAVE AN ID OF TYPE LONG");
     }
 
-    public void delete(CommitteeMembershipId id) {
+    public void delete(EventSignUpId id) {
         boolean done = false;
         while (!done) {
             try (Session session = getSessionFactory().openSession()) {
@@ -52,4 +52,5 @@ public class CommitteeMembershipDao extends SessionWrapper<CommitteeMembership> 
             }
         }
     }
+
 }

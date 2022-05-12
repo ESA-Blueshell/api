@@ -27,10 +27,6 @@ public class Committee {
     @JsonIgnore
     private Set<CommitteeMembership> members;
 
-    @ManyToMany(mappedBy = "subscriptions")
-    @JsonIgnore
-    private Set<User> subscribers;
-
     public Committee() {
     }
 
@@ -42,18 +38,6 @@ public class Committee {
         }
         for (CommitteeMembership cm : getMembers()) {
             set.add(cm.getUserId());
-        }
-        return set;
-    }
-
-    @JsonProperty("subscribers")
-    public Set<Long> getSubscriberIds() {
-        Set<Long> set = new HashSet<>();
-        if (getSubscribers() == null) {
-            return set;
-        }
-        for (User user : getSubscribers()) {
-            set.add(user.getId());
         }
         return set;
     }

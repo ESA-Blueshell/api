@@ -1,13 +1,11 @@
 package net.blueshell.api.controller;
 
-import net.blueshell.api.business.user.User;
-import net.blueshell.api.business.user.UserDao;
 import net.blueshell.api.business.user.Role;
+import net.blueshell.api.business.user.User;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class AuthorizationController {
 
@@ -26,7 +24,7 @@ public class AuthorizationController {
         return getPrincipal().getUsername();
     }
 
-    protected boolean isAuthedForUser(net.blueshell.api.business.user.User user) {
+    protected boolean isAuthedForUser(User user) {
         return hasAuthorization(Role.ADMIN)
                 || hasAuthorization(Role.MEMBER) && getAuthorizedUsername().equalsIgnoreCase(user.getUsername());
     }
@@ -35,19 +33,13 @@ public class AuthorizationController {
         if (getPrincipal() == null) {
             return false;
         }
-        return getPrincipal().getAuthorities()
-                .stream()
-                .anyMatch(r -> Role.valueOf(r.toString())
-                .matchesRole(role));
+        return getPrincipal().hasRole(role);
     }
 
     public Set<Role> getRoles() {
         if (getPrincipal() == null) {
             return new HashSet<>();
         }
-        return getPrincipal().getAuthorities()
-                .stream()
-                .map(ga -> Role.valueOf(ga.toString()))
-                .collect(Collectors.toCollection(HashSet::new));
+        return getPrincipal().getRoles();
     }
 }

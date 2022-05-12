@@ -3,6 +3,7 @@ package net.blueshell.api.auth;
 import net.blueshell.api.business.user.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +21,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.sql.DataSource;
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -82,14 +84,17 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable()
+        httpSecurity.cors().and()
+                .csrf().disable()
                 // dont authenticate this particular request
-                .authorizeRequests().antMatchers("/authenticate").permitAll()
-//                .authorizeRequests()
-//                .anyRequest().authenticated()
-//                .anyRequest().permitAll()
+                .authorizeRequests().antMatchers("/authenticate").permitAll().and()
+                .authorizeRequests().antMatchers(HttpMethod.GET, "/news/**").permitAll().and()
+                .authorizeRequests().antMatchers(HttpMethod.GET, "/events/**").permitAll().and()
+                .authorizeRequests().antMatchers(HttpMethod.GET, "/download/**").permitAll().and()
+                .authorizeRequests().antMatchers(HttpMethod.GET, "/newsPageable**").permitAll().and()
+
                 // all other requests need to be authenticated
-                .anyRequest().authenticated()
+                .authorizeRequests().anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
 
@@ -97,6 +102,18 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
+        configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
     /*
     @Override

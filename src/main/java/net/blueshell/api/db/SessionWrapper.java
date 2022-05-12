@@ -49,6 +49,7 @@ public class SessionWrapper<T> {
                 t.commit();
                 done = true;
             } catch (Exception e) {
+                e.printStackTrace();
                 System.out.println("Well that didn't work, let's try again");
             }
         }
@@ -64,6 +65,7 @@ public class SessionWrapper<T> {
                 t.commit();
                 done = true;
             } catch (Exception e) {
+                e.printStackTrace();
                 System.out.println("Well that didn't work, let's try again");
             }
         }

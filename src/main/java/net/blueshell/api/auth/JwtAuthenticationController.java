@@ -2,13 +2,13 @@ package net.blueshell.api.auth;
 
 import net.blueshell.api.auth.model.JwtRequest;
 import net.blueshell.api.auth.model.JwtResponse;
+import net.blueshell.api.business.user.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -34,7 +34,9 @@ public class JwtAuthenticationController {
 
         var token = jwtTokenUtil.generateToken(user);
 
-        return ResponseEntity.ok(new JwtResponse(token, user.getId()));
+        var expiration = System.currentTimeMillis() + JwtTokenUtil.JWT_TOKEN_VALIDITY;
+
+        return ResponseEntity.ok(new JwtResponse(token, user.getId(), expiration, user.hasRole(Role.BOARD)));
     }
 
     private void authenticate(String username, String password) throws Exception {

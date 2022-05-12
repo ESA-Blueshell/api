@@ -30,3 +30,7 @@
 /tokens/
 
 .cfg.xml
+
+/uploads
+
+credentials.json
