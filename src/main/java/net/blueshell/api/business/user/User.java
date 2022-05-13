@@ -90,14 +90,15 @@ public class User implements UserDetails {
     @Column
     private boolean enabled;
 
-    @Column
+    @Column(name = "resetKey")
     @JsonIgnore
     private String resetKey;
 
-    @Column
+    @Column(name = "resetKeyValidUntil")
     @JsonIgnore
     private Timestamp resetKeyValidUntil;
 
+    @Column(name = "resetType")
     @Enumerated(EnumType.STRING)
     @JsonIgnore
     private ResetType resetType;
