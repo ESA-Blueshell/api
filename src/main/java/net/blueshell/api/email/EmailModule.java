@@ -8,12 +8,21 @@ import javax.mail.internet.MimeMessage;
 
 public class EmailModule {
 
-    private static final String EMAIL = "swordieserver@gmail.com";
-    private static final String EMAIL_PASSWORD = "4K2QpKkOnGOEsWGUz5s9";
+    private static final String EMAIL = "TODO";
+    private static final String EMAIL_PASSWORD = "TODO";
+
+    private static final String INITIAL_EMAIL_SUBJECT = "Blueshell esports account creation";
+    private static final String INITIAL_EMAIL_CONTENT = "Hello %s, <br /><br />" +
+            "Welcome to Blueshell Esports! You can activate your account by clicking on <a href=\"https://www.esa-blueshell.nl/reset-password?username=%s&token=%s\">this link</a>.<br /><br />" +
+            "For information on events and our general community, either check out either our discord or <a href=\"https://www.esa-blueshell.nl\">website</a>. Enjoy your stay!<br /><br />" +
+            "Please do not reply to this email, as this is a generated email. Any responses will be ignored.<br /><br />" +
+            "Kind regards," +
+            "<br /><br />" +
+            "Blueshell Esports";
 
     private static final String PASSWORD_RESET_EMAIL_SUBJECT = "Blueshell esports password reset";
     private static final String PASSWORD_RESET_EMAIL_CONTENT = "Hello %s, <br /><br />" +
-            "Your password has been reset, you can create a new password by going to <a href=\"https://www.swordie.net/reset-password?username=%s&token=%s\">this link</a>.<br /><br />" +
+            "Your password has been reset, you can create a new password by going to <a href=\"https://www.esa-blueshell.nl/reset-password?username=%s&token=%s\">this link</a>.<br /><br />" +
             "If you did not perform this action, please make sure that no one else but you has access to your account.<br /><br />" +
             "Please do not reply to this email, as this is a generated email. Any responses will be ignored.<br /><br />" +
             "Kind regards," +
@@ -35,6 +44,10 @@ public class EmailModule {
             return new PasswordAuthentication(EMAIL, EMAIL_PASSWORD);
         }
     };
+
+    public static void sendInitialKeyEmail(User user) {
+        sendEmail(user, INITIAL_EMAIL_SUBJECT, String.format(INITIAL_EMAIL_CONTENT));
+    }
 
     public static void sendPasswordResetEmail(User user) {
         sendEmail(user, PASSWORD_RESET_EMAIL_SUBJECT, String.format(PASSWORD_RESET_EMAIL_CONTENT, user.getFirstName(), user.getFirstName(), user.getResetKey()));

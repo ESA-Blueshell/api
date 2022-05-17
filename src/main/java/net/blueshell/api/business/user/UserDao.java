@@ -4,9 +4,6 @@ import net.blueshell.api.daos.Dao;
 import net.blueshell.api.db.SessionWrapper;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
-
-import java.util.List;
 
 public class UserDao extends SessionWrapper<User> implements Dao<User> {
 

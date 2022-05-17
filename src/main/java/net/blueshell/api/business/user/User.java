@@ -33,7 +33,6 @@ public class User implements UserDetails {
     @Column
     private String username;
 
-    @JsonIgnore
     private String password;
 
     @Column(name = "first_name")
@@ -208,6 +207,16 @@ public class User implements UserDetails {
             set.add(role.getReprString());
         }
         return set;
+    }
+
+    @JsonProperty("password")
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @JsonIgnore
+    public String getPassword() {
+        return password;
     }
 
     @Override

@@ -6,8 +6,11 @@ import lombok.Data;
 
 import javax.validation.constraints.Email;
 
+/**
+ * DTO for communicating account changes after the initial account.
+ */
 @Data
-public class SimpleUserDTO {
+public class AdvancedUserDTO {
 
     public static final UserDao dao = new UserDao();
 
@@ -32,11 +35,6 @@ public class SimpleUserDTO {
     @JsonProperty
     @Email
     private String email;
-
-
-    private SimpleUserDTO() {
-    }
-
     @JsonIgnore
     public String getPassword() {
         return password;
@@ -47,14 +45,31 @@ public class SimpleUserDTO {
     }
 
     public User toUser() {
-        return dao.getByUsername(username);
+        User user;
+        if (getId() != 0)
+        {
+            user = dao.getById(getId());
+        }
+        else {
+            user = new User();
+            user.setUsername(getUsername());
+        }
+        user.setPassword(getPassword());
+        user.setFirstName(getFirstName());
+        user.setLastName(getLastName());
+        user.setEmail(getEmail());
+        user.setDiscord(getDiscord());
+        return user;
     }
 
-    public static SimpleUserDTO fromUser(User user) {
-        SimpleUserDTO res = new SimpleUserDTO();
+    public static AdvancedUserDTO fromUser(User user) {
+        var res = new AdvancedUserDTO();
         res.id = user.getId();
         res.username = user.getUsername();
         res.discord = user.getDiscord();
+        res.firstName = user.getFirstName();
+        res.lastName = user.getLastName();
+        res.email = user.getEmail();
         return res;
     }
 }

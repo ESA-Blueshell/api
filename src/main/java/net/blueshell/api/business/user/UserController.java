@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.ws.rs.*;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +24,8 @@ public class UserController extends AuthorizationController {
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private static final int PASSWORD_RESET_KEY_LENGTH = 15;
     private static final long PASSWORD_RESET_KEY_VALID_SECONDS = 3600 * 2; // 2 hours
+    private static final int INITIAL_ACCOUNT_KEY_LENGTH = 15;
+    private static final long INITIAL_ACCOUNT_KEY_VALID_SECONDS = 3600 * 24 * 3; // 3 days
 
     private final UserDao dao = new UserDao();
 
@@ -55,16 +56,23 @@ public class UserController extends AuthorizationController {
     }
 
     @PutMapping(value = "/users")
-    public Object createOrUpdateUser(User user) {
-        User oldUser = dao.getById(user.getId());
-        User userWithSameName = dao.getByUsername(user.getUsername());
+    public Object createOrUpdateUser(@RequestBody AdvancedUserDTO userDto) {
+        User oldUser = dao.getById(userDto.getId());
+        User userWithSameName = dao.getByUsername(userDto.getUsername());
+
+        var user = userDto.toUser();
         if (oldUser == null) {
             if (userWithSameName != null) {
                 return new BadRequestException("Username is already taken.");
             }
 
             // create new user
-            return createUser(user);
+            createUser(user);
+            user.setResetType(ResetType.INITIAL_ACCOUNT_CREATION);
+            user.setResetKey(Util.getRandomCapitalString(INITIAL_ACCOUNT_KEY_LENGTH));
+            user.setResetKeyValidUntil(Timestamp.from(Instant.now().plusSeconds(INITIAL_ACCOUNT_KEY_VALID_SECONDS)));
+            EmailModule.sendPasswordResetEmail(user);
+            dao.update(user);
         } else if (isAuthedForUser(user)){
             dao.update(user);
         }
