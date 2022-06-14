@@ -3,6 +3,8 @@ package net.blueshell.api.business.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.Timestamp;
 
@@ -13,6 +15,8 @@ import java.sql.Timestamp;
 public class AdvancedUserDTO {
 
     public static final UserDao dao = new UserDao();
+
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @JsonProperty
     private long id;
@@ -98,7 +102,7 @@ public class AdvancedUserDTO {
         }
 
         if (getPassword() != null) {
-            user.setPassword(getPassword());
+            user.setPassword(passwordEncoder.encode(getPassword()));
         }
         if (getEmail() != null) {
             user.setEmail(getEmail());
