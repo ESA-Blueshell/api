@@ -60,7 +60,7 @@ public class UserController extends AuthorizationController {
         User oldUser = dao.getById(userDto.getId());
         User userWithSameName = dao.getByUsername(userDto.getUsername());
 
-        var user = userDto.toUser();
+        var user = userDto.mapToUser();
         if (oldUser == null) {
             if (userWithSameName != null) {
                 return new BadRequestException("Username is already taken.");

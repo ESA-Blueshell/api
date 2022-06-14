@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import javax.validation.constraints.Email;
+import java.sql.Timestamp;
 
 /**
  * DTO for communicating account changes after the initial account.
@@ -21,20 +21,59 @@ public class AdvancedUserDTO {
     private String username;
 
     @JsonProperty
-    private String discord;
-
-    @JsonProperty
-    private String firstName;
-
-    @JsonProperty
-    private String lastName;
-
-    @JsonProperty
     private String password;
 
     @JsonProperty
-    @Email
+    private String gender;
+
+    @JsonProperty
+    private Timestamp dateOfBirth;
+
+    @JsonProperty
+    private String discordTag;
+
+    @JsonProperty
     private String email;
+
+    @JsonProperty
+    private String phoneNumber;
+
+    @JsonProperty
+    private String street;
+
+    @JsonProperty
+    private String houseNumber;
+
+    @JsonProperty
+    private String postalCode;
+
+    @JsonProperty
+    private String city;
+
+    @JsonProperty
+    private String country;
+
+    @JsonProperty
+    private boolean wantsNewsletter;
+
+    @JsonProperty
+    private boolean photoConsent;
+
+    @JsonProperty
+    private String nationality;
+
+    @JsonProperty
+    private String schoolMail;
+
+    @JsonProperty
+    private String studentNumber;
+
+    @JsonProperty
+    private String study;
+
+    @JsonProperty
+    private int startStudyYear;
+
     @JsonIgnore
     public String getPassword() {
         return password;
@@ -44,21 +83,29 @@ public class AdvancedUserDTO {
         this.password = password;
     }
 
-    public User toUser() {
+    /**
+     * Creates a new User if id == 0, gets the current User from the DB otherwise. Then fills all fields with the ones
+     * of this object *if they are not null*. If a field *is null*, the field will be ignored.
+     * @return the created or altered User
+     */
+    public User mapToUser() {
         User user;
-        if (getId() != 0)
-        {
+        if (getId() != 0) {
             user = dao.getById(getId());
-        }
-        else {
+        } else {
             user = new User();
             user.setUsername(getUsername());
         }
-        user.setPassword(getPassword());
-        user.setFirstName(getFirstName());
-        user.setLastName(getLastName());
-        user.setEmail(getEmail());
-        user.setDiscord(getDiscord());
+
+        if (getPassword() != null) {
+            user.setPassword(getPassword());
+        }
+        if (getEmail() != null) {
+            user.setEmail(getEmail());
+        }
+        if (getDiscordTag() != null) {
+            user.setDiscord(getDiscordTag());
+        }
         return user;
     }
 
@@ -66,10 +113,8 @@ public class AdvancedUserDTO {
         var res = new AdvancedUserDTO();
         res.id = user.getId();
         res.username = user.getUsername();
-        res.discord = user.getDiscord();
-        res.firstName = user.getFirstName();
-        res.lastName = user.getLastName();
         res.email = user.getEmail();
+        res.discordTag = user.getDiscord();
         return res;
     }
 }
