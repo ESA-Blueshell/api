@@ -121,6 +121,9 @@ public class UserController extends AuthorizationController {
             throw new BadRequestException("Invalid key.");
         }
 
+        user.setResetKey(null);
+        user.setResetType(null);
+        user.setResetKeyValidUntil(null);
         user.setEnabled(true);
 
         dao.update(user);
