@@ -46,7 +46,7 @@ public class EmailModule {
     };
 
     public static void sendInitialKeyEmail(User user) {
-        sendEmail(user, INITIAL_EMAIL_SUBJECT, String.format(INITIAL_EMAIL_CONTENT));
+        sendEmail(user, INITIAL_EMAIL_SUBJECT, String.format(INITIAL_EMAIL_CONTENT, user.getUsername(), user.getUsername(), user.getResetKey()));
     }
 
     public static void sendPasswordResetEmail(User user) {

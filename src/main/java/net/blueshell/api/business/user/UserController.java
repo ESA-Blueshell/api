@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.ws.rs.*;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,7 +56,7 @@ public class UserController extends AuthorizationController {
         return user;
     }
 
-    @PutMapping(value = "/users")
+    @PutMapping(value = "/createAccount")
     public Object createOrUpdateUser(@RequestBody AdvancedUserDTO userDto) {
         User oldUser = dao.getById(userDto.getId());
         User userWithSameName = dao.getByUsername(userDto.getUsername());
@@ -67,11 +68,16 @@ public class UserController extends AuthorizationController {
             }
 
             // create new user
+            user.setCreatedAt(TimeUtil.of(LocalDateTime.now()));
+            user.setFirstName("");
+            user.setLastName("");
+            user.setMemberSince(TimeUtil.of(LocalDateTime.of(3000, 1, 1, 0, 0)));
+
             createUser(user);
             user.setResetType(ResetType.INITIAL_ACCOUNT_CREATION);
             user.setResetKey(Util.getRandomCapitalString(INITIAL_ACCOUNT_KEY_LENGTH));
             user.setResetKeyValidUntil(Timestamp.from(Instant.now().plusSeconds(INITIAL_ACCOUNT_KEY_VALID_SECONDS)));
-            EmailModule.sendPasswordResetEmail(user);
+            EmailModule.sendInitialKeyEmail(user);
             dao.update(user);
         } else if (isAuthedForUser(user)){
             dao.update(user);
