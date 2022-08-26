@@ -8,12 +8,12 @@ import javax.mail.internet.MimeMessage;
 
 public class EmailModule {
 
-    private static final String EMAIL = "TODO";
-    private static final String EMAIL_PASSWORD = "TODO";
+    private static final String EMAIL = "swordieserver@gmail.com";
+    private static final String EMAIL_PASSWORD = "tqfyvxkpzhnrldtj"; // App password
 
     private static final String INITIAL_EMAIL_SUBJECT = "Blueshell esports account creation";
     private static final String INITIAL_EMAIL_CONTENT = "Hello %s, <br /><br />" +
-            "Welcome to Blueshell Esports! You can activate your account by clicking on <a href=\"https://www.esa-blueshell.nl/reset-password?username=%s&token=%s\">this link</a>.<br /><br />" +
+            "Welcome to Blueshell Esports! You can activate your account by clicking on <a href=\"https://www.esa-blueshell.nl/enableaccount?username=%s&token=%s\">this link</a>.<br /><br />" +
             "For information on events and our general community, either check out either our discord or <a href=\"https://www.esa-blueshell.nl\">website</a>. Enjoy your stay!<br /><br />" +
             "Please do not reply to this email, as this is a generated email. Any responses will be ignored.<br /><br />" +
             "Kind regards," +

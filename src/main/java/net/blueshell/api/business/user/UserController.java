@@ -112,11 +112,11 @@ public class UserController extends AuthorizationController {
         return StatusCodes.OK;
     }
 
-    @PostMapping(value = "/users/{id}/enable")
-    public void enableUserByEmaillink(@PathVariable("id") String id, @QueryParam("token") String token) {
-        User user = dao.getById(Long.parseLong(id));
+    @PostMapping(value = "/users/{username}/enable")
+    public void enableUserByEmaillink(@PathVariable("username") String username, @QueryParam("token") String token) {
+        User user = dao.getByUsername(username);
         if (user == null) {
-            throw new NotFoundException();
+            throw new NotFoundException("Could not find that account.");
         }
 
         if (TimeUtil.hasExpired(user.getResetKeyValidUntil())) {

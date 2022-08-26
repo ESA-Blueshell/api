@@ -89,6 +89,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // dont authenticate this particular request
                 .authorizeRequests().antMatchers("/authenticate").permitAll().and()
                 .authorizeRequests().antMatchers("/createAccount").permitAll().and()
+                .authorizeRequests().antMatchers("/enableAccount").permitAll().and()
                 .authorizeRequests().antMatchers(HttpMethod.GET, "/news/**").permitAll().and()
                 .authorizeRequests().antMatchers(HttpMethod.GET, "/events/**").permitAll().and()
                 .authorizeRequests().antMatchers(HttpMethod.GET, "/download/**").permitAll().and()
