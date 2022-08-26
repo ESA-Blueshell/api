@@ -1,6 +1,7 @@
 package net.blueshell.api.business.user;
 
 import com.wordnik.swagger.annotations.ApiParam;
+import net.blueshell.api.business.user.request.EnableAccountRequest;
 import net.blueshell.api.business.user.request.PasswordResetRequest;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
@@ -58,6 +59,10 @@ public class UserController extends AuthorizationController {
 
     @PutMapping(value = "/createAccount")
     public Object createOrUpdateUser(@RequestBody AdvancedUserDTO userDto) {
+        if (!userDto.getUsername().matches("[a-zA-Z0-9]+")) {
+            return new BadRequestException("Invalid username, must only contain alphanumeric characters.");
+        }
+
         User oldUser = dao.getById(userDto.getId());
         User userWithSameName = dao.getByUsername(userDto.getUsername());
 
@@ -112,9 +117,13 @@ public class UserController extends AuthorizationController {
         return StatusCodes.OK;
     }
 
-    @PostMapping(value = "/users/{username}/enable")
-    public void enableUserByEmaillink(@PathVariable("username") String username, @QueryParam("token") String token) {
-        User user = dao.getByUsername(username);
+    @PostMapping(value = "/enableAccount")
+    public void enableUserByEmaillink(@RequestBody EnableAccountRequest request) {
+        if (request == null || !request.isValid()) {
+            throw new BadRequestException("Missing username/password.");
+        }
+
+        User user = dao.getByUsername(request.getUsername());
         if (user == null) {
             throw new NotFoundException("Could not find that account.");
         }
@@ -123,7 +132,7 @@ public class UserController extends AuthorizationController {
             throw new BadRequestException("Reset key has expired.");
         }
 
-        if (!token.equals(user.getResetKey()) || user.getResetType() != ResetType.INITIAL_ACCOUNT_CREATION) {
+        if (!request.getToken().equals(user.getResetKey()) || user.getResetType() != ResetType.INITIAL_ACCOUNT_CREATION) {
             throw new BadRequestException("Invalid key.");
         }
 
