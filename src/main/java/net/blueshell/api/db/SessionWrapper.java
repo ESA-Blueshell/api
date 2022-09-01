@@ -21,82 +21,60 @@ public class SessionWrapper<T> {
 
     public List<T> list() {
         List<T> list = null;
-        boolean done = false;
-        while (!done) {
-            try (Session session = sessionFactory.openSession()) {
-                Transaction t = session.beginTransaction();
-                CriteriaBuilder builder = session.getCriteriaBuilder();
-                CriteriaQuery<T> criteriaQuery = builder.createQuery(clazz);
-                Root<T> tRoot = criteriaQuery.from(clazz);
-                criteriaQuery.select(tRoot);
-                list = session.createQuery(criteriaQuery).getResultList();
-                t.commit();
-                done = true;
-            } catch (Exception e) {
-                System.out.println("Well that didn't work, let's try again");
-            }
+        try (Session session = sessionFactory.openSession()) {
+            Transaction t = session.beginTransaction();
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<T> criteriaQuery = builder.createQuery(clazz);
+            Root<T> tRoot = criteriaQuery.from(clazz);
+            criteriaQuery.select(tRoot);
+            list = session.createQuery(criteriaQuery).getResultList();
+            t.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
 
     public T getById(long id) {
         T obj = null;
-        boolean done = false;
-        while (!done) {
-            try (Session session = sessionFactory.openSession()) {
-                Transaction t = session.beginTransaction();
-                obj = session.find(clazz, id);
-                t.commit();
-                done = true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Well that didn't work, let's try again");
-            }
+        try (Session session = sessionFactory.openSession()) {
+            Transaction t = session.beginTransaction();
+            obj = session.find(clazz, id);
+            t.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return obj;
     }
 
     public T create(T object) {
-        boolean done = false;
-        while (!done) {
-            try (Session session = sessionFactory.openSession()) {
-                Transaction t = session.beginTransaction();
-                session.save(object);
-                t.commit();
-                done = true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Well that didn't work, let's try again");
-            }
+        try (Session session = sessionFactory.openSession()) {
+            Transaction t = session.beginTransaction();
+            session.save(object);
+            t.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return object;
     }
 
     public void update(T object) {
-        boolean done = false;
-        while (!done) {
-            try (Session session = sessionFactory.openSession()) {
-                Transaction t = session.beginTransaction();
-                session.update(object);
-                t.commit();
-                done = true;
-            } catch (Exception e) {
-                System.out.println("Well that didn't work, let's try again");
-            }
+        try (Session session = sessionFactory.openSession()) {
+            Transaction t = session.beginTransaction();
+            session.update(object);
+            t.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public void delete(long id) {
-        boolean done = false;
-        while (!done) {
-            try (Session session = sessionFactory.openSession()) {
-                Transaction t = session.beginTransaction();
-                session.remove(getById(id));
-                t.commit();
-                done = true;
-            } catch (Exception e) {
-                System.out.println("Well that didn't work, let's try again");
-            }
+        try (Session session = sessionFactory.openSession()) {
+            Transaction t = session.beginTransaction();
+            session.remove(getById(id));
+            t.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

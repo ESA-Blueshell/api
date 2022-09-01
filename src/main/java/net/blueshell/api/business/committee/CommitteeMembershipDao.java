@@ -19,17 +19,12 @@ public class CommitteeMembershipDao extends SessionWrapper<CommitteeMembership> 
 
     public CommitteeMembership getById(CommitteeMembershipId id) {
         CommitteeMembership obj = null;
-        boolean done = false;
-        while (!done) {
-            try (Session session = getSessionFactory().openSession()) {
-                Transaction t = session.beginTransaction();
-                obj = session.find(CommitteeMembership.class, id);
-                t.commit();
-                done = true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Well that didn't work, let's try again");
-            }
+        try (Session session = getSessionFactory().openSession()) {
+            Transaction t = session.beginTransaction();
+            obj = session.find(CommitteeMembership.class, id);
+            t.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return obj;
     }
@@ -40,16 +35,12 @@ public class CommitteeMembershipDao extends SessionWrapper<CommitteeMembership> 
     }
 
     public void delete(CommitteeMembershipId id) {
-        boolean done = false;
-        while (!done) {
-            try (Session session = getSessionFactory().openSession()) {
-                Transaction t = session.beginTransaction();
-                session.remove(getById(id));
-                t.commit();
-                done = true;
-            } catch (Exception e) {
-                System.out.println("Well that didn't work, let's try again");
-            }
+        try (Session session = getSessionFactory().openSession()) {
+            Transaction t = session.beginTransaction();
+            session.remove(getById(id));
+            t.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
