@@ -93,7 +93,7 @@ public class EventController extends AuthorizationController {
             return StatusCodes.FORBIDDEN;
         }
         // If the event has a sign-up, check if the new event's form is properly formatted
-        if (event.getSignUpForm() != null && !event.validateSignUpForm()) {
+        if (event.getSignUpForm() != null && !event.hasValidSignUpForm()) {
             return StatusCodes.BAD_REQUEST;
         }
         if (event.isVisible()) {
@@ -197,7 +197,7 @@ public class EventController extends AuthorizationController {
             return StatusCodes.FORBIDDEN;
         }
         // If the event has a sign-up, check if the new event's form is properly formatted
-        if (newEvent.getSignUpForm() != null && !newEvent.validateSignUpForm()) {
+        if (newEvent.getSignUpForm() != null && !newEvent.hasValidSignUpForm()) {
             return StatusCodes.BAD_REQUEST;
         }
 

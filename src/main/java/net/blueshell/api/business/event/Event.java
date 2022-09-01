@@ -263,7 +263,7 @@ public class Event {
      *
      * @return true if all's good
      */
-    public boolean validateSignUpForm() {
+    public boolean hasValidSignUpForm() {
         if (signUpForm == null) {
             return false;
         }
@@ -275,28 +275,33 @@ public class Event {
             if (eventSignUpForm.size() == 0) return false;
 
             for (Object questionObj : eventSignUpForm) {
-                LinkedHashMap<String, Object> question = (LinkedHashMap<String, Object>) questionObj;
-
-                if (!question.containsKey("prompt") || !question.containsKey("type")) return false;
-
-                String type = (String) question.get("type");
-                if (!type.equals("open") && !type.equals("radio") && !type.equals("checkbox"))
-                    return false;
-
-                if ("radio".equals(type) || "checkbox".equals(type)) {
-                    // Schizo checking
-                    if (!question.containsKey("options") ||
-                            !(question.get("options") instanceof List) ||
-                            !(((List) question.get("options")).stream().allMatch(opt -> opt instanceof String))) {
-                        return false;
-                    }
-                }
+                if (!hasValidSignupFormQuestion((LinkedHashMap<String, Object>) questionObj)) return false;
             }
         } catch (ParseException e) {
             return false;
         }
 
         return true;
+    }
+
+    private boolean hasValidSignupFormQuestion(LinkedHashMap<String, Object> questionObj) {
+        LinkedHashMap<String, Object> question = questionObj;
+
+        if (!question.containsKey("prompt") || !question.containsKey("type")) return false;
+
+        String type = (String) question.get("type");
+        switch (type) {
+            case "open":
+                return true;
+            case "radio":
+            case "checkbox":
+                return question.containsKey("options") &&
+                        question.get("options") instanceof List &&
+                        ((List) question.get("options")).stream().allMatch(opt -> opt instanceof String);
+
+            default:
+                return false;
+        }
     }
 
     /**
