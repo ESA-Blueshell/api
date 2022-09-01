@@ -31,8 +31,6 @@ public class UserController extends AuthorizationController {
 
     private final UserDao dao = new UserDao();
 
-
-
     @PreAuthorize("hasAuthority('BOARD')")
     @GetMapping(value = "/users/members")
     public List<SimpleUserDTO> getMembers() {
@@ -66,28 +64,30 @@ public class UserController extends AuthorizationController {
         User oldUser = dao.getById(userDto.getId());
         User userWithSameName = dao.getByUsername(userDto.getUsername());
 
-        var user = userDto.mapToUser();
+        var user = userDto.mapToBasicUser();
         if (oldUser == null) {
             if (userWithSameName != null) {
-                return new BadRequestException("Username is already taken.");
+                throw new BadRequestException("Username is already taken.");
             }
-
-            // create new user
-            user.setCreatedAt(TimeUtil.of(LocalDateTime.now()));
-            user.setFirstName("");
-            user.setLastName("");
-            user.setMemberSince(TimeUtil.of(LocalDateTime.of(3000, 1, 1, 0, 0)));
-
-            createUser(user);
-            user.setResetType(ResetType.INITIAL_ACCOUNT_CREATION);
-            user.setResetKey(Util.getRandomCapitalString(INITIAL_ACCOUNT_KEY_LENGTH));
-            user.setResetKeyValidUntil(Timestamp.from(Instant.now().plusSeconds(INITIAL_ACCOUNT_KEY_VALID_SECONDS)));
-            EmailModule.sendInitialKeyEmail(user);
-            dao.update(user);
+            fillInInitialFieldsAndSendMail(user);
         } else if (isAuthedForUser(user)){
-            dao.update(user);
+            UserModule.applyUserDtoToUser(userDto, user);
         }
         return StatusCodes.OK;
+    }
+
+    private void fillInInitialFieldsAndSendMail(User user) {
+        user.setCreatedAt(TimeUtil.of(LocalDateTime.now()));
+        user.setFirstName("");
+        user.setLastName("");
+        user.setMemberSince(TimeUtil.of(LocalDateTime.of(3000, 1, 1, 0, 0)));
+
+        createUser(user);
+        user.setResetType(ResetType.INITIAL_ACCOUNT_CREATION);
+        user.setResetKey(Util.getRandomCapitalString(INITIAL_ACCOUNT_KEY_LENGTH));
+        user.setResetKeyValidUntil(Timestamp.from(Instant.now().plusSeconds(INITIAL_ACCOUNT_KEY_VALID_SECONDS)));
+        EmailModule.sendInitialKeyEmail(user);
+        dao.update(user);
     }
 
     @GetMapping(value = "/users/{id}")

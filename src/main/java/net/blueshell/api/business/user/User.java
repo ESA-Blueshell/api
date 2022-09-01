@@ -69,7 +69,7 @@ public class User implements UserDetails {
     private String studentNumber;
 
     @Column(name = "date_of_birth")
-    private String dateOfBirth;
+    private Timestamp dateOfBirth;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -110,6 +110,27 @@ public class User implements UserDetails {
 
     @Column(name = "consent_gdpr")
     private boolean consentGdpr;
+
+    @Column
+    private String gender;
+
+    @Column
+    private String street;
+
+    @Column
+    private String country;
+
+    @Column
+    private boolean photoConsent;
+
+    @Column
+    private String nationality;
+
+    @Column
+    private String study;
+
+    @Column
+    private int startStudyYear;
 
     @OneToOne
     @JoinColumn(name = "registration_id")

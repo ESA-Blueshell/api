@@ -92,7 +92,7 @@ public class AdvancedUserDTO {
      * of this object *if they are not null*. If a field *is null*, the field will be ignored.
      * @return the created or altered User
      */
-    public User mapToUser() {
+    public User mapToBasicUser() {
         User user;
         if (getId() != 0) {
             user = dao.getById(getId());
