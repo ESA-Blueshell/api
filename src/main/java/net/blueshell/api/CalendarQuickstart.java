@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -127,16 +128,16 @@ public class CalendarQuickstart {
             event.setSignUp(false);
             // Check if it's an all day event or not
             if (gevent.getStart().getDateTime() == null) {
-                // It's an all day event, so only set the start time
-
-                // Date toString is yyyy-mm-dd, so split on "-" and turn all of them into ints
-                List<Integer> splitStartDate = Arrays.stream(gevent.getStart().getDate().toString().split("-")).map(Integer::parseInt).collect(Collectors.toList());
-                event.setStartTime(LocalDateTime.of(splitStartDate.get(0), splitStartDate.get(1), splitStartDate.get(2), 0, 0));
+                event.setStartTime(LocalDate.parse(gevent.getEnd().getDate().toString(), DateTimeFormatter.ISO_DATE).atStartOfDay());
+                event.setEndTime(LocalDate.parse(gevent.getEnd().getDate().toString(), DateTimeFormatter.ISO_DATE)
+                        // vuetify's calendar doesn't like it when there's an event until midnight
+                        .atStartOfDay().minusMinutes(1));
             } else {
                 // Set start time
                 event.setStartTime(LocalDateTime.parse(gevent.getStart().getDateTime().toString(), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-                //TODO: Check if this is still relevant ---> Check if the event is until midnight (vuetify's calendar doesn't like it when there's an event until midnight for some reason ¯\_(ツ)_/¯)
-                event.setEndTime(LocalDateTime.parse(gevent.getEnd().getDateTime().toString(), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+
+                // vuetify's calendar doesn't like it when there's an event until midnight
+                event.setEndTime(LocalDateTime.parse(gevent.getEnd().getDateTime().toString().replace("00:00:00", "23:59:00"), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
             }
 
             event.setGoogleId(gevent.getId());

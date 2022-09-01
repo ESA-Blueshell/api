@@ -26,7 +26,7 @@ public class AuthorizationController {
 
     protected boolean isAuthedForUser(User user) {
         return hasAuthorization(Role.ADMIN)
-                || hasAuthorization(Role.MEMBER) && getAuthorizedUsername().equalsIgnoreCase(user.getUsername());
+                || getAuthorizedUsername().equalsIgnoreCase(user.getUsername());
     }
 
     protected boolean hasAuthorization(Role role) {
