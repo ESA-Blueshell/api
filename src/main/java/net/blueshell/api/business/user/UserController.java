@@ -70,8 +70,6 @@ public class UserController extends AuthorizationController {
                 throw new BadRequestException("Username is already taken.");
             }
             fillInInitialFieldsAndSendMail(user);
-        } else if (isAuthedForUser(user)) {
-            UserModule.applyUserDtoToUser(userDto, user);
         }
         return StatusCodes.OK;
     }
@@ -80,10 +78,11 @@ public class UserController extends AuthorizationController {
     public Object updateUser(
             @ApiParam(name = "Id of the user") @PathVariable("id") String id,
             @RequestBody AdvancedUserDTO userDto) {
+        var existingUser = dao.getById(Long.parseLong(id));
 
-
-        //TODO: netjes alle checks doen (voor geldigheid van fields en authority voor sommige velden)
-
+        if (isAuthedForUser(existingUser)) {
+            UserModule.applyUserDtoToUser(userDto, existingUser);
+        }
 
         return StatusCodes.INTERNAL_SERVER_ERROR;
     }

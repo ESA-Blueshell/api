@@ -1,16 +1,18 @@
 package net.blueshell.api.business.user;
 
 import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.regex.Pattern;
 
 public class UserModule {
 
     private static final UserDao dao = new UserDao();
 
-    public static User applyUserDtoToUser(AdvancedUserDTO dto, User user) {
+    public static void applyUserDtoToUser(AdvancedUserDTO dto, User user) {
         applyIfFieldIsNull(user, dto.getGender(), User::setGender);
         applyIfFieldIsNull(user, dto.getDateOfBirth(), User::setDateOfBirth);
         applyIfFieldIsNull(user, dto.getDiscordTag(), User::setDiscord);
-        applyIfFieldIsNull(user, dto.getEmail(), User::setEmail);
+        applyIfFieldIsNullAndPassesVerifyCheck(user, dto.getEmail(), User::setEmail, UserModule::verifyEmail);
         applyIfFieldIsNull(user, dto.getPhoneNumber(), User::setPhoneNumber);
         applyIfFieldIsNull(user, dto.getStreet(), User::setStreet);
         applyIfFieldIsNull(user, dto.getHouseNumber(), User::setHouseNumber);
@@ -25,8 +27,16 @@ public class UserModule {
         applyIfFieldIsNull(user, dto.getStartStudyYear(), User::setStartStudyYear);
 
         dao.update(user);
+    }
 
-        return user;
+    private static Boolean verifyEmail(String email) {
+        return Pattern.matches("^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", email);
+    }
+
+    private static <T> void applyIfFieldIsNullAndPassesVerifyCheck(User user, T obj, BiConsumer<User, T> applier, Function<T, Boolean> verifier) {
+        if (obj != null && verifier.apply(obj)) {
+            applier.accept(user, obj);
+        }
     }
 
     private static <T> void applyIfFieldIsNull(User user, T obj, BiConsumer<User, T> applier) {
