@@ -1,6 +1,9 @@
 package net.blueshell.api.auth.model;
 
+import net.blueshell.api.business.user.Role;
+
 import java.io.Serializable;
+import java.util.Set;
 
 public class JwtResponse implements Serializable {
 
@@ -8,13 +11,13 @@ public class JwtResponse implements Serializable {
     private final String jwtToken;
     private final long userId;
     private final long expiration;
-    private final boolean isBoard;
+    private Set<Role> roles;
 
-    public JwtResponse(String jwtToken, long userId, long expiration, boolean isBoard) {
+    public JwtResponse(String jwtToken, long userId, long expiration, Set<Role> roles) {
         this.jwtToken = jwtToken;
         this.userId = userId;
         this.expiration = expiration;
-        this.isBoard = isBoard;
+        this.roles = roles;
     }
 
     public String getToken() {
@@ -29,7 +32,7 @@ public class JwtResponse implements Serializable {
         return expiration;
     }
 
-    public boolean isBoard() {
-        return isBoard;
+    public Set<Role> getRoles() {
+        return roles;
     }
 }

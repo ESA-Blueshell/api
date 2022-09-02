@@ -1,6 +1,11 @@
 package net.blueshell.api.business.user;
 
+import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public enum Role {
     GUEST("GUEST"),
@@ -33,5 +38,20 @@ public enum Role {
 
     public Role[] getInheritedRoles() {
         return inheritedRoles;
+    }
+
+    /**
+     * Depth- (or breadth idk) first search for all inherited roles of this Role.
+     */
+    public Set<Role> getAllInheritedRoles() {
+        Set<Role> res = new HashSet<>();
+        res.add(this);
+        ArrayDeque<Role> unexplored = new ArrayDeque<>(List.of(inheritedRoles));
+        while (!unexplored.isEmpty()) {
+            Role currentRole = unexplored.remove();
+            res.add(currentRole);
+            unexplored.addAll(Arrays.stream(currentRole.inheritedRoles).filter(role -> !res.contains(role)).collect(Collectors.toList()));
+        }
+        return res;
     }
 }

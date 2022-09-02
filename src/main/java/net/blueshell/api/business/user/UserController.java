@@ -70,10 +70,22 @@ public class UserController extends AuthorizationController {
                 throw new BadRequestException("Username is already taken.");
             }
             fillInInitialFieldsAndSendMail(user);
-        } else if (isAuthedForUser(user)){
+        } else if (isAuthedForUser(user)) {
             UserModule.applyUserDtoToUser(userDto, user);
         }
         return StatusCodes.OK;
+    }
+
+    @PutMapping(value = "/users/{id}")
+    public Object updateUser(
+            @ApiParam(name = "Id of the user") @PathVariable("id") String id,
+            @RequestBody AdvancedUserDTO userDto) {
+
+
+        //TODO: netjes alle checks doen (voor geldigheid van fields en authority voor sommige velden)
+
+
+        return StatusCodes.INTERNAL_SERVER_ERROR;
     }
 
     private void fillInInitialFieldsAndSendMail(User user) {

@@ -11,6 +11,10 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @RestController
 @CrossOrigin
 public class JwtAuthenticationController {
@@ -36,7 +40,10 @@ public class JwtAuthenticationController {
 
         var expiration = System.currentTimeMillis() + JwtTokenUtil.JWT_TOKEN_VALIDITY;
 
-        return ResponseEntity.ok(new JwtResponse(token, user.getId(), expiration, user.hasRole(Role.BOARD)));
+        Set<Role> roles = user.getRoles();
+        //Add all inherited roles
+        roles.addAll(roles.stream().flatMap(role -> role.getAllInheritedRoles().stream()).collect(Collectors.toList()));
+        return ResponseEntity.ok(new JwtResponse(token, user.getId(), expiration, roles));
     }
 
     private void authenticate(String username, String password) throws Exception {
