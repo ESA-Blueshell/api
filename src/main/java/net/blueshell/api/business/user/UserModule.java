@@ -9,22 +9,22 @@ public class UserModule {
     private static final UserDao dao = new UserDao();
 
     public static void applyUserDtoToUser(AdvancedUserDTO dto, User user) {
-        applyIfFieldIsNull(user, dto.getGender(), User::setGender);
-        applyIfFieldIsNull(user, dto.getDateOfBirth(), User::setDateOfBirth);
-        applyIfFieldIsNull(user, dto.getDiscordTag(), User::setDiscord);
-        applyIfFieldIsNullAndPassesVerifyCheck(user, dto.getEmail(), User::setEmail, UserModule::verifyEmail);
-        applyIfFieldIsNull(user, dto.getPhoneNumber(), User::setPhoneNumber);
-        applyIfFieldIsNull(user, dto.getStreet(), User::setStreet);
-        applyIfFieldIsNull(user, dto.getHouseNumber(), User::setHouseNumber);
-        applyIfFieldIsNull(user, dto.getPostalCode(), User::setPostalCode);
-        applyIfFieldIsNull(user, dto.getCity(), User::setCity);
-        applyIfFieldIsNull(user, dto.getCountry(), User::setCountry);
-        applyIfFieldIsNull(user, dto.isWantsNewsletter(), User::setNewsletter);
-        applyIfFieldIsNull(user, dto.isPhotoConsent(), User::setPhotoConsent);
-        applyIfFieldIsNull(user, dto.getNationality(), User::setNationality);
-        applyIfFieldIsNull(user, dto.getStudentNumber(), User::setStudentNumber);
-        applyIfFieldIsNull(user, dto.getStudy(), User::setStudy);
-        applyIfFieldIsNull(user, dto.getStartStudyYear(), User::setStartStudyYear);
+        applyIfFieldIsNotNull(user, dto.getGender(), User::setGender);
+        applyIfFieldIsNotNull(user, dto.getDateOfBirth(), User::setDateOfBirth);
+        applyIfFieldIsNotNull(user, dto.getDiscordTag(), User::setDiscord);
+        applyIfFieldIsNotNullAndPassesVerifyCheck(user, dto.getEmail(), User::setEmail, UserModule::verifyEmail);
+        applyIfFieldIsNotNull(user, dto.getPhoneNumber(), User::setPhoneNumber);
+        applyIfFieldIsNotNull(user, dto.getStreet(), User::setStreet);
+        applyIfFieldIsNotNull(user, dto.getHouseNumber(), User::setHouseNumber);
+        applyIfFieldIsNotNull(user, dto.getPostalCode(), User::setPostalCode);
+        applyIfFieldIsNotNull(user, dto.getCity(), User::setCity);
+        applyIfFieldIsNotNull(user, dto.getCountry(), User::setCountry);
+        applyIfFieldIsNotNull(user, dto.isWantsNewsletter(), User::setNewsletter);
+        applyIfFieldIsNotNull(user, dto.isPhotoConsent(), User::setPhotoConsent);
+        applyIfFieldIsNotNull(user, dto.getNationality(), User::setNationality);
+        applyIfFieldIsNotNull(user, dto.getStudentNumber(), User::setStudentNumber);
+        applyIfFieldIsNotNull(user, dto.getStudy(), User::setStudy);
+        applyIfFieldIsNotNull(user, dto.getStartStudyYear(), User::setStartStudyYear);
 
         dao.update(user);
     }
@@ -33,13 +33,13 @@ public class UserModule {
         return Pattern.matches("^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", email);
     }
 
-    private static <T> void applyIfFieldIsNullAndPassesVerifyCheck(User user, T obj, BiConsumer<User, T> applier, Function<T, Boolean> verifier) {
+    private static <T> void applyIfFieldIsNotNullAndPassesVerifyCheck(User user, T obj, BiConsumer<User, T> applier, Function<T, Boolean> verifier) {
         if (obj != null && verifier.apply(obj)) {
             applier.accept(user, obj);
         }
     }
 
-    private static <T> void applyIfFieldIsNull(User user, T obj, BiConsumer<User, T> applier) {
+    private static <T> void applyIfFieldIsNotNull(User user, T obj, BiConsumer<User, T> applier) {
         if (obj != null) {
             applier.accept(user, obj);
         }
