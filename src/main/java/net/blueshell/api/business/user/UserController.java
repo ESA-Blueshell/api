@@ -80,11 +80,12 @@ public class UserController extends AuthorizationController {
             @RequestBody AdvancedUserDTO userDto) {
         var existingUser = dao.getById(Long.parseLong(id));
 
-        if (isAuthedForUser(existingUser)) {
-            UserModule.applyUserDtoToUser(userDto, existingUser);
+        if (existingUser == null || !isAuthedForUser(existingUser)) {
+            return StatusCodes.NOT_FOUND;
         }
+        UserModule.applyUserDtoToUser(userDto, existingUser);
 
-        return StatusCodes.INTERNAL_SERVER_ERROR;
+        return StatusCodes.OK;
     }
 
     private void fillInInitialFieldsAndSendMail(User user) {
