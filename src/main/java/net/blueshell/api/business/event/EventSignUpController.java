@@ -69,11 +69,10 @@ public class EventSignUpController extends AuthorizationController {
         if (event == null || !event.canSee(authedUser)) {
             return StatusCodes.NOT_FOUND;
         }
-        if (!event.isSignUp()) {
+        if (!event.isSignUp() || (!authedUser.isContributionPaid() && event.isMembersOnly())) {
             return StatusCodes.FORBIDDEN;
         }
-
-
+        
         // Check if the formAnswers are formatted correctly
         if (event.getSignUpForm() != null && !event.validateAnswers(formAnswers)) {
             return StatusCodes.BAD_REQUEST;
