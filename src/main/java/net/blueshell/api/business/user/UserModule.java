@@ -11,11 +11,11 @@ public class UserModule {
     public static void applyUserDtoToUser(AdvancedUserDTO dto, User user) {
         applyIfFieldIsNotNull(user, dto.getGender(), User::setGender);
         applyIfFieldIsNotNull(user, dto.getDateOfBirth(), User::setDateOfBirth);
-        applyIfFieldIsNotNull(user, dto.getDiscordTag(), User::setDiscord);
+        applyIfFieldIsNotNull(user, dto.getDiscord(), User::setDiscord);
         applyIfFieldIsNotNullAndPassesVerifyCheck(user, dto.getEmail(), User::setEmail, UserModule::verifyEmail);
         applyIfFieldIsNotNull(user, dto.getPhoneNumber(), User::setPhoneNumber);
-        applyIfFieldIsNotNull(user, dto.getStreet(), User::setStreet);
-        applyIfFieldIsNotNull(user, dto.getHouseNumber(), User::setHouseNumber);
+        applyIfFieldIsNotNull(user, dto.getAddress(), User::setAddress);
+        applyIfFieldIsNotNull(user, dto.getSteamId(), User::setSteamid);
         applyIfFieldIsNotNull(user, dto.getPostalCode(), User::setPostalCode);
         applyIfFieldIsNotNull(user, dto.getCity(), User::setCity);
         applyIfFieldIsNotNull(user, dto.getCountry(), User::setCountry);

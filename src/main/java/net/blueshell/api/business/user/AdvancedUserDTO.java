@@ -34,7 +34,10 @@ public class AdvancedUserDTO {
     private Timestamp dateOfBirth;
 
     @JsonProperty
-    private String discordTag;
+    private String discord;
+
+    @JsonProperty
+    private String steamId;
 
     @JsonProperty
     private String email;
@@ -43,13 +46,10 @@ public class AdvancedUserDTO {
     private String phoneNumber;
 
     @JsonProperty
-    private String street;
-
-    @JsonProperty
-    private String houseNumber;
-
-    @JsonProperty
     private String postalCode;
+
+    @JsonProperty
+    private String address;
 
     @JsonProperty
     private String city;
@@ -107,8 +107,8 @@ public class AdvancedUserDTO {
         if (getEmail() != null) {
             user.setEmail(getEmail());
         }
-        if (getDiscordTag() != null) {
-            user.setDiscord(getDiscordTag());
+        if (getDiscord() != null) {
+            user.setDiscord(getDiscord());
         }
         return user;
     }
@@ -118,7 +118,7 @@ public class AdvancedUserDTO {
         res.id = user.getId();
         res.username = user.getUsername();
         res.email = user.getEmail();
-        res.discordTag = user.getDiscord();
+        res.discord = user.getDiscord();
         return res;
     }
 }

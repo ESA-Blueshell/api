@@ -40,7 +40,7 @@ create table users
   date_of_birth     datetime,
   created_at        datetime not null,
   member_since      datetime not null,
-  discord           text,  #TODO: change to discordid / discordtag
+  discord           text,  #TODO: change to discordid / discordtag ALSO CHANGE IT IN FRONTEND THEN (on account page for example)
   steamid           text,
   newsletter        bool     not null,
   contribution_paid bool     not null,

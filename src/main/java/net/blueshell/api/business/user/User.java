@@ -201,7 +201,7 @@ public class User implements UserDetails {
             return set;
         }
         for (CommitteeMembership cm : getCommitteeMemberships()) {
-            set.add(cm.getUserId());
+            set.add(cm.getCommitteeId());
         }
         return set;
     }
