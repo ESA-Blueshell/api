@@ -24,7 +24,13 @@ public class SimpleUserDTO {
     private String firstName;
 
     @JsonProperty
+    private String prefix;
+
+    @JsonProperty
     private String lastName;
+
+    @JsonProperty
+    private String fullName;
 
     @JsonProperty
     private String password;
@@ -35,6 +41,20 @@ public class SimpleUserDTO {
 
 
     private SimpleUserDTO() {
+    }
+
+    public static SimpleUserDTO fromUser(User user) {
+        SimpleUserDTO res = new SimpleUserDTO();
+        res.id = user.getId();
+        res.username = user.getUsername();
+        res.discord = user.getDiscord();
+        res.firstName = user.getFirstName();
+        res.prefix = user.getPrefix();
+        res.lastName = user.getLastName();
+        res.fullName = user.getFullName();
+        res.password = user.getPassword();
+        res.email = user.getEmail();
+        return res;
     }
 
     @JsonIgnore
@@ -48,13 +68,5 @@ public class SimpleUserDTO {
 
     public User toUser() {
         return dao.getByUsername(username);
-    }
-
-    public static SimpleUserDTO fromUser(User user) {
-        SimpleUserDTO res = new SimpleUserDTO();
-        res.id = user.getId();
-        res.username = user.getUsername();
-        res.discord = user.getDiscord();
-        return res;
     }
 }

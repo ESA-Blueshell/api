@@ -58,13 +58,12 @@ public class CommitteeController extends AuthorizationController {
             return StatusCodes.NOT_FOUND;
         }
         newCommittee.setId(Long.parseLong(id));
-        dao.update(newCommittee);
 
-        Set<CommitteeMembership> removedMembers = new HashSet<>(oldCommittee.getMembers());
-        removedMembers.removeAll(newCommittee.getMembers());
-        for (CommitteeMembership membership : removedMembers) {
+        // Remove old members (members are re-added automatically by the dao.update() call
+        for (CommitteeMembership membership : oldCommittee.getMembers()) {
             membershipDao.delete(new CommitteeMembershipId(membership.getUser(), membership.getCommittee()));
         }
+        dao.update(newCommittee);
         return StatusCodes.OK;
     }
 
