@@ -90,9 +90,11 @@ public class UserController extends AuthorizationController {
 
     private void fillInInitialFieldsAndSendMail(User user) {
         user.setCreatedAt(TimeUtil.of(LocalDateTime.now()));
-        user.setFirstName("");
-        user.setLastName("");
         user.setMemberSince(TimeUtil.of(LocalDateTime.of(3000, 1, 1, 0, 0)));
+
+        // Enabled by default.
+        user.setNewsletter(true);
+        user.setPhotoConsent(true);
 
         createUser(user);
         user.setResetType(ResetType.INITIAL_ACCOUNT_CREATION);

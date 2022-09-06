@@ -31,6 +31,18 @@ public class AdvancedUserDTO {
     private String gender;
 
     @JsonProperty
+    private String initials;
+
+    @JsonProperty
+    private String firstName;
+
+    @JsonProperty
+    private String prefix;
+
+    @JsonProperty
+    private String lastName;
+
+    @JsonProperty
     private Timestamp dateOfBirth;
 
     @JsonProperty
@@ -103,6 +115,18 @@ public class AdvancedUserDTO {
 
         if (getPassword() != null) {
             user.setPassword(passwordEncoder.encode(getPassword()));
+        }
+        if (getInitials() != null) {
+            user.setInitials(getInitials());
+        }
+        if (getFirstName() != null) {
+            user.setFirstName(getFirstName());
+        }
+        if (getPrefix() != null) {
+            user.setPrefix(getPrefix());
+        }
+        if (getLastName() != null) {
+            user.setLastName(getLastName());
         }
         if (getEmail() != null) {
             user.setEmail(getEmail());
