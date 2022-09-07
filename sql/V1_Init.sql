@@ -188,9 +188,8 @@ foreign key (last_editor_id) references users (id)
 create table authorities
 (
   user_id   bigint,       # for
-  username  varchar(30), # needs size as it's a PK
   authority varchar(255), # same
-  primary key (username, authority)
+  primary key (user_id, authority)
 );
 
 insert into users (username, enabled, password, first_name, last_name, email, created_at, member_since, newsletter,
@@ -203,9 +202,9 @@ values
        ('guest', true, '$2a$10$/qL7UwPKq0qeAoQDrQ2k2egdk7ldDroa50CPNmf6nud7F4QOGm3S6', 'u', 'ser', 'us@er', NOW(), NOW(), true, true, true, true),
        ('Louis Hu', true, 'redacted', 'Louis', 'Hu', 'lou@uis', NOW(), NOW(), true, true, true, true);
 
-insert into authorities (user_id, username, authority)
-values (1, 'admin', 'ADMIN'),
-       (2, 'user', 'MEMBER'),
-       (3, 'board', 'BOARD'),
-       (4, 'treasurer', 'TREASURER'),
-       (5, 'guest', 'GUEST');
+insert into authorities (user_id, authority)
+values (1, 'ADMIN'),
+       (2, 'MEMBER'),
+       (3, 'BOARD'),
+       (4, 'TREASURER'),
+       (5, 'GUEST');

@@ -43,18 +43,6 @@ public class UserController extends AuthorizationController {
         return dao.list();
     }
 
-    @PreAuthorize("hasAuthority('BOARD')")
-    @PostMapping(value = "/users")
-    public Object createUser(User user) {
-        try {
-            dao.create(user);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return StatusCodes.BAD_REQUEST;
-        }
-        return user;
-    }
-
     @PutMapping(value = "/createAccount")
     public Object createOrUpdateUser(@RequestBody AdvancedUserDTO userDto) {
         if (!userDto.getUsername().matches("[a-zA-Z0-9]+")) {
@@ -96,7 +84,9 @@ public class UserController extends AuthorizationController {
         user.setNewsletter(true);
         user.setPhotoConsent(true);
 
-        createUser(user);
+        dao.create(user);
+
+        // Only try doing email stuff once user has been successfully created
         user.setResetType(ResetType.INITIAL_ACCOUNT_CREATION);
         user.setResetKey(Util.getRandomCapitalString(INITIAL_ACCOUNT_KEY_LENGTH));
         user.setResetKeyValidUntil(Timestamp.from(Instant.now().plusSeconds(INITIAL_ACCOUNT_KEY_VALID_SECONDS)));

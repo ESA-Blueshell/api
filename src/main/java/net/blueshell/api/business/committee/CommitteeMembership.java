@@ -53,6 +53,11 @@ public class CommitteeMembership implements Serializable {
     }
 
     @Override
+    public String toString() {
+        return String.format("CommitteeMembership={userId: %d, committee: %d, role: %s}", user.getId(), committee.getId(), role);
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(user, committee);
     }
