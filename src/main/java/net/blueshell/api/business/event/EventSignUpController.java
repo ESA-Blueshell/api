@@ -1,5 +1,6 @@
 package net.blueshell.api.business.event;
 
+import net.blueshell.api.business.user.Role;
 import net.blueshell.api.business.user.User;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
@@ -69,10 +70,10 @@ public class EventSignUpController extends AuthorizationController {
         if (event == null || !event.canSee(authedUser)) {
             return StatusCodes.NOT_FOUND;
         }
-        if (!event.isSignUp() || (!authedUser.isContributionPaid() && event.isMembersOnly())) {
+        if (!event.isSignUp() || (!authedUser.hasRole(Role.MEMBER) && event.isMembersOnly())) {
             return StatusCodes.FORBIDDEN;
         }
-        
+
         // Check if the formAnswers are formatted correctly
         if (event.getSignUpForm() != null && !event.validateAnswers(formAnswers)) {
             return StatusCodes.BAD_REQUEST;
