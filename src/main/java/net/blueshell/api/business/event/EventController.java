@@ -189,7 +189,7 @@ public class EventController extends AuthorizationController {
         }
         Event newEvent = eventDTO.toEvent(storageService, authedUser);
         // Check if user is allowed to edit the old and new event
-        if (!(oldEvent.canEdit(authedUser) || newEvent.canEdit(authedUser))) {
+        if (!(oldEvent.canEdit(authedUser) && newEvent.canEdit(authedUser))) {
             return StatusCodes.FORBIDDEN;
         }
         // Check if the user is allowed to edit public events (only board should be able to do this)

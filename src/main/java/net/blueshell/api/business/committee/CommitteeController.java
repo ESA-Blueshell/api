@@ -13,6 +13,7 @@ import javax.ws.rs.NotFoundException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @RestController
@@ -23,7 +24,9 @@ public class CommitteeController extends AuthorizationController {
     private final CommitteeMembershipDao membershipDao = new CommitteeMembershipDao();
 
     @GetMapping(value = "/committees")
-    public Object getCommittees(@RequestParam(required = false) boolean fullCommittees) {
+    public Object getCommittees(
+            @RequestParam(required = false) boolean fullCommittees,
+            @RequestParam(required = false) boolean isMember) {
         Function<Committee, Object> fromCommittee;
         if (fullCommittees) {
             if (!hasAuthorization(Role.BOARD)) {
@@ -33,7 +36,16 @@ public class CommitteeController extends AuthorizationController {
         } else {
             fromCommittee = SimpleCommitteeDTO::fromCommittee;
         }
+
+        Predicate<Committee> isMemberPredicate;
+        if (isMember) {
+            isMemberPredicate = (committee -> hasAuthorization(Role.BOARD) || getPrincipal().getCommitteeIds().contains(committee.getId()));
+        } else {
+            isMemberPredicate = (committee -> true);
+        }
+
         return dao.list().stream()
+                .filter(isMemberPredicate)
                 .map(fromCommittee)
                 .collect(Collectors.toList());
     }
