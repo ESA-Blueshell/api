@@ -19,7 +19,7 @@ public class UserModule {
         applyIfFieldIsNotNull(user, dto.getPostalCode(), User::setPostalCode);
         applyIfFieldIsNotNull(user, dto.getCity(), User::setCity);
         applyIfFieldIsNotNull(user, dto.getCountry(), User::setCountry);
-        applyIfFieldIsNotNull(user, dto.isWantsNewsletter(), User::setNewsletter);
+        applyIfFieldIsNotNull(user, dto.isNewsletter(), User::setNewsletter);
         applyIfFieldIsNotNull(user, dto.isPhotoConsent(), User::setPhotoConsent);
         applyIfFieldIsNotNull(user, dto.getNationality(), User::setNationality);
         applyIfFieldIsNotNull(user, dto.getStudentNumber(), User::setStudentNumber);

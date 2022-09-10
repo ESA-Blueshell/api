@@ -70,7 +70,7 @@ public class AdvancedUserDTO {
     private String country;
 
     @JsonProperty
-    private boolean wantsNewsletter;
+    private boolean newsletter;
 
     @JsonProperty
     private boolean photoConsent;
