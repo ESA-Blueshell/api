@@ -202,27 +202,27 @@ public class EventController extends AuthorizationController {
         }
 
         // Handle event visibility
-//        try {
-//            if (newEvent.isVisible()) {
-//                String googleId;
-//                if (oldEvent.isVisible()) {
-//                    // Update event in googel calendar
-//                    googleId = oldEvent.getGoogleId();
-//                    updateGoogleCalendar(googleId, newEvent);
-//                } else {
-//                    // Add to google calendar
-//                    googleId = addToGoogleCalendar(newEvent);
-//                }
-//                newEvent.setGoogleId(googleId);
-//
-//            } else if (oldEvent.getGoogleId() != null) {
-//                // Old event was on google calendar and new event is not visible, so remove it from google calendar
-//                removeFromGoogleCalendar(oldEvent.getGoogleId());
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return StatusCodes.INTERNAL_SERVER_ERROR;
-//        }
+        try {
+            if (newEvent.isVisible()) {
+                String googleId;
+                if (oldEvent.isVisible()) {
+                    // Update event in googel calendar
+                    googleId = oldEvent.getGoogleId();
+                    updateGoogleCalendar(googleId, newEvent);
+                } else {
+                    // Add to google calendar
+                    googleId = addToGoogleCalendar(newEvent);
+                }
+                newEvent.setGoogleId(googleId);
+
+            } else if (oldEvent.getGoogleId() != null) {
+                // Old event was on google calendar and new event is not visible, so remove it from google calendar
+                removeFromGoogleCalendar(oldEvent.getGoogleId());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return StatusCodes.INTERNAL_SERVER_ERROR;
+        }
 
         // Update event in database
         newEvent.setId(Long.parseLong(id));
