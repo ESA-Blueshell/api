@@ -296,7 +296,7 @@ public class User implements UserDetails {
     }
 
     public String getFullName() {
-        if (prefix == null) {
+        if (prefix == null || prefix.isEmpty()) {
             return firstName + " " + lastName;
         }
         return firstName + " " + prefix + " " + lastName;
