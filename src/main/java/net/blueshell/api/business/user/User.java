@@ -120,7 +120,7 @@ public class User implements UserDetails {
     @Column
     private String country;
 
-    @Column
+    @Column(name = "photo_consent")
     private boolean photoConsent;
 
     @Column
@@ -129,7 +129,7 @@ public class User implements UserDetails {
     @Column
     private String study;
 
-    @Column
+    @Column(name = "start_study_year")
     private int startStudyYear;
 
     @OneToOne
@@ -230,14 +230,14 @@ public class User implements UserDetails {
         return set;
     }
 
-    @JsonProperty("password")
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     @JsonIgnore
     public String getPassword() {
         return password;
+    }
+
+    @JsonProperty("password")
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
