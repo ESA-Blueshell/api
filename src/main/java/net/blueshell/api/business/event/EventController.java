@@ -155,7 +155,7 @@ public class EventController extends AuthorizationController {
 
         return dao.list().stream()
                 .filter(predicate)
-                .filter(e -> e.getDeletedAt() != null)
+                .filter(e -> e.getDeletedAt() == null)
                 .sorted(Comparator.comparing(Event::getStartTime))
                 .collect(Collectors.toList());
     }
@@ -175,7 +175,14 @@ public class EventController extends AuthorizationController {
 
     @PutMapping(value = "/events/restore/{id}")
     public Object restoreDeletedEvent(@PathVariable("id") String id) {
+
         Event event = dao.getById(Long.parseLong(id));
+        User authedUser = getPrincipal();
+
+        if (!event.canEdit(authedUser)) {
+            return StatusCodes.FORBIDDEN;
+        }
+
         event.setDeletedAt(null);
         dao.update(event);
         return StatusCodes.OK;
