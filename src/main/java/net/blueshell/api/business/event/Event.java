@@ -22,6 +22,7 @@ import org.apache.tomcat.util.json.ParseException;
 
 import javax.persistence.*;
 import java.math.BigInteger;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -121,6 +122,9 @@ public class Event {
 
     @Column(name = "sign_up_form")
     private String signUpForm;
+
+    @Column(name = "deleted_at")
+    private Instant deletedAt;
 
 
     public Event() {

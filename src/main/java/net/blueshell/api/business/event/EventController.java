@@ -19,6 +19,7 @@ import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
 import net.blueshell.api.daos.Dao;
 import net.blueshell.api.storage.StorageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,6 +45,7 @@ public class EventController extends AuthorizationController {
     private static final String GOOGLE_CALENDAR_ID = "9cugc57n2rc43p6o1r0povepe0@group.calendar.google.com";
 
     private final Dao<Event> dao = new EventDao();
+    private final EventSignUpDao signUpDao = new EventSignUpDao();
     private final StorageService storageService;
     private Calendar service;
 
@@ -152,8 +155,30 @@ public class EventController extends AuthorizationController {
 
         return dao.list().stream()
                 .filter(predicate)
+                .filter(e -> e.getDeletedAt() != null)
                 .sorted(Comparator.comparing(Event::getStartTime))
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping(value = "/events/deleted")
+    public List<Event> getDeletedEvents() {
+        Predicate<Event> predicate;
+
+        User authedUser = getPrincipal();
+        predicate = event -> event.canEdit(authedUser) && event.getDeletedAt() != null;
+
+        return dao.list().stream()
+                .filter(predicate)
+                .sorted(Comparator.comparing(Event::getStartTime))
+                .collect(Collectors.toList());
+    }
+
+    @PutMapping(value = "/events/restore/{id}")
+    public Object restoreDeletedEvent(@PathVariable("id") String id) {
+        Event event = dao.getById(Long.parseLong(id));
+        event.setDeletedAt(null);
+        dao.update(event);
+        return StatusCodes.OK;
     }
 
     @DeleteMapping(value = "/events/{id}")
@@ -174,8 +199,12 @@ public class EventController extends AuthorizationController {
             e.printStackTrace();
             return StatusCodes.INTERNAL_SERVER_ERROR;
         }
-        // Delete the event in the database
-        dao.delete(Long.parseLong(id));
+        // Remove all the users that are signed up to that event from it
+        List<User> signedUpUsers = signUpDao.list().stream().filter(signUp -> signUp.getEvent().getId() == Long.parseLong(id)).map(EventSignUp::getUser).collect(Collectors.toList());
+        signedUpUsers.forEach(user -> signUpDao.delete(new EventSignUpId(user, event)));
+        // Soft-delete the event in the database
+        event.setDeletedAt(Instant.now());
+        dao.update(event);
         return StatusCodes.OK;
     }
 
