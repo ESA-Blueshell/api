@@ -83,7 +83,6 @@ public class UserController extends AuthorizationController {
 
         // Enabled by default.
         user.setNewsletter(true);
-        user.setPhotoConsent(true);
 
         dao.create(user);
 
