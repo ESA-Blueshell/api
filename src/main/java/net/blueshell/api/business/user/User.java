@@ -275,6 +275,10 @@ public class User implements UserDetails {
         getRoles().add(role);
     }
 
+    public void removeRole(Role role) {
+        getRoles().remove(role);
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

@@ -5,6 +5,11 @@ import net.blueshell.api.db.SessionWrapper;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class UserDao extends SessionWrapper<User> implements Dao<User> {
 
     public UserDao() {
@@ -19,6 +24,21 @@ public class UserDao extends SessionWrapper<User> implements Dao<User> {
             query.setParameter("name", username);
             var objs = query.list();
             obj = objs.size() == 0 ? null : (User) objs.get(0);
+            t.commit();
+        }
+        return obj;
+    }
+
+    public List<User> list(Boolean isMember) {
+        List<User> obj = new ArrayList<>();
+        try (Session session = getSessionFactory().openSession()) {
+            Transaction t = session.beginTransaction();
+            var query = session.createQuery("from User");
+            obj.addAll(query.list());
+            if (isMember != null) {
+                // Just do this like this for now, idk how to do it properly in HQL
+                obj = obj.stream().filter(u -> isMember == u.hasRole(Role.MEMBER)).collect(Collectors.toList());
+            }
             t.commit();
         }
         return obj;
