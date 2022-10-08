@@ -150,8 +150,8 @@ public class UserController extends AuthorizationController {
 
     @PreAuthorize("hasAuthority('BOARD')")
     @PostMapping(value = "/users/{id}/member")
-    public Object getUserById(@ApiParam(name = "Id of the user") @PathVariable("id") String id,
-                              @ApiParam(name = "To enable/disable membership") @QueryParam("member") Boolean isMember) {
+    public void makeUserMember(@ApiParam(name = "Id of the user") @PathVariable("id") String id,
+                               @ApiParam(name = "To enable/disable membership") @QueryParam("member") Boolean isMember) {
         User user = dao.getById(Long.parseLong(id));
         if (user == null) {
             throw new NotFoundException("Could not find that account.");
