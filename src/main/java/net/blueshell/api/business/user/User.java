@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -224,7 +225,8 @@ public class User implements UserDetails {
         if (getRoles() == null) {
             return set;
         }
-        for (Role role : getRoles()) {
+        // Go through all inherited roles
+        for (Role role : roles.stream().flatMap(role -> role.getAllInheritedRoles().stream()).collect(Collectors.toList())) {
             set.add(role.getReprString());
         }
         return set;
