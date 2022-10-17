@@ -8,6 +8,7 @@ import net.blueshell.api.controller.AuthorizationController;
 import net.blueshell.api.email.EmailModule;
 import net.blueshell.api.util.TimeUtil;
 import net.blueshell.api.util.Util;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,8 +40,8 @@ public class UserController extends AuthorizationController {
 
     @PreAuthorize("hasAuthority('BOARD')")
     @GetMapping(value = "/users")
-    public List<User> getUsers() {
-        return dao.list();
+    public List<User> getUsers(@QueryParam("member") Boolean isMember) {
+        return dao.list(isMember);
     }
 
     @PutMapping(value = "/createAccount")
@@ -143,6 +144,29 @@ public class UserController extends AuthorizationController {
         user.setResetType(null);
         user.setResetKeyValidUntil(null);
         user.setEnabled(true);
+
+        dao.update(user);
+    }
+
+    @PreAuthorize("hasAuthority('BOARD')")
+    @PostMapping(value = "/users/{id}/member")
+    public void makeUserMember(@ApiParam(name = "Id of the user") @PathVariable("id") String id,
+                               @ApiParam(name = "To enable/disable membership") @QueryParam("member") Boolean isMember) {
+        User user = dao.getById(Long.parseLong(id));
+        if (user == null) {
+            throw new NotFoundException("Could not find that account.");
+        }
+
+        if (isMember == null) {
+            isMember = true;
+        }
+
+        if (isMember) {
+            user.addRole(Role.MEMBER);
+            user.setMemberSince(Timestamp.from(Instant.now()));
+        } else {
+            user.removeRole(Role.MEMBER);
+        }
 
         dao.update(user);
     }
