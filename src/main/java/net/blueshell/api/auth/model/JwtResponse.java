@@ -10,12 +10,14 @@ public class JwtResponse implements Serializable {
     private static final long serialVersionUID = -8091879091924046844L;
     private final String jwtToken;
     private final long userId;
+    private final String username;
     private final long expiration;
     private Set<Role> roles;
 
-    public JwtResponse(String jwtToken, long userId, long expiration, Set<Role> roles) {
+    public JwtResponse(String jwtToken, long userId, String username, long expiration, Set<Role> roles) {
         this.jwtToken = jwtToken;
         this.userId = userId;
+        this.username = username;
         this.expiration = expiration;
         this.roles = roles;
     }
@@ -26,6 +28,10 @@ public class JwtResponse implements Serializable {
 
     public long getUserId() {
         return userId;
+    }
+
+    public String getUsername(){
+        return username;
     }
 
     public long getExpiration() {

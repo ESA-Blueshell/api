@@ -43,7 +43,7 @@ public class JwtAuthenticationController {
         Set<Role> roles = user.getRoles();
         //Add all inherited roles
         roles.addAll(roles.stream().flatMap(role -> role.getAllInheritedRoles().stream()).collect(Collectors.toList()));
-        return ResponseEntity.ok(new JwtResponse(token, user.getId(), expiration, roles));
+        return ResponseEntity.ok(new JwtResponse(token, user.getId(), user.getUsername(), expiration, roles));
     }
 
     private void authenticate(String username, String password) throws Exception {
