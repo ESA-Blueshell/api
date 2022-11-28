@@ -8,7 +8,6 @@ import net.blueshell.api.business.event.EventFeedback;
 import net.blueshell.api.business.event.EventSignUp;
 import net.blueshell.api.business.news.News;
 import net.blueshell.api.business.picture.Picture;
-import net.blueshell.api.business.registration.Registration;
 import net.blueshell.api.business.sponsor.Sponsor;
 import net.blueshell.api.business.user.User;
 import org.hibernate.Session;
@@ -40,7 +39,6 @@ public class DatabaseManager {
                 EventSignUp.class,
                 EventFeedback.class,
                 Picture.class,
-                Registration.class,
                 Sponsor.class,
                 News.class,
                 User.class,

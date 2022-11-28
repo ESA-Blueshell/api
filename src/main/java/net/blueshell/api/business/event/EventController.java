@@ -22,12 +22,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
@@ -37,8 +34,6 @@ import java.util.stream.Collectors;
 public class EventController extends AuthorizationController {
 
 
-    //TODO: CHANGE TO BLUESHELL CALENDAR!!!!!!!!!1!!!!!111!!
-    //TODO: This is now the sitecie calendar lol
     private static final String GOOGLE_CALENDAR_ID = "9cugc57n2rc43p6o1r0povepe0@group.calendar.google.com";
     private static final String APPLICATION_NAME = "Blueshell Google Calendar API";
     private static final String CREDENTIALS_FILENAME = "credentials.json";
@@ -189,11 +184,13 @@ public class EventController extends AuthorizationController {
             return StatusCodes.FORBIDDEN;
         }
         // Delete the event in the google calendar
-        try {
-            removeFromGoogleCalendar(event.getGoogleId());
-        } catch (IOException e) {
-            e.printStackTrace();
-            return StatusCodes.INTERNAL_SERVER_ERROR;
+        if (event.getGoogleId() != null) {
+            try {
+                removeFromGoogleCalendar(event.getGoogleId());
+            } catch (IOException e) {
+                e.printStackTrace();
+                return StatusCodes.INTERNAL_SERVER_ERROR;
+            }
         }
         // Remove all the users that are signed up to that event from it
         List<User> signedUpUsers = signUpDao.list().stream().filter(signUp -> signUp.getEvent().getId() == Long.parseLong(id)).map(EventSignUp::getUser).collect(Collectors.toList());
