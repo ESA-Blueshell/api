@@ -16,6 +16,9 @@ import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
 import net.blueshell.api.daos.Dao;
 import net.blueshell.api.storage.StorageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +44,9 @@ public class EventController extends AuthorizationController {
     private final Dao<Event> dao = new EventDao();
     private final StorageService storageService;
     private Calendar service;
+
+    @Autowired
+    private EventRepository eventRepository;
 
     {
         try {
@@ -160,6 +166,11 @@ public class EventController extends AuthorizationController {
                 .collect(Collectors.toList());
     }
 
+
+    @GetMapping(value = "/events/eventPageable")
+    Page<Event> eventPageable(Pageable pageable) {
+        return eventRepository.findAll(pageable);
+    }
 
     @DeleteMapping(value = "/events/{id}")
     public Object deleteEventById(@PathVariable("id") String id) {
