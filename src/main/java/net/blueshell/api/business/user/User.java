@@ -7,7 +7,6 @@ import net.blueshell.api.business.billable.Billable;
 import net.blueshell.api.business.committee.Committee;
 import net.blueshell.api.business.committee.CommitteeMembership;
 import net.blueshell.api.business.picture.Picture;
-import net.blueshell.api.business.registration.Registration;
 import net.blueshell.api.util.TimeUtil;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -134,11 +133,6 @@ public class User implements UserDetails {
     private int startStudyYear;
 
     @OneToOne
-    @JoinColumn(name = "registration_id")
-    @JsonIgnore
-    private Registration registration;
-
-    @OneToOne
     @JoinColumn(name = "profile_picture")
     @JsonIgnore
     private Picture profilePicture;
@@ -161,7 +155,6 @@ public class User implements UserDetails {
     @ElementCollection(targetClass = Role.class)
     @Enumerated(EnumType.STRING)
     @JsonIgnore
-    @Column(name = "authority")
     private Set<Role> roles;
 
     public User() {
@@ -183,11 +176,6 @@ public class User implements UserDetails {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    @JsonProperty("registration")
-    public long getRegistrationId() {
-        return getRegistration() == null ? 0 : getRegistration().getId();
     }
 
     @JsonProperty("profilePicture")
