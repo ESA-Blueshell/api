@@ -140,6 +140,27 @@ public class EventController extends AuthorizationController {
                 .collect(Collectors.toList());
     }
 
+
+
+
+    @GetMapping(value = "/events/past")
+    public List<Event> getPastEvents(@RequestParam(required = false) boolean editable) {
+        Predicate<Event> predicate;
+
+        User authedUser = getPrincipal();
+        if (editable) {
+            predicate = event -> event.getStartTime().isBefore(LocalDateTime.now()) && event.canEdit(authedUser);
+        } else {
+            predicate = event -> event.getStartTime().isBefore(LocalDateTime.now()) && event.canSee(authedUser);
+        }
+
+        return dao.list().stream()
+                .filter(predicate)
+                .sorted(Comparator.comparing(Event::getStartTime))
+                .collect(Collectors.toList());
+    }
+
+
     @DeleteMapping(value = "/events/{id}")
     public Object deleteEventById(@PathVariable("id") String id) {
         Event event = dao.getById(Long.parseLong(id));
