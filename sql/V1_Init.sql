@@ -90,6 +90,7 @@ create table events
   members_only   bool,
   sign_up        bool not null,
   sign_up_form   json,
+  max_participants bigint,
   primary key (id),
   foreign key (creator_id) references users (id),
   foreign key (last_editor_id) references users (id),
