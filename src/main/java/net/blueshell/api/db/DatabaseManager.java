@@ -1,6 +1,5 @@
 package net.blueshell.api.db;
 
-import net.blueshell.api.business.billable.Billable;
 import net.blueshell.api.business.committee.Committee;
 import net.blueshell.api.business.committee.CommitteeMembership;
 import net.blueshell.api.business.event.Event;
@@ -33,7 +32,6 @@ public class DatabaseManager {
         config = configuration;
         configuration.setProperty("autoReconnect", "true");
         Class[] dbClasses = new Class[] {
-                Billable.class,
                 Committee.class,
                 Event.class,
                 EventSignUp.class,

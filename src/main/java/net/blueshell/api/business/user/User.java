@@ -3,8 +3,6 @@ package net.blueshell.api.business.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import net.blueshell.api.business.billable.Billable;
-import net.blueshell.api.business.committee.Committee;
 import net.blueshell.api.business.committee.CommitteeMembership;
 import net.blueshell.api.business.picture.Picture;
 import net.blueshell.api.util.TimeUtil;
@@ -144,10 +142,6 @@ public class User implements UserDetails {
     @JsonIgnore
     private Set<CommitteeMembership> committeeMemberships;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "source")
-    @JsonIgnore
-    private Set<Billable> billables;
-
     @JoinTable(
             name = "authorities",
             joinColumns = @JoinColumn(name = "user_id")
@@ -155,6 +149,7 @@ public class User implements UserDetails {
     @ElementCollection(targetClass = Role.class)
     @Enumerated(EnumType.STRING)
     @JsonIgnore
+    @Column(name = "authority")
     private Set<Role> roles;
 
     public User() {
@@ -191,18 +186,6 @@ public class User implements UserDetails {
         }
         for (CommitteeMembership cm : getCommitteeMemberships()) {
             set.add(cm.getCommitteeId());
-        }
-        return set;
-    }
-
-    @JsonProperty("billables")
-    public Set<Long> getBillableIds() {
-        Set<Long> set = new HashSet<>();
-        if (getBillables() == null) {
-            return set;
-        }
-        for (Billable billable : getBillables()) {
-            set.add(billable.getId());
         }
         return set;
     }

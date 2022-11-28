@@ -12,7 +12,6 @@ import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 import lombok.Data;
-import net.blueshell.api.business.billable.Billable;
 import net.blueshell.api.business.committee.Committee;
 import net.blueshell.api.business.picture.Picture;
 import net.blueshell.api.business.user.Role;
@@ -99,10 +98,6 @@ public class Event {
     @JsonIgnore
     private Set<EventFeedback> feedbacks;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
-    @JsonIgnore
-    private Set<Billable> billables;
-
     @OneToMany(mappedBy = "event")
     @JsonIgnore
     private Set<Picture> pictures;
@@ -183,18 +178,6 @@ public class Event {
         }
         for (EventFeedback ef : getFeedbacks()) {
             set.add(ef.getId());
-        }
-        return set;
-    }
-
-    @JsonProperty("billables")
-    public Set<Long> getBillableIds() {
-        Set<Long> set = new HashSet<>();
-        if (getBillables() == null) {
-            return set;
-        }
-        for (Billable b : getBillables()) {
-            set.add(b.getId());
         }
         return set;
     }
