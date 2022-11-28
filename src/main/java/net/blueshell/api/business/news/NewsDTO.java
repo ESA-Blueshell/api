@@ -119,10 +119,7 @@ public class NewsDTO {
 
     //TODO: fix this when we work with POST (the id part)
     public News toNews() {
-        User author = userDao.getById(Long.parseLong(creatorId));
-        User last_editor = userDao.getById(Long.parseLong(lastEditorId));
-        Timestamp posted_at = Timestamp.valueOf(this.postedAt);
-        return new News(author, newsType, title, content, posted_at);
+        return new News(newsType, title, content);
     }
 
 }

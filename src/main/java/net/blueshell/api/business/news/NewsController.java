@@ -1,16 +1,20 @@
 package net.blueshell.api.business.news;
 
+import net.blueshell.api.business.user.User;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
 import net.blueshell.api.daos.Dao;
 import net.blueshell.api.business.user.UserDao;
 import net.blueshell.api.business.user.Role;
+import org.apache.tomcat.jni.Time;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,25 +48,22 @@ public class NewsController extends AuthorizationController {
 
     @PreAuthorize("hasAuthority('BOARD')")
     @PostMapping(value = "/news")
-    public Object createNews(News news) {
-        try {
-            return dao.create(news);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return StatusCodes.BAD_REQUEST;
+    public Object createNews(@RequestBody NewsDTO newsDTO) {
+        User authedUser = getPrincipal();
+        News news = newsDTO.toNews();
+        if (!news.canEdit(authedUser)) {
+            return StatusCodes.FORBIDDEN;
         }
+        news.setAuthor(authedUser);
+        news.setPostedAt(Timestamp.valueOf(LocalDateTime.now()));
+        news.setLastEditor(authedUser);
+        dao.create(news);
+        return news;
     }
 
     @PreAuthorize("hasAuthority('BOARD')")
     @PutMapping(value = "/news/{id}")
     public Object createOrUpdateNews (News news) {
-        News nw = dao.getById(news.getId());
-        if (nw == null && hasAuthorization(Role.BOARD)) {
-            // create new news
-            return createNews(news);
-        } else {
-            dao.update(nw);
-        }
         return StatusCodes.OK;
     }
 
@@ -88,7 +89,6 @@ public class NewsController extends AuthorizationController {
         dao.delete(Long.parseLong(id));
         return StatusCodes.OK;
     }
-
 
 
     public NewsDTO from(News news) {

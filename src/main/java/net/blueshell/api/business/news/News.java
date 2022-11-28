@@ -2,6 +2,7 @@ package net.blueshell.api.business.news;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import net.blueshell.api.business.user.Role;
 import net.blueshell.api.business.user.User;
 
 import javax.persistence.*;
@@ -47,6 +48,12 @@ public class News {
         this.postedAt = postedAt;
     }
 
+    public News(String newsType, String title, String content) {
+        this.newsType = newsType;
+        this.title = title;
+        this.content = content;
+    }
+
     @JsonProperty("author")
     public long getAuthorId() { return getAuthor() == null ? 0 : getAuthor().getId(); }
 
@@ -64,4 +71,9 @@ public class News {
     @Override
     public int hashCode() { return Objects.hash(id); }
 
+
+    public boolean canEdit(User user) {
+        // Check if user has board authority OR if user is in the event's committee
+        return user != null && (user.getAuthorities().stream().anyMatch(auth -> Role.valueOf(auth.getAuthority()).matchesRole(Role.BOARD)));
+    }
 }
