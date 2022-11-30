@@ -8,7 +8,8 @@ import net.blueshell.api.controller.AuthorizationController;
 import net.blueshell.api.email.EmailModule;
 import net.blueshell.api.util.TimeUtil;
 import net.blueshell.api.util.Util;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -171,11 +172,11 @@ public class UserController extends AuthorizationController {
         dao.update(user);
     }
 
-    @DeleteMapping(value = "/users/{id}/password")
-    public void enableUserByEmaillink(@PathVariable("id") String id) {
-        User user = dao.getById(Long.parseLong(id));
+    @DeleteMapping(value = "/users/password")
+    public ResponseEntity<Object> sendResetMail(@QueryParam("username") String username) {
+        User user = dao.getByUsername(username);
         if (user == null) {
-            throw new NotFoundException();
+            return StatusCodes.NOT_FOUND;
         }
 
         String resetKey;
@@ -190,26 +191,36 @@ public class UserController extends AuthorizationController {
         EmailModule.sendPasswordResetEmail(user);
 
         dao.update(user);
+        return StatusCodes.OK;
     }
 
-    @PostMapping(value = "/users/{id}/password")
-    public void enableUserByEmaillink(@PathVariable("id") String id, @QueryParam("token") String token, PasswordResetRequest resetRequest) {
-        User user = dao.getById(Long.parseLong(id));
+    @PostMapping(value = "/users/password")
+    public ResponseEntity<Object> resetUserPassword(@RequestBody PasswordResetRequest resetRequest) {
+        if (resetRequest == null || !resetRequest.isValid()) {
+            return new ResponseEntity<>("Not every field in the reset request was filled", HttpStatus.BAD_REQUEST);
+        }
+
+        User user = dao.getByUsername(resetRequest.getUsername());
         if (user == null) {
-            throw new NotFoundException();
+            return StatusCodes.NOT_FOUND;
         }
-
         if (TimeUtil.hasExpired(user.getResetKeyValidUntil())) {
-            throw new BadRequestException("Reset key has expired.");
+            return new ResponseEntity<>("Reset key has expired, try resetting your password again", HttpStatus.BAD_REQUEST);
+        }
+        if (!resetRequest.getToken().equals(user.getResetKey()) || user.getResetType() != ResetType.PASSWORD_RESET) {
+            return new ResponseEntity<>("Invalid reset key", HttpStatus.BAD_REQUEST);
         }
 
-        if (!token.equals(user.getResetKey()) || user.getResetType() != ResetType.PASSWORD_RESET) {
-            throw new BadRequestException("Invalid key.");
-        }
-
+        //Set the new password
         user.setPassword(passwordEncoder.encode(resetRequest.getNewPassword()));
 
+        //Remove reset info
+        user.setResetKey(null);
+        user.setResetKeyValidUntil(null);
+        user.setResetType(null);
+
         dao.update(user);
+        return StatusCodes.OK;
     }
 
 

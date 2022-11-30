@@ -22,7 +22,7 @@ public class EmailModule {
 
     private static final String PASSWORD_RESET_EMAIL_SUBJECT = "Blueshell esports password reset";
     private static final String PASSWORD_RESET_EMAIL_CONTENT = "Hello %s, <br /><br />" +
-            "Your password has been reset, you can create a new password by going to <a href=\"https://esa-blueshell.nl/reset-password?username=%s&token=%s\">this link</a>.<br /><br />" +
+            "Your password has been reset, you can create a new password by going to <a href=\"https://esa-blueshell.nl/login/reset-password?username=%s&token=%s\">this link</a>.<br /><br />" +
             "If you did not perform this action, please make sure that no one else but you has access to your account.<br /><br />" +
             "Please do not reply to this email, as this is a generated email. Any responses will be ignored.<br /><br />" +
             "Kind regards," +
@@ -50,7 +50,7 @@ public class EmailModule {
     }
 
     public static void sendPasswordResetEmail(User user) {
-        sendEmail(user, PASSWORD_RESET_EMAIL_SUBJECT, String.format(PASSWORD_RESET_EMAIL_CONTENT, user.getFirstName(), user.getFirstName(), user.getResetKey()));
+        sendEmail(user, PASSWORD_RESET_EMAIL_SUBJECT, String.format(PASSWORD_RESET_EMAIL_CONTENT, user.getFirstName(), user.getUsername(), user.getResetKey()));
     }
 
     public static void sendUsernameEmail(User user) {
