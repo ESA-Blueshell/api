@@ -120,7 +120,7 @@ public class EventController extends AuthorizationController {
             @RequestParam(required = false) String to) {
         User authedUser = getPrincipal();
 
-        Predicate<Event> predicate = event -> event.canSee(authedUser) &&
+        Predicate<Event> predicate = event -> event.isVisible() &&
                 (from == null || (to == null ? event.inMonth(from) : event.inRange(from, to)));
 
         return dao.list().stream()
@@ -137,7 +137,7 @@ public class EventController extends AuthorizationController {
         if (editable) {
             predicate = event -> event.getStartTime().isAfter(LocalDateTime.now()) && event.canEdit(authedUser);
         } else {
-            predicate = event -> event.getStartTime().isAfter(LocalDateTime.now()) && event.canSee(authedUser);
+            predicate = event -> event.getStartTime().isAfter(LocalDateTime.now()) && event.isVisible();
         }
 
         return dao.list().stream()
@@ -157,7 +157,7 @@ public class EventController extends AuthorizationController {
         if (editable) {
             predicate = event -> event.getStartTime().isBefore(LocalDateTime.now()) && event.canEdit(authedUser);
         } else {
-            predicate = event -> event.getStartTime().isBefore(LocalDateTime.now()) && event.canSee(authedUser);
+            predicate = event -> event.getStartTime().isBefore(LocalDateTime.now()) && event.isVisible();
         }
 
         return dao.list().stream()
