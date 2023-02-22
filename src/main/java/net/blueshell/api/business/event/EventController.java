@@ -163,7 +163,7 @@ public class EventController extends AuthorizationController {
         return dao.list().stream()
                 .filter(predicate)
                 .sorted(Comparator.comparing(Event::getStartTime))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()).subList(0,30);
     }
 
 
