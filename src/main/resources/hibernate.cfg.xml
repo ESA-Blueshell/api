@@ -9,6 +9,7 @@
         <property name="connection.autoReconnect">true</property>
         <property name="connection.autoReconnectForPools">true</property>
         <property name="connection.is-connection-validation-required">true</property>
+        <property name="connection.pool_size">100</property>
 
         <property name="hibernate.dialect">
             org.hibernate.dialect.MySQLDialect

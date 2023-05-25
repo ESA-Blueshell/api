@@ -92,8 +92,15 @@ public class NewsController extends AuthorizationController {
 
 
     public NewsDTO from(News news) {
-        return new NewsDTO(String.valueOf(news.getId()), String.valueOf(news.getAuthorId()), userDao.getById(news.getAuthorId()).getUsername(),
-                String.valueOf(news.getLastEditorId()), userDao.getById(news.getLastEditorId()).getUsername(), news.getNewsType(),
-                news.getTitle(), news.getContent(), news.getPostedAt().toString());
+        return new NewsDTO(
+                String.valueOf(news.getId()),
+                String.valueOf(news.getAuthorId()),
+                userDao.getById(news.getAuthorId()).getUsername(),
+                String.valueOf(news.getLastEditorId()),
+                userDao.getById(news.getLastEditorId()).getUsername(),
+                news.getNewsType(),
+                news.getTitle(),
+                news.getContent(),
+                news.getPostedAt().toString());
     }
 }
