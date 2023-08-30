@@ -306,6 +306,7 @@ public class Event {
         String type = (String) question.get("type");
         switch (type) {
             case "open":
+            case "description":
                 return true;
             case "radio":
             case "checkbox":
