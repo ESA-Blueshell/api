@@ -30,7 +30,7 @@ public class EmailModule {
             "Blueshell Esports";
 
     private static final String USERNAME_EMAIL_SUBJECT = "Blueshell esports username";
-    private static final String USERNAME_EMAIL_CONTENT = "Hello Swordie player,<br /><br />" +
+    private static final String USERNAME_EMAIL_CONTENT = "Hello bluesheller,<br /><br />" +
             "Your username is as follows:<br /><br />" +
             "<b>%s</b> <br /><br />" +
             "If you did not perform this action, please make sure that no one else but you has access to your account.<br /><br />" +
