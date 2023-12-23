@@ -34,7 +34,20 @@ public class DatabaseManager {
                 .setProperty("hibernate.connection.url", "jdbc:mysql://127.0.0.1:3306/blueshell?autoReconnect=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true")
                 .setProperty("hibernate.connection.username", "root")
                 .setProperty("hibernate.connection.password", "password")
-                .setProperty("connection.pool_size", "100");
+                .setProperty("connection.pool_size", "100")
+                .setProperty("connection.autoReconnect", "true")
+                .setProperty("connection.autoReconnectForPools", "true")
+                .setProperty("connection.is-connection-validation-required", "true")
+                .setProperty("connection.pool_size", "10000")
+
+                .setProperty("hibernate.enable_lazy_load_no_trans", "true")
+
+                .setProperty("hibernate.show_sql", "false")
+
+                .setProperty("hibernate.format_sql", "true")
+
+                .setProperty("hibernate.use_sql_comments", "true");
+
 
         config = configuration;
         configuration.setProperty("autoReconnect", "true");
