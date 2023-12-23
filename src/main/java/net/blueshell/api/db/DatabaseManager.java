@@ -29,6 +29,7 @@ public class DatabaseManager {
 
     public static void init() {
         Configuration configuration = new Configuration()
+                .setProperty("connection.driver_class", "com.mysql.cj.jdbc.Driver")
                 .setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect")
                 .setProperty("hibernate.connection.url", "jdbc:mysql://127.0.0.1:3306/blueshell?autoReconnect=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true")
                 .setProperty("hibernate.connection.username", "root")
