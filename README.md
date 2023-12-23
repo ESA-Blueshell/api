@@ -9,7 +9,7 @@ https://ladvien.com/data-analytics-mysql-localhost-setup/
 
 4. Double click the created schema
 
-5. Open the 2 files in the sql folder of the cloned repo (V1_Init.sql, auth_data.sql) and run them
+5. Open the 2 files in the sql folder of the cloned repo (V0__Init.sql, auth_data.sql) and run them
 
 6. Open the blueshell-api project in IntelliJ
 

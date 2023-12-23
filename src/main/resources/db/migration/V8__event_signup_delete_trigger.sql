@@ -1,3 +1,5 @@
+DELIMITER //
+
 create trigger delete_signups_trigger
     before delete
     on events
@@ -6,7 +8,7 @@ begin
     delete
     from event_signups
     where event_id = OLD.id;
-end;
+end//
 
 
 create trigger update_signups_trigger
@@ -22,4 +24,6 @@ begin
         from event_signups
         where event_id = OLD.id;
     end if;
-end;
+end//
+
+DELIMITER ;
