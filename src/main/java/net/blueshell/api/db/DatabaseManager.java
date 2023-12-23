@@ -28,10 +28,16 @@ public class DatabaseManager {
 
 
     public static void init() {
-        Configuration configuration = new Configuration().configure();
+        Configuration configuration = new Configuration()
+                .setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect")
+                .setProperty("hibernate.connection.url", "jdbc:mysql://127.0.0.1:3306/blueshell?autoReconnect=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true")
+                .setProperty("hibernate.connection.username", "root")
+                .setProperty("hibernate.connection.password", "password")
+                .setProperty("connection.pool_size", "100");
+
         config = configuration;
         configuration.setProperty("autoReconnect", "true");
-        Class[] dbClasses = new Class[] {
+        Class[] dbClasses = new Class[]{
                 Committee.class,
                 Event.class,
                 EventSignUp.class,
@@ -42,7 +48,7 @@ public class DatabaseManager {
                 User.class,
                 CommitteeMembership.class,
         };
-        for(Class clazz : dbClasses) {
+        for (Class clazz : dbClasses) {
             configuration.addAnnotatedClass(clazz);
         }
         sessionFactory = configuration.buildSessionFactory();
