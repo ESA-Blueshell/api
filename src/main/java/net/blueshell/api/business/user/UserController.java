@@ -8,6 +8,7 @@ import net.blueshell.api.controller.AuthorizationController;
 import net.blueshell.api.email.EmailModule;
 import net.blueshell.api.util.TimeUtil;
 import net.blueshell.api.util.Util;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,6 +31,9 @@ public class UserController extends AuthorizationController {
     private static final long PASSWORD_RESET_KEY_VALID_SECONDS = 3600 * 2; // 2 hours
     private static final int INITIAL_ACCOUNT_KEY_LENGTH = 15;
     private static final long INITIAL_ACCOUNT_KEY_VALID_SECONDS = 3600 * 24 * 3; // 3 days
+
+    @Autowired
+    private EmailModule emailModule;
 
     private final UserDao dao = new UserDao();
 
@@ -91,7 +95,7 @@ public class UserController extends AuthorizationController {
         user.setResetType(ResetType.INITIAL_ACCOUNT_CREATION);
         user.setResetKey(Util.getRandomCapitalString(INITIAL_ACCOUNT_KEY_LENGTH));
         user.setResetKeyValidUntil(Timestamp.from(Instant.now().plusSeconds(INITIAL_ACCOUNT_KEY_VALID_SECONDS)));
-        EmailModule.sendInitialKeyEmail(user);
+        emailModule.sendInitialKeyEmail(user);
         dao.update(user);
     }
 
@@ -188,7 +192,7 @@ public class UserController extends AuthorizationController {
         }
 
         // Send old info that is still valid (above condition is not met)
-        EmailModule.sendPasswordResetEmail(user);
+        emailModule.sendPasswordResetEmail(user);
 
         dao.update(user);
         return StatusCodes.OK;
