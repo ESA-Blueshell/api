@@ -6,6 +6,7 @@ import net.blueshell.api.business.user.UserDao;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
 import net.blueshell.api.daos.Dao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +20,12 @@ import java.util.stream.Collectors;
 @RestController
 public class CommitteeController extends AuthorizationController {
 
-    private final Dao<Committee> dao = new CommitteeDao();
-    private final Dao<User> userDao = new UserDao();
-    private final CommitteeMembershipDao membershipDao = new CommitteeMembershipDao();
+    @Autowired
+    private CommitteeDao dao;
+    @Autowired
+    private UserDao userDao;
+    @Autowired
+    private CommitteeMembershipDao membershipDao;
 
     @GetMapping(value = "/committees")
     public Object getCommittees(

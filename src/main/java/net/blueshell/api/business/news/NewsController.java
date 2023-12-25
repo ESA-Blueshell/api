@@ -17,9 +17,10 @@ import java.util.stream.Collectors;
 @RestController
 public class NewsController extends AuthorizationController {
 
-    private final Dao<News> dao = new NewsDao();
-    private final UserDao userDao = new UserDao();
-
+    @Autowired
+    private NewsDao dao;
+    @Autowired
+    private UserDao userDao;
     @Autowired
     private NewsRepository newsRepository;
 

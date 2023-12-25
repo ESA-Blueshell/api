@@ -4,7 +4,11 @@ import net.blueshell.api.daos.Dao;
 import net.blueshell.api.db.SessionWrapper;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Component;
 
+@Component
+@DependsOn("dataSource")
 public class CommitteeMembershipDao extends SessionWrapper<CommitteeMembership> implements Dao<CommitteeMembership> {
 
     public CommitteeMembershipDao() {

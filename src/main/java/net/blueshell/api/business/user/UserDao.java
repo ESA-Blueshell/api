@@ -4,12 +4,16 @@ import net.blueshell.api.daos.Dao;
 import net.blueshell.api.db.SessionWrapper;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
+@DependsOn("dataSource")
 public class UserDao extends SessionWrapper<User> implements Dao<User> {
 
     public UserDao() {

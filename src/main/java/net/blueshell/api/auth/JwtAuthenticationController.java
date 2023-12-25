@@ -5,13 +5,9 @@ import net.blueshell.api.auth.model.JwtResponse;
 import net.blueshell.api.business.user.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -53,6 +49,9 @@ public class JwtAuthenticationController {
             throw new Exception("USER_DISABLED", e);
         } catch (BadCredentialsException e) {
             throw new Exception("INVALID_CREDENTIALS", e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("WHAT???", e);
         }
     }
 

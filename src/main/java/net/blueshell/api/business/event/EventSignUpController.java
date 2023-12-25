@@ -5,6 +5,7 @@ import net.blueshell.api.business.user.User;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
 import net.blueshell.api.daos.Dao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -12,8 +13,10 @@ import java.util.stream.Collectors;
 
 @RestController
 public class EventSignUpController extends AuthorizationController {
-    private final Dao<Event> eventDao = new EventDao();
-    private final EventSignUpDao signUpDao = new EventSignUpDao();
+    @Autowired
+    private EventDao eventDao;
+    @Autowired
+    private EventSignUpDao signUpDao;
 
 
     @GetMapping(value = "/events/signups")

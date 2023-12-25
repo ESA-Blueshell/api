@@ -41,12 +41,14 @@ public class EventController extends AuthorizationController {
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final List<String> SCOPES = List.of(CalendarScopes.CALENDAR_EVENTS);
 
-    private final Dao<Event> dao = new EventDao();
-    private final StorageService storageService;
-    private Calendar service;
-
+    @Autowired
+    private EventDao dao;
     @Autowired
     private EventRepository eventRepository;
+    @Autowired
+    private StorageService storageService;
+
+    private Calendar service;
 
     {
         try {
@@ -63,10 +65,6 @@ public class EventController extends AuthorizationController {
             e.printStackTrace();
             System.exit(65656565);
         }
-    }
-
-    public EventController(StorageService storageService) {
-        this.storageService = storageService;
     }
 
     @PreAuthorize("hasAuthority('COMMITTEE')")

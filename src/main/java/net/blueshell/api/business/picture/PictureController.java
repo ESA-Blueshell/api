@@ -7,6 +7,7 @@ import net.blueshell.api.daos.Dao;
 import net.blueshell.api.business.event.EventDao;
 import net.blueshell.api.business.user.UserDao;
 import net.blueshell.api.business.event.Event;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,9 +16,10 @@ import java.util.List;
 @RestController
 public class PictureController extends AuthorizationController {
 
-    private final Dao<Picture> pictureDao = new PictureDao();
-    private final Dao<Event> eventDao = new EventDao();
-    private final UserDao userDao = new UserDao();
+    @Autowired
+    private Dao<Picture> pictureDao;
+    @Autowired
+    private Dao<Event> eventDao;
 
     @PreAuthorize("hasAuthority('BOARD')")
     @GetMapping(value = "/pictures")

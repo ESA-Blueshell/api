@@ -34,8 +34,8 @@ public class UserController extends AuthorizationController {
 
     @Autowired
     private EmailModule emailModule;
-
-    private final UserDao dao = new UserDao();
+    @Autowired
+    private UserDao dao;
 
     @PreAuthorize("hasAuthority('BOARD')")
     @GetMapping(value = "/users/members")
