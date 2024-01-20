@@ -2,15 +2,6 @@ package net.blueshell.api.business.event;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.api.client.util.DateTime;
-import com.google.api.services.calendar.model.EventDateTime;
-import com.vladsch.flexmark.ext.autolink.AutolinkExtension;
-import com.vladsch.flexmark.ext.emoji.EmojiExtension;
-import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension;
-import com.vladsch.flexmark.ext.tables.TablesExtension;
-import com.vladsch.flexmark.html.HtmlRenderer;
-import com.vladsch.flexmark.parser.Parser;
-import com.vladsch.flexmark.util.data.MutableDataSet;
 import lombok.Data;
 import net.blueshell.api.business.committee.Committee;
 import net.blueshell.api.business.picture.Picture;
@@ -22,33 +13,12 @@ import org.apache.tomcat.util.json.ParseException;
 import javax.persistence.*;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.*;
 
 @Entity
 @Table(name = "events")
 @Data
 public class Event {
-    public static final HtmlRenderer htmlRenderer;
-    public static final Parser htmlParser;
-
-
-    static {
-        MutableDataSet options = new MutableDataSet();
-
-        // uncomment to set optional extensions
-        options.set(Parser.EXTENSIONS, Arrays.asList(
-                TablesExtension.create(),
-                StrikethroughExtension.create()
-        ));
-
-        // uncomment to convert soft-breaks to hard breaks
-//        options.set(HtmlRenderer.SOFT_BREAK, "");
-//        options.set(HtmlRenderer.HARD_BREAK, "");
-
-        htmlParser = Parser.builder(options).build();
-        htmlRenderer = HtmlRenderer.builder(options).build();
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -234,31 +204,6 @@ public class Event {
         String[] toSplit = to.split("-");
         LocalDateTime toDateTime = LocalDateTime.of(Integer.parseInt(toSplit[0]), Integer.parseInt(toSplit[1]), 1, 0, 0);
         return startTime.isAfter(fromDateTime) && startTime.isBefore(toDateTime);
-    }
-
-    com.google.api.services.calendar.model.Event toGoogleEvent() {
-        com.google.api.services.calendar.model.Event googleEvent = new com.google.api.services.calendar.model.Event();
-        googleEvent.setSummary(title)
-                .setLocation(location);
-
-        //Convert description from markdown to html for cool styling
-        String preProcessedHtml = htmlRenderer.render(htmlParser.parse(description));
-        preProcessedHtml = preProcessedHtml.replaceAll("<p>", "");
-        preProcessedHtml = preProcessedHtml.replaceAll("</p>", "");
-        googleEvent.setDescription(preProcessedHtml);
-
-        DateTime startDateTime = new DateTime(startTime.atZone(ZoneId.systemDefault()).toEpochSecond() * 1000);
-        EventDateTime start = new EventDateTime()
-                .setDateTime(startDateTime)
-                .setTimeZone("Europe/Amsterdam");
-        googleEvent.setStart(start);
-
-        DateTime endDateTime = new DateTime(endTime.atZone(ZoneId.systemDefault()).toEpochSecond() * 1000);
-        EventDateTime end = new EventDateTime()
-                .setDateTime(endDateTime)
-                .setTimeZone("Europe/Amsterdam");
-        googleEvent.setEnd(end);
-        return googleEvent;
     }
 
     public boolean canSee(User user) {

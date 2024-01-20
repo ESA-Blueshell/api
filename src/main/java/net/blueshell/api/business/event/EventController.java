@@ -1,30 +1,19 @@
 package net.blueshell.api.business.event;
 
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.services.calendar.Calendar;
-import com.google.api.services.calendar.CalendarScopes;
-import com.google.auth.http.HttpCredentialsAdapter;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.wordnik.swagger.annotations.ApiParam;
 import net.blueshell.api.business.user.Role;
 import net.blueshell.api.business.user.User;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
-import net.blueshell.api.daos.Dao;
 import net.blueshell.api.storage.StorageService;
+import net.blueshell.api.util.GoogleCalendarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -34,38 +23,15 @@ import java.util.stream.Collectors;
 @RestController
 public class EventController extends AuthorizationController {
 
-
-    private static final String GOOGLE_CALENDAR_ID = "9cugc57n2rc43p6o1r0povepe0@group.calendar.google.com";
-    private static final String APPLICATION_NAME = "Blueshell Google Calendar API";
-    private static final String CREDENTIALS_FILENAME = "credentials.json";
-    private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    private static final List<String> SCOPES = List.of(CalendarScopes.CALENDAR_EVENTS);
-
     @Autowired
     private EventDao dao;
     @Autowired
     private EventRepository eventRepository;
     @Autowired
     private StorageService storageService;
+    @Autowired
+    private GoogleCalendarService calendarService;
 
-    private Calendar service;
-
-    {
-        try {
-            final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-            GoogleCredentials credentials = ServiceAccountCredentials
-                    .fromStream(new FileInputStream(CREDENTIALS_FILENAME))
-                    .createScoped(SCOPES);
-
-            // Build a new authorized API client service.
-            service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, new HttpCredentialsAdapter(credentials))
-                    .setApplicationName(APPLICATION_NAME)
-                    .build();
-        } catch (IOException | GeneralSecurityException e) {
-            e.printStackTrace();
-            System.exit(65656565);
-        }
-    }
 
     @PreAuthorize("hasAuthority('COMMITTEE')")
     @PostMapping(value = "/events")
@@ -87,7 +53,7 @@ public class EventController extends AuthorizationController {
         if (event.isVisible()) {
             // If event is visible, add to google calendar
             try {
-                String googleId = addToGoogleCalendar(event);
+                String googleId = calendarService.addToGoogleCalendar(event);
                 event.setGoogleId(googleId);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -190,7 +156,7 @@ public class EventController extends AuthorizationController {
         // Delete the event in the google calendar
         if (event.getGoogleId() != null) {
             try {
-                removeFromGoogleCalendar(event.getGoogleId());
+                calendarService.removeFromGoogleCalendar(event.getGoogleId());
             } catch (IOException e) {
                 e.printStackTrace();
                 return StatusCodes.INTERNAL_SERVER_ERROR;
@@ -230,16 +196,16 @@ public class EventController extends AuthorizationController {
                 if (oldEvent.isVisible()) {
                     // Update event in googel calendar
                     googleId = oldEvent.getGoogleId();
-                    updateGoogleCalendar(googleId, newEvent);
+                    calendarService.updateGoogleCalendar(googleId, newEvent);
                 } else {
                     // Add to google calendar
-                    googleId = addToGoogleCalendar(newEvent);
+                    googleId = calendarService.addToGoogleCalendar(newEvent);
                 }
                 newEvent.setGoogleId(googleId);
 
             } else if (oldEvent.getGoogleId() != null) {
                 // Old event was on google calendar and new event is not visible, so remove it from google calendar
-                removeFromGoogleCalendar(oldEvent.getGoogleId());
+                calendarService.removeFromGoogleCalendar(oldEvent.getGoogleId());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -256,23 +222,5 @@ public class EventController extends AuthorizationController {
         dao.update(newEvent);
         return StatusCodes.OK;
     }
-
-    private void updateGoogleCalendar(String googleId, Event newEvent) throws IOException {
-        com.google.api.services.calendar.model.Event googleEvent = newEvent.toGoogleEvent();
-        service.events().update(GOOGLE_CALENDAR_ID, googleId, googleEvent).execute();
-    }
-
-
-    private String addToGoogleCalendar(Event event) throws IOException {
-        com.google.api.services.calendar.model.Event googleEvent = event.toGoogleEvent();
-        googleEvent = service.events().insert(GOOGLE_CALENDAR_ID, googleEvent).execute();
-        return googleEvent.getId();
-    }
-
-
-    private void removeFromGoogleCalendar(String googleId) throws IOException {
-        service.events().delete(GOOGLE_CALENDAR_ID, googleId).execute();
-    }
-
 
 }
