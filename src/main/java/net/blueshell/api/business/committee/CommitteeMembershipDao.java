@@ -23,10 +23,11 @@ public class CommitteeMembershipDao extends SessionWrapper<CommitteeMembership> 
 
     public CommitteeMembership getById(CommitteeMembershipId id) {
         CommitteeMembership obj = null;
-        try (Session session = getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Transaction t = session.beginTransaction();
             obj = session.find(CommitteeMembership.class, id);
             t.commit();
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -39,10 +40,11 @@ public class CommitteeMembershipDao extends SessionWrapper<CommitteeMembership> 
     }
 
     public void delete(CommitteeMembershipId id) {
-        try (Session session = getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Transaction t = session.beginTransaction();
             session.remove(getById(id));
             t.commit();
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

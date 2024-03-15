@@ -23,10 +23,11 @@ public class EventSignUpDao extends SessionWrapper<EventSignUp> implements Dao<E
 
     public EventSignUp getById(EventSignUpId id) {
         EventSignUp obj = null;
-        try (Session session = getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Transaction t = session.beginTransaction();
             obj = session.find(EventSignUp.class, id);
             t.commit();
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -39,10 +40,11 @@ public class EventSignUpDao extends SessionWrapper<EventSignUp> implements Dao<E
     }
 
     public void delete(EventSignUpId id) {
-        try (Session session = getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Transaction t = session.beginTransaction();
             session.remove(getById(id));
             t.commit();
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

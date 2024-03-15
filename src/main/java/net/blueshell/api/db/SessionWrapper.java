@@ -11,7 +11,7 @@ import java.util.List;
 
 public class SessionWrapper<T> {
 
-    private SessionFactory sessionFactory;
+    protected SessionFactory sessionFactory;
     private Class<T> clazz;
 
     public SessionWrapper(Class<T> clazz) {
@@ -29,6 +29,7 @@ public class SessionWrapper<T> {
             criteriaQuery.select(tRoot);
             list = session.createQuery(criteriaQuery).getResultList();
             t.commit();
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -41,6 +42,7 @@ public class SessionWrapper<T> {
             Transaction t = session.beginTransaction();
             obj = session.find(clazz, id);
             t.commit();
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -52,6 +54,7 @@ public class SessionWrapper<T> {
             Transaction t = session.beginTransaction();
             session.save(object);
             t.commit();
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,6 +66,7 @@ public class SessionWrapper<T> {
             Transaction t = session.beginTransaction();
             session.update(object);
             t.commit();
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -73,12 +77,9 @@ public class SessionWrapper<T> {
             Transaction t = session.beginTransaction();
             session.remove(getById(id));
             t.commit();
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
     }
 }

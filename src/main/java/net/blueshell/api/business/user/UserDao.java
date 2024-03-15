@@ -22,20 +22,21 @@ public class UserDao extends SessionWrapper<User> implements Dao<User> {
 
     public User getByUsername(String username) {
         User obj;
-        try (Session session = getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Transaction t = session.beginTransaction();
             var query = session.createQuery("from User where username = :name");
             query.setParameter("name", username);
             var objs = query.list();
             obj = objs.size() == 0 ? null : (User) objs.get(0);
             t.commit();
+            session.close();
         }
         return obj;
     }
 
     public List<User> list(Boolean isMember) {
         List<User> obj = new ArrayList<>();
-        try (Session session = getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Transaction t = session.beginTransaction();
             var query = session.createQuery("from User");
             obj.addAll(query.list());
@@ -44,6 +45,7 @@ public class UserDao extends SessionWrapper<User> implements Dao<User> {
                 obj = obj.stream().filter(u -> isMember == u.hasRole(Role.MEMBER)).collect(Collectors.toList());
             }
             t.commit();
+            session.close();
         }
         return obj;
     }
