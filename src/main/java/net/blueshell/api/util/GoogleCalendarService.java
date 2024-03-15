@@ -16,8 +16,9 @@ import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 import net.blueshell.api.business.event.Event;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -25,19 +26,10 @@ import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 
-@Service
+@Component
 public class GoogleCalendarService {
 
-    @Value("${googleCalendar.id}")
-    private String calendarId;
-    @Value("${googleCalendar.clientId}")
-    private String clientId;
-    @Value("${googleCalendar.clientEmail}")
-    private String clientEmail;
-    @Value("${googleCalendar.privateKeyPkcs8}")
-    private String privateKeyPkcs8;
-    @Value("${googleCalendar.privateKeyId}")
-    private String privateKeyId;
+    private final String calendarId;
 
     private static final String APPLICATION_NAME = "Blueshell Google Calendar API";
 
@@ -48,8 +40,22 @@ public class GoogleCalendarService {
 
     private final Calendar service;
 
-    public GoogleCalendarService() throws GeneralSecurityException, IOException {
+    @Autowired
+    public GoogleCalendarService(
+            @Value("${googleCalendar.id}") String calendarId,
+            @Value("${googleCalendar.clientId}") String clientId,
+            @Value("${googleCalendar.clientEmail}") String clientEmail,
+            @Value("${googleCalendar.privateKeyPkcs8}") String privateKeyPkcs8,
+            @Value("${googleCalendar.privateKeyId}") String privateKeyId
+    ) throws GeneralSecurityException, IOException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        System.out.println("Google Calendar Service created");
+        System.out.println("Calendar ID: " + calendarId);
+        System.out.println("Client ID: " + clientId);
+        System.out.println("Client Email: " + clientEmail);
+        System.out.println("Private Key ID: " + privateKeyId);
+        System.out.println("Private Key PKCS8: " + privateKeyPkcs8);
+
         GoogleCredentials credentials = ServiceAccountCredentials
                 .fromPkcs8(clientId, clientEmail, privateKeyPkcs8, privateKeyId, SCOPES);
 
@@ -69,6 +75,7 @@ public class GoogleCalendarService {
 
         htmlParser = Parser.builder(options).build();
         htmlRenderer = HtmlRenderer.builder(options).build();
+        this.calendarId = calendarId;
         // uncomment to convert soft-breaks to hard breaks
 //        options.set(HtmlRenderer.SOFT_BREAK, "");
 //        options.set(HtmlRenderer.HARD_BREAK, "");
