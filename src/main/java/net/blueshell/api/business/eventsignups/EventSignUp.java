@@ -1,8 +1,10 @@
-package net.blueshell.api.business.event;
+package net.blueshell.api.business.eventsignups;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import net.blueshell.api.business.event.Event;
+import net.blueshell.api.business.guest.Guest;
 import net.blueshell.api.business.user.User;
 
 import javax.persistence.*;
@@ -13,31 +15,35 @@ import java.util.Objects;
 @Entity
 @Table(name = "event_signups")
 @Data
-@IdClass(EventSignUpId.class)
 public class EventSignUp implements Serializable {
 
     @Id
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonIgnore
-    private User user;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "event_id")
     @JsonIgnore
     private Event event;
 
-    @Column(name = "form_answers")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "guest_id")
+    @JsonIgnore
+    private Guest guest;
+
     private String formAnswers;
 
-    @Column(name = "signed_up_at")
     private LocalDateTime signedUpAt;
 
     public EventSignUp() {
     }
 
-    public EventSignUp(User user, Event event, String formAnswers, LocalDateTime signedUpAt) {
+    public EventSignUp(Event event, User user, Guest guest, String formAnswers, LocalDateTime signedUpAt) {
         this.user = user;
         this.event = event;
         this.formAnswers = formAnswers;

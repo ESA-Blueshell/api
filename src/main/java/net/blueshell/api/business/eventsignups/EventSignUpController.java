@@ -1,5 +1,8 @@
-package net.blueshell.api.business.event;
+package net.blueshell.api.business.eventsignups;
 
+import net.blueshell.api.business.event.Event;
+import net.blueshell.api.business.event.EventDao;
+import net.blueshell.api.business.guest.Guest;
 import net.blueshell.api.business.user.Role;
 import net.blueshell.api.business.user.User;
 import net.blueshell.api.constants.StatusCodes;
@@ -17,6 +20,8 @@ public class EventSignUpController extends AuthorizationController {
     private EventDao eventDao;
     @Autowired
     private EventSignUpDao signUpDao;
+    @Autowired
+    private Dao<Guest> guestDao;
 
 
     @GetMapping(value = "/events/signups")
@@ -38,8 +43,7 @@ public class EventSignUpController extends AuthorizationController {
         if (!event.isSignUp()) {
             return StatusCodes.FORBIDDEN;
         }
-        EventSignUpId id = new EventSignUpId(authedUser, event);
-        EventSignUp signUp = signUpDao.getById(id);
+        EventSignUp signUp = signUpDao.getByUserAndEvent(authedUser, event);
         if (signUp == null) {
             return StatusCodes.NOT_FOUND;
         }
@@ -83,17 +87,42 @@ public class EventSignUpController extends AuthorizationController {
         }
 
         // Check if we're updating an existing sign-up or not
-        EventSignUp oldSignUp = signUpDao.getById(new EventSignUpId(authedUser, event));
+        EventSignUp oldSignUp = signUpDao.getByUserAndEvent(authedUser, event);
         if (oldSignUp != null) {
             LocalDateTime signedUpAt = oldSignUp.getSignedUpAt();
-            EventSignUp signUp = new EventSignUp(authedUser, event, formAnswers, signedUpAt);
+            EventSignUp signUp = new EventSignUp(event, authedUser, null, formAnswers, signedUpAt);
             signUpDao.update(signUp);
             return StatusCodes.OK;
         }
 
         // Create new sign-up
         LocalDateTime signedUpAt = LocalDateTime.now();
-        EventSignUp signUp = new EventSignUp(authedUser, event, formAnswers, signedUpAt);
+        EventSignUp signUp = new EventSignUp(event, authedUser, null, formAnswers, signedUpAt);
+        signUpDao.create(signUp);
+        return StatusCodes.CREATED;
+    }
+
+    @PostMapping(value = "/events/signups/{id}/guest")
+    public Object createGuestSignUp(
+            @PathVariable("id") String eventId,
+            @RequestBody EventGuestSignUpDTO signUpDTO) {
+
+        Event event = eventDao.getById(Long.parseLong(eventId));
+        if (event == null || !event.isVisible()) {
+            return StatusCodes.NOT_FOUND;
+        }
+        if (!event.isSignUp() || event.isMembersOnly()) {
+            return StatusCodes.FORBIDDEN;
+        }
+
+        Guest createdGuest = guestDao.create(signUpDTO.toGuest());
+        if (createdGuest == null) {
+            return StatusCodes.INTERNAL_SERVER_ERROR;
+        }
+
+        // Create new sign-up
+        LocalDateTime signedUpAt = LocalDateTime.now();
+        EventSignUp signUp = new EventSignUp(event, null, createdGuest, signUpDTO.getFormAnswers(), signedUpAt);
         signUpDao.create(signUp);
         return StatusCodes.CREATED;
     }
@@ -108,13 +137,12 @@ public class EventSignUpController extends AuthorizationController {
         if (event == null) {
             return StatusCodes.NOT_FOUND;
         }
-        EventSignUpId id = new EventSignUpId(authedUser, event);
-        EventSignUp eventSignUp = signUpDao.getById(id);
+        EventSignUp eventSignUp = signUpDao.getByUserAndEvent(authedUser, event);
         if (eventSignUp == null) {
             return StatusCodes.NOT_FOUND;
         }
 
-        signUpDao.delete(id);
+        signUpDao.delete(eventSignUp.getId());
         return StatusCodes.OK;
     }
 }
