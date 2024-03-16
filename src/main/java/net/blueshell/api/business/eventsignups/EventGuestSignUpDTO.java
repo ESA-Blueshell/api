@@ -23,7 +23,7 @@ public class EventGuestSignUpDTO {
     private String email;
 
     @JsonProperty
-    private String formAnswers;
+    private String answers;
 
     public Guest toGuest() {
         return new Guest(name, discord, email);

@@ -122,7 +122,7 @@ public class EventSignUpController extends AuthorizationController {
 
         // Create new sign-up
         LocalDateTime signedUpAt = LocalDateTime.now();
-        EventSignUp signUp = new EventSignUp(event, null, createdGuest, signUpDTO.getFormAnswers(), signedUpAt);
+        EventSignUp signUp = new EventSignUp(event, null, createdGuest, signUpDTO.getAnswers(), signedUpAt);
         signUpDao.create(signUp);
         return StatusCodes.CREATED;
     }
