@@ -22,7 +22,7 @@ public class Guest {
     private String discord;
     @Column
     private String email;
-    @Column
+    @Column(name = "created_at")
     private Timestamp createdAt;
 
     public Guest() {

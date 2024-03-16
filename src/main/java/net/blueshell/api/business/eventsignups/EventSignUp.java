@@ -36,8 +36,10 @@ public class EventSignUp implements Serializable {
     @JsonIgnore
     private Guest guest;
 
+    @Column(name = "form_answers")
     private String formAnswers;
 
+    @Column(name = "signed_up_at")
     private LocalDateTime signedUpAt;
 
     public EventSignUp() {
