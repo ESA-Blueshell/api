@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import net.blueshell.api.tables.records.CommitteesRecord;
 
 public class CommitteeDTO {
 
@@ -22,15 +23,15 @@ public class CommitteeDTO {
     private CommitteeDTO() {
     }
 
-    public Committee toCommittee() {
-        Committee res = new Committee();
+    public CommitteesRecord toCommittee() {
+        CommitteesRecord res = new CommitteesRecord();
         res.setName(name);
         res.setDescription(description);
         res.setMembers(members.stream().map(membershipDTO -> membershipDTO.toMembership(res)).collect(Collectors.toSet()));
         return res;
     }
 
-    public static CommitteeDTO fromCommittee(Committee committee) {
+    public static CommitteeDTO fromCommittee(CommitteesRecord committee) {
         CommitteeDTO res = new CommitteeDTO();
         res.id = committee.getId();
         res.name = committee.getName();

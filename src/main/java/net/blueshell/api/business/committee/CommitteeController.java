@@ -14,6 +14,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import net.blueshell.api.tables.records.CommitteesRecord;
+
 @RestController
 public class CommitteeController extends AuthorizationController {
 
@@ -30,7 +32,7 @@ public class CommitteeController extends AuthorizationController {
     public Object getCommittees(
             @RequestParam(required = false) boolean fullCommittees,
             @RequestParam(required = false) boolean isMember) {
-        Function<Committee, Object> fromCommittee;
+        Function<CommitteesRecord, Object> fromCommittee;
         if (fullCommittees) {
             if (!hasAuthorization(Role.BOARD)) {
                 return StatusCodes.FORBIDDEN;
@@ -40,7 +42,7 @@ public class CommitteeController extends AuthorizationController {
             fromCommittee = SimpleCommitteeDTO::fromCommittee;
         }
 
-        Predicate<Committee> isMemberPredicate;
+        Predicate<CommitteesRecord> isMemberPredicate;
         if (isMember) {
             isMemberPredicate = (committee -> hasAuthorization(Role.BOARD) || getPrincipal().getCommitteeIds().contains(committee.getId()));
         } else {
@@ -56,8 +58,8 @@ public class CommitteeController extends AuthorizationController {
 
     @PreAuthorize("hasAuthority('BOARD')")
     @PostMapping(value = "/committees")
-    public Committee createCommittee(@RequestBody CommitteeDTO committeeDTO) {
-        Committee committee = committeeDTO.toCommittee();
+    public CommitteesRecord createCommittee(@RequestBody CommitteeDTO committeeDTO) {
+        CommitteesRecord committee = committeeDTO.toCommittee();
         var committeeObj = dao.create(committee);
 
         for (var member : committeeObj.getMembers()) {
@@ -72,8 +74,8 @@ public class CommitteeController extends AuthorizationController {
     @PreAuthorize("hasAuthority('BOARD')")
     @PutMapping(value = "/committees/{id}")
     public void createOrUpdateCommittee(@PathVariable String id, @RequestBody CommitteeDTO committeeDTO) {
-        Committee oldCommittee = dao.getById(Long.parseLong(id));
-        Committee newCommittee = committeeDTO.toCommittee();
+        CommitteesRecord oldCommittee = dao.getById(Long.parseLong(id));
+        CommitteesRecord newCommittee = committeeDTO.toCommittee();
         User authedUser = getPrincipal();
         // Check if committee exists
         if (oldCommittee == null) {
@@ -86,7 +88,7 @@ public class CommitteeController extends AuthorizationController {
         newCommittee.setId(Long.parseLong(id));
 
         // Remove old members (members are re-added automatically by the dao.update() call
-        for (CommitteeMembership membership : oldCommittee.getMembers()) {
+        for (var membership : oldCommittee.getMembers()) {
             var user = membership.getUser();
             membershipDao.delete(new CommitteeMembershipId(user, membership.getCommittee()));
             if (user.getCommitteeMemberships().isEmpty()) {

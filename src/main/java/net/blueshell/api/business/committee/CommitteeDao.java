@@ -1,46 +1,105 @@
 package net.blueshell.api.business.committee;
 
+import net.blueshell.api.business.user.User;
 import net.blueshell.api.db.AbstractDAO;
-import org.hibernate.cfg.NotYetImplementedException;
+import org.jetbrains.annotations.NotNull;
+import org.jooq.Result;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
+import net.blueshell.api.tables.records.CommitteesRecord;
 
-import java.util.Collection;
+import java.sql.SQLException;
+
+import static net.blueshell.api.tables.Committees.COMMITTEES;
 
 @Component
 @DependsOn("dataSource")
-public class CommitteeDao extends AbstractDAO<Committee> {
+public class CommitteeDao extends AbstractDAO<CommitteesRecord>
+{
 
-    public CommitteeDao() {
-    }
-
-	public Collection<Committee> list()
+	public CommitteeDao()
 	{
-
-		throw new NotYetImplementedException();
 	}
 
-	public Committee create(Committee committee)
+	public Result<CommitteesRecord> list()
 	{
-
-		throw new NotYetImplementedException();
+		try
+		{
+			var con = getConnection();
+			var ctx = getContext(con);
+			return ctx.selectFrom(COMMITTEES)
+					  .fetch();
+		}
+		catch (SQLException e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
-	public Committee getById(long l)
+	public CommitteesRecord create(CommitteesRecord committee)
 	{
+		try
+		{
+			var con = getConnection();
+			var ctx = getContext(con);
+			var id = ctx.insertInto(COMMITTEES)
+						.set(committee)
+						.returningResult(COMMITTEES.ID)
+						.fetchSingle();
 
-		throw new NotYetImplementedException();
+			return getById(id.value1());
+		}
+		catch (SQLException e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
-	public void update(Committee newCommittee)
+	public CommitteesRecord getById(long id)
 	{
-
-		throw new NotYetImplementedException();
+		try
+		{
+			var con = getConnection();
+			var ctx = getContext(con);
+			return ctx.selectFrom(COMMITTEES)
+					  .where(COMMITTEES.ID.eq(id))
+					  .fetchOne();
+		}
+		catch (SQLException e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
-	public void delete(long l)
+	public void update(CommitteesRecord newCommittee)
 	{
+		try
+		{
+			var con = getConnection();
+			var ctx = getContext(con);
+			ctx.update(COMMITTEES)
+			   .set(newCommittee)
+			   .execute();
+		}
+		catch (SQLException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
 
-		throw new NotYetImplementedException();
+	public void delete(long id)
+	{
+		try
+		{
+			var con = getConnection();
+			var ctx = getContext(con);
+			ctx.deleteFrom(COMMITTEES)
+			   .where(COMMITTEES.ID.eq(id))
+			   .execute();
+		}
+		catch (SQLException e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 }
