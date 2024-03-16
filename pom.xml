@@ -196,10 +196,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>16</source>
-                    <target>16</target>
-                </configuration>
             </plugin>
             <plugin>
                 <!-- Specify the maven code generator plugin -->
@@ -257,6 +253,7 @@
                             <inputCatalog>public</inputCatalog>
                               -->
                             <inputSchema>blueshell</inputSchema>
+                            <includeForeignKeys>true</includeForeignKeys>
                         </database>
                         <target>
                             <packageName>net.blueshell.api</packageName>

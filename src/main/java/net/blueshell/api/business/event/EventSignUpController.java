@@ -4,7 +4,6 @@ import net.blueshell.api.business.user.Role;
 import net.blueshell.api.business.user.User;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
-import net.blueshell.api.daos.Dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

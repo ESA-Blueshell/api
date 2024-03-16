@@ -2,6 +2,7 @@ package net.blueshell.api.business.user;
 
 import net.blueshell.api.db.AbstractDAO;
 import net.blueshell.api.tables.records.UsersRecord;
+import org.hibernate.cfg.NotYetImplementedException;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.Record1;
 import org.jooq.SQLDialect;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static net.blueshell.api.tables.Roles.ROLES;
@@ -140,7 +142,7 @@ public class UserDao extends AbstractDAO<User>
 		}
 	}
 
-	public void updateUserRoles(User user)
+	public void updateRoles(User user)
 	{
 		try (var con = getConnection())
 		{
@@ -167,7 +169,7 @@ public class UserDao extends AbstractDAO<User>
 	{
 		try (var con = getConnection())
 		{
-			var ctx = DSL.using(con, SQLDialect.MYSQL);
+			var ctx = getContext(con);
 			var result = ctx.insertInto(USERS)
 							.set(user)
 							.returningResult(USERS.ID)
@@ -176,6 +178,38 @@ public class UserDao extends AbstractDAO<User>
 			{
 				user.setId(result.value1());
 			}
+		}
+		catch (SQLException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void update(UsersRecord user)
+	{
+		try (var con = getConnection())
+		{
+			var ctx = DSL.using(con, SQLDialect.MYSQL);
+			ctx.update(USERS)
+			   .set(user)
+			   .execute();
+		}
+		catch (SQLException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+
+	public Set<Role> getRoles(long id)
+	{
+		try (var con = getConnection())
+		{
+			var ctx = getContext(con);
+			return ctx.selectFrom(ROLES)
+					  .where(ROLES.USER_ID.eq(id))
+					  .stream()
+					  .map(rec -> Role.valueOf(rec.getRole()))
+					  .collect(Collectors.toSet());
 		}
 		catch (SQLException e)
 		{

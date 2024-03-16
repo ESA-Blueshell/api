@@ -59,7 +59,7 @@ public class UserController extends AuthorizationController
 		return dao.list()
 				  .stream()
 				  .filter(user -> (isMember != null && isMember) == user.hasRole(Role.MEMBER))
-				  .toList();
+				  .collect(Collectors.toList());
 	}
 
 	@PutMapping(value = "/createAccount")
@@ -97,7 +97,9 @@ public class UserController extends AuthorizationController
 		{
 			return StatusCodes.NOT_FOUND;
 		}
-		UserModule.applyUserDtoToUser(userDto, existingUser);
+
+		var userRecord = dao.getRecordById(Long.parseLong(id));
+		UserModule.applyUserDtoToUser(userDto, userRecord);
 
 		return StatusCodes.OK;
 	}
@@ -217,7 +219,7 @@ public class UserController extends AuthorizationController
 			user.removeRole(Role.MEMBER);
 		}
 
-		dao.updateUserRoles(user);
+		dao.updateRoles(user);
 	}
 
 	@DeleteMapping(value = "/users/password")

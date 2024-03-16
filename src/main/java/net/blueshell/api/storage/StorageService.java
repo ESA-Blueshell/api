@@ -78,7 +78,6 @@ public class StorageService {
         try {
             byte[] bytes = Base64.decodeBase64(base64String);
 
-
             String path = this.rootLocation.resolve(filename).toString();
             try (FileOutputStream outputStream = new FileOutputStream(path)) {
                 outputStream.write(bytes);

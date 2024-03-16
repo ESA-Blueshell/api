@@ -16,6 +16,6 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        return UserMapper.fromRecord(userDao.getByUsername(username));
+        return userDao.getByUsername(username);
     }
 }

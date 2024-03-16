@@ -2,7 +2,6 @@ package net.blueshell.api.business.news;
 
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
-import net.blueshell.api.daos.Dao;
 import net.blueshell.api.business.user.UserDao;
 import net.blueshell.api.business.user.Role;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,10 @@ public class NewsController extends AuthorizationController {
 
     @Autowired
     private NewsDao dao;
+
     @Autowired
     private UserDao userDao;
+
     @Autowired
     private NewsRepository newsRepository;
 
@@ -75,8 +76,8 @@ public class NewsController extends AuthorizationController {
         if (news == null) {
             return StatusCodes.NOT_FOUND;
         }
-        NewsDTO newsDTO = from(dao.getById(Long.parseLong(id)));
-        return newsDTO;
+
+		return from(dao.getById(Long.parseLong(id)));
     }
 
     @PreAuthorize("hasAuthority('BOARD')")

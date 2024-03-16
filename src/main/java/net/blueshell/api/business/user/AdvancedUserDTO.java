@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * DTO for communicating account changes after the initial account.
@@ -44,7 +45,7 @@ public class AdvancedUserDTO {
     private String lastName;
 
     @JsonProperty
-    private Timestamp dateOfBirth;
+    private LocalDateTime dateOfBirth;
 
     @JsonProperty
     private String discord;

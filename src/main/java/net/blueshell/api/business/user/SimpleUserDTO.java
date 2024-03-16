@@ -67,6 +67,6 @@ public class SimpleUserDTO {
     }
 
     public User toUser() {
-        return UserMapper.fromRecord(dao.getByUsername(username));
+        return dao.getByUsername(username);
     }
 }

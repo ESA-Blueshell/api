@@ -1,9 +1,11 @@
 package net.blueshell.api.business.committee;
 
+import lombok.Data;
 import net.blueshell.api.business.user.User;
 
 import java.io.Serializable;
 
+@Data
 public class CommitteeMembershipId implements Serializable {
 
     private User user;

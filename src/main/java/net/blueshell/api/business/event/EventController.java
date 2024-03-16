@@ -25,10 +25,13 @@ public class EventController extends AuthorizationController {
 
     @Autowired
     private EventDao dao;
+
     @Autowired
     private EventRepository eventRepository;
+
     @Autowired
     private StorageService storageService;
+
     @Autowired
     private GoogleCalendarService calendarService;
 
@@ -220,6 +223,7 @@ public class EventController extends AuthorizationController {
             newEvent.setBanner(oldEvent.getBanner());
         }
         dao.update(newEvent);
+
         return StatusCodes.OK;
     }
 

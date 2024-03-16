@@ -6,6 +6,7 @@ import lombok.Data;
 import net.blueshell.api.business.committee.CommitteeMembership;
 import net.blueshell.api.business.picture.Picture;
 import net.blueshell.api.util.TimeUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +23,9 @@ import java.util.stream.Collectors;
 
 @Data
 public class User implements UserDetails {
+
+    @Autowired
+    private UserDao userDao;
 
     private long id;
 
@@ -140,6 +144,14 @@ public class User implements UserDetails {
             set.add(cm.getCommitteeId());
         }
         return set;
+    }
+
+    public Set<Role> getRoles()
+    {
+        if (roles == null) {
+            roles = userDao.getRoles(getId());
+        }
+        return roles;
     }
 
     @JsonProperty("roles")
