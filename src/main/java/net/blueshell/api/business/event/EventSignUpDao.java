@@ -1,7 +1,6 @@
 package net.blueshell.api.business.event;
 
-import net.blueshell.api.daos.Dao;
-import net.blueshell.api.db.SessionWrapper;
+import net.blueshell.api.db.AbstractDAO;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.context.annotation.DependsOn;
@@ -9,10 +8,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @DependsOn("dataSource")
-public class EventSignUpDao extends SessionWrapper<EventSignUp> implements Dao<EventSignUp> {
+public class EventSignUpDao extends AbstractDAO<EventSignUp> {
 
     public EventSignUpDao() {
-        super(EventSignUp.class);
     }
 
     @Override

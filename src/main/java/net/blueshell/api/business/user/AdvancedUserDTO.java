@@ -3,6 +3,7 @@ package net.blueshell.api.business.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import net.blueshell.api.tables.records.UsersRecord;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -104,12 +105,12 @@ public class AdvancedUserDTO {
      * of this object *if they are not null*. If a field *is null*, the field will be ignored.
      * @return the created or altered User
      */
-    public User mapToBasicUser() {
-        User user;
+    public net.blueshell.api.tables.records.UsersRecord mapToBasicUserRecord() {
+        net.blueshell.api.tables.records.UsersRecord user;
         if (getId() != 0) {
-            user = dao.getById(getId());
+            user = dao.getRecordById(getId());
         } else {
-            user = new User();
+            user = new UsersRecord();
             user.setUsername(getUsername());
         }
 

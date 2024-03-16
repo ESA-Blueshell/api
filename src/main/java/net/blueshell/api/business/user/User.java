@@ -13,143 +13,95 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Entity
-@Table(name = "users")
 @Data
 public class User implements UserDetails {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column
     private String username;
 
     private String password;
 
-    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name")
     private String lastName;
 
-    @Column
     private String prefix;
 
-    @Column
     private String initials;
 
-    @Column
     private String address;
 
-    @Column(name = "house_number")
     private String houseNumber;
 
-    @Column(name = "postal_code")
     private String postalCode;
 
-    @Column
     private String city;
 
-    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column
     private String email;
 
-    @Column(name = "student_number")
     private String studentNumber;
 
-    @Column(name = "date_of_birth")
-    private Timestamp dateOfBirth;
+    private LocalDateTime dateOfBirth;
 
-    @Column(name = "created_at")
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
-    @Column(name = "member_since")
-    private Timestamp memberSince;
+    private LocalDateTime memberSince;
 
-    @Column
     private String discord;
 
-    @Column
     private String steamid;
 
-    @Column
     private boolean newsletter;
 
-    @Column
     private boolean enabled;
 
-    @Column(name = "reset_key")
     @JsonIgnore
     private String resetKey;
 
-    @Column(name = "reset_key_valid_until")
     @JsonIgnore
-    private Timestamp resetKeyValidUntil;
+    private LocalDateTime resetKeyValidUntil;
 
-    @Column(name = "reset_type")
-    @Enumerated(EnumType.STRING)
     @JsonIgnore
     private ResetType resetType;
 
-    @Column(name = "contribution_paid")
     private boolean contributionPaid;
 
-    @Column(name = "consent_privacy")
     private boolean consentPrivacy;
 
-    @Column(name = "consent_gdpr")
     private boolean consentGdpr;
 
-    @Column
     private String gender;
 
-    @Column
     private String street;
 
-    @Column
     private String country;
 
-    @Column(name = "photo_consent")
     private boolean photoConsent;
 
-    @Column
     private String nationality;
 
-    @Column
     private String study;
 
-    @Column(name = "start_study_year")
     private int startStudyYear;
 
-    @OneToOne
-    @JoinColumn(name = "profile_picture")
     @JsonIgnore
     private Picture profilePicture;
 
-    @Column(name = "deleted_at")
-    private Timestamp deletedAt;
+    private LocalDateTime deletedAt;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonIgnore
     private Set<CommitteeMembership> committeeMemberships;
 
-    @JoinTable(
-            name = "authorities",
-            joinColumns = @JoinColumn(name = "user_id")
-    )
-    @ElementCollection(targetClass = Role.class)
-    @Enumerated(EnumType.STRING)
-    @JsonIgnore
-    @Column(name = "authority")
     private Set<Role> roles;
 
     public User() {
@@ -157,7 +109,7 @@ public class User implements UserDetails {
 
     public User(String username, String password, String firstName, String lastName, String email) {
         this();
-        createdAt = Timestamp.from(Instant.now());
+        createdAt = LocalDateTime.now();
         this.username = username;
         this.password = password;
         this.firstName = firstName;

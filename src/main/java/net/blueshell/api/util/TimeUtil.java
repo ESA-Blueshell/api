@@ -19,4 +19,8 @@ public class TimeUtil {
         return Timestamp.valueOf(localDateTime);
     }
 
+    public static boolean hasExpired(LocalDateTime time)
+    {
+        return time.isBefore(LocalDateTime.now());
+    }
 }

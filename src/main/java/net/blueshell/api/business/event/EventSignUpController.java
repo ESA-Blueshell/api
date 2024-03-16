@@ -13,8 +13,10 @@ import java.util.stream.Collectors;
 
 @RestController
 public class EventSignUpController extends AuthorizationController {
+
     @Autowired
     private EventDao eventDao;
+
     @Autowired
     private EventSignUpDao signUpDao;
 
