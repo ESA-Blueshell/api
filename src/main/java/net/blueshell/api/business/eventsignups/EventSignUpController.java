@@ -92,14 +92,14 @@ public class EventSignUpController extends AuthorizationController {
             LocalDateTime signedUpAt = oldSignUp.getSignedUpAt();
             EventSignUp signUp = new EventSignUp(event, authedUser, null, formAnswers, signedUpAt);
             signUpDao.update(signUp);
-            return StatusCodes.OK;
+            return signUp;
         }
 
         // Create new sign-up
         LocalDateTime signedUpAt = LocalDateTime.now();
         EventSignUp signUp = new EventSignUp(event, authedUser, null, formAnswers, signedUpAt);
         signUpDao.create(signUp);
-        return StatusCodes.CREATED;
+        return signUp;
     }
 
     @PostMapping(value = "/events/signups/{id}/guest")
@@ -124,7 +124,7 @@ public class EventSignUpController extends AuthorizationController {
         LocalDateTime signedUpAt = LocalDateTime.now();
         EventSignUp signUp = new EventSignUp(event, null, createdGuest, signUpDTO.getAnswers(), signedUpAt);
         signUpDao.create(signUp);
-        return StatusCodes.CREATED;
+        return signUp;
     }
 
     @DeleteMapping(value = "/events/signups/{id}")
