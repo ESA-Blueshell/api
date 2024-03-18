@@ -38,7 +38,8 @@ public class StorageService {
         return ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/download/")
                 .path(filename)
-                .toUriString();
+                .toUriString()
+                .replace("http://", "https://"); //Hacky but it works
     }
 
     @PostConstruct
