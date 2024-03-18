@@ -3,6 +3,7 @@ package net.blueshell.api.controller;
 import net.blueshell.api.storage.StorageService;
 import net.blueshell.api.storage.UploadFileResponse;
 import org.springframework.core.io.Resource;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * yoinked from <a href="https://attacomsian.com/blog/uploading-files-spring-boot">https://attacomsian.com/blog/uploading-files-spring-boot</a>
@@ -43,6 +46,7 @@ public class FileController {
         }
         return ResponseEntity
                 .ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.DAYS).cachePublic())
                 .headers(headers)
                 .body(resource);
     }
