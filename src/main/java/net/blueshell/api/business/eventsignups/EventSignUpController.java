@@ -8,6 +8,7 @@ import net.blueshell.api.business.user.User;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
 import net.blueshell.api.daos.Dao;
+import net.blueshell.api.email.EmailModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,9 @@ public class EventSignUpController extends AuthorizationController {
     @Autowired
     private Dao<Guest> guestDao;
 
+    @Autowired
+    private EmailModule emailModule;
+
 
     @GetMapping(value = "/events/signups")
     public Object getMySignUps() {
@@ -30,7 +34,11 @@ public class EventSignUpController extends AuthorizationController {
         if (authedUser == null) {
             return StatusCodes.UNAUTHORIZED;
         }
-        return signUpDao.list().stream().filter(signUp -> signUp.getUserId() == authedUser.getId()).collect(Collectors.toList());
+        return signUpDao.list().stream()
+                .filter(signUp -> signUp
+                        .getUserId() != null && signUp
+                        .getUserId() == authedUser.getId())
+                .collect(Collectors.toList());
     }
 
     @GetMapping(value = "/events/signups/{id}")
@@ -44,6 +52,16 @@ public class EventSignUpController extends AuthorizationController {
             return StatusCodes.FORBIDDEN;
         }
         EventSignUp signUp = signUpDao.getByUserAndEvent(authedUser, event);
+        if (signUp == null) {
+            return StatusCodes.NOT_FOUND;
+        }
+        return signUp;
+    }
+
+    //TODO: rename all the endpoints in this class, it is getting confusing
+    @GetMapping(value = "/events/signups/byHash/{id}")
+    public Object getSignUpByHashedId(@PathVariable("id") String hashedId) {
+        EventSignUp signUp = signUpDao.getByHashedId(hashedId);
         if (signUp == null) {
             return StatusCodes.NOT_FOUND;
         }
@@ -120,10 +138,15 @@ public class EventSignUpController extends AuthorizationController {
             return StatusCodes.INTERNAL_SERVER_ERROR;
         }
 
+
         // Create new sign-up
         LocalDateTime signedUpAt = LocalDateTime.now();
         EventSignUp signUp = new EventSignUp(event, null, createdGuest, signUpDTO.getAnswers(), signedUpAt);
         signUpDao.create(signUp);
+
+        // Send email to guest
+        emailModule.sendGuestSignUpEmail(signUp);
+
         return signUp;
     }
 

@@ -1,6 +1,8 @@
 package net.blueshell.api.email;
 
+import net.blueshell.api.business.eventsignups.EventSignUp;
 import net.blueshell.api.business.user.User;
+import net.blueshell.api.util.Util;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +37,15 @@ public class EmailModule {
             "<br /><br />" +
             "Blueshell Esports";
 
+    private static final String GUEST_SIGNUP_EMAIL_SUBJECT = "Blueshell esports event signup";
+    private static final String GUEST_SIGNUP_EMAIL_CONTENT = "Hello %s, <br /><br />" +
+            "Thank you for signing up for %s! You can edit or cancel your signup by going to <a href=\"https://esa-blueshell.nl/events/signups/edit/%s\">this link</a>.<br /><br />" +
+            "If you have questions about the event, feel free to ask them in <a href=\"https://discord.com/channels/324285132133629963/633720092244312095\">the discord server</a>.<br /><br />" +
+            "Please do not reply to this email, as this is a generated email. Any responses will be ignored.<br /><br />" +
+            "Kind regards," +
+            "<br /><br />" +
+            "Blueshell Esports";
+
     private final Authenticator auth = new javax.mail.Authenticator() {
         protected PasswordAuthentication getPasswordAuthentication() {
             return new PasswordAuthentication(email, password);
@@ -42,15 +53,18 @@ public class EmailModule {
     };
 
     public void sendInitialKeyEmail(User user) {
-        sendEmail(user, INITIAL_EMAIL_SUBJECT, String.format(INITIAL_EMAIL_CONTENT, user.getUsername(), user.getUsername(), user.getResetKey()));
+        sendEmail(user.getEmail(), INITIAL_EMAIL_SUBJECT, String.format(INITIAL_EMAIL_CONTENT, user.getUsername(), user.getUsername(), user.getResetKey()));
     }
 
     public void sendPasswordResetEmail(User user) {
-        sendEmail(user, PASSWORD_RESET_EMAIL_SUBJECT, String.format(PASSWORD_RESET_EMAIL_CONTENT, user.getFirstName(), user.getUsername(), user.getResetKey()));
+        sendEmail(user.getEmail(), PASSWORD_RESET_EMAIL_SUBJECT, String.format(PASSWORD_RESET_EMAIL_CONTENT, user.getFirstName(), user.getUsername(), user.getResetKey()));
     }
 
-    private void sendEmail(User user, String subject, String content) {
-        var userEmail = user.getEmail();
+    public void sendGuestSignUpEmail(EventSignUp signUp) {
+        sendEmail(signUp.getGuest().getEmail(), GUEST_SIGNUP_EMAIL_SUBJECT, String.format(GUEST_SIGNUP_EMAIL_CONTENT, signUp.getGuest().getName(), signUp.getEvent().getTitle(), Util.getMd5Hash(String.valueOf(signUp.getId()))));
+    }
+
+    private void sendEmail(String toEmail, String subject, String content) {
 
         var properties = System.getProperties();
         properties.put("mail.smtp.host", "smtp.gmail.com");
@@ -63,7 +77,7 @@ public class EmailModule {
         try {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(email));
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(userEmail));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
             message.setSubject(subject);
             message.setContent(content, "text/html; charset=utf-8");
 
