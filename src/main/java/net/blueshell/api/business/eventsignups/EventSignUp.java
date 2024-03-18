@@ -53,6 +53,17 @@ public class EventSignUp implements Serializable {
         this.signedUpAt = signedUpAt;
     }
 
+    public EventSignUp(long id, Event event, User user, Guest guest, String formAnswers, LocalDateTime signedUpAt) {
+        this.id = id;
+        this.user = user;
+        this.guest = guest;
+        this.event = event;
+        this.formAnswers = formAnswers;
+        this.signedUpAt = signedUpAt;
+    }
+
+
+
     @JsonProperty("user")
     public Long getUserId() {
         return getUser() == null ? null : getUser().getId();

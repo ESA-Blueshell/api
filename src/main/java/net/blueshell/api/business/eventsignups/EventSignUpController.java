@@ -89,10 +89,10 @@ public class EventSignUpController extends AuthorizationController {
         // Check if we're updating an existing sign-up or not
         EventSignUp oldSignUp = signUpDao.getByUserAndEvent(authedUser, event);
         if (oldSignUp != null) {
-            LocalDateTime signedUpAt = oldSignUp.getSignedUpAt();
-            EventSignUp signUp = new EventSignUp(event, authedUser, null, formAnswers, signedUpAt);
-            signUpDao.update(signUp);
-            return signUp;
+            oldSignUp.setFormAnswers(formAnswers);
+
+            signUpDao.update(oldSignUp);
+            return oldSignUp;
         }
 
         // Create new sign-up
