@@ -120,6 +120,20 @@ public class EventSignUpController extends AuthorizationController {
         return signUp;
     }
 
+    @PutMapping(value = "/events/{eventId}/signups/{id}")
+    public Object updateSignUp(@PathVariable("eventId") String eventId, @PathVariable("id") String signUpId, @RequestBody String formAnswers) {
+        // For now, this method only applies to guest sign-ups
+        EventSignUp signUp = signUpDao.getById(Long.parseLong(signUpId));
+
+        if (signUp == null || signUp.getGuest() == null || signUp.getEvent().getId() != Long.parseLong(eventId)) {
+            return StatusCodes.NOT_FOUND;
+        }
+
+        signUp.setFormAnswers(formAnswers);
+        signUpDao.update(signUp);
+        return signUp;
+    }
+
     @PostMapping(value = "/events/signups/{id}/guest")
     public Object createGuestSignUp(
             @PathVariable("id") String eventId,
@@ -166,6 +180,19 @@ public class EventSignUpController extends AuthorizationController {
         }
 
         signUpDao.delete(eventSignUp.getId());
+        return StatusCodes.OK;
+    }
+
+
+    @DeleteMapping(value = "/events/{eventId}/signups/{id}")
+    public Object removeSignUp(@PathVariable("eventId") String eventId, @PathVariable("id") String signUpId) {
+        // For now, this method only applies to guest sign-ups
+        EventSignUp signUp = signUpDao.getById(Long.parseLong(signUpId));
+        if (signUp == null || signUp.getGuest() == null || signUp.getEvent().getId() != Long.parseLong(eventId)) {
+            return StatusCodes.NOT_FOUND;
+        }
+
+        signUpDao.delete(signUp.getId());
         return StatusCodes.OK;
     }
 }

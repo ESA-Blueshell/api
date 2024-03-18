@@ -96,6 +96,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers(HttpMethod.GET, "/newsPageable**").permitAll().and()
                 .authorizeRequests().antMatchers("/users/password").permitAll().and()
                 .authorizeRequests().antMatchers(HttpMethod.POST, "/events/signups/*/guest").permitAll().and()
+                .authorizeRequests().antMatchers(HttpMethod.PUT, "/events/*/signups/*").permitAll().and()
+                .authorizeRequests().antMatchers(HttpMethod.DELETE, "/events/*/signups/*").permitAll().and()
 
                 // all other requests need to be authenticated
                 .authorizeRequests().anyRequest().authenticated()
