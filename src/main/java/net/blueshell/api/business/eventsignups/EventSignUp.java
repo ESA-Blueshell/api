@@ -31,7 +31,7 @@ public class EventSignUp implements Serializable {
     @JsonIgnore
     private User user;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "guest_id")
     @JsonIgnore
     private Guest guest;

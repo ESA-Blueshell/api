@@ -1,6 +1,7 @@
 package net.blueshell.api.business.eventsignups;
 
 import net.blueshell.api.business.event.Event;
+import net.blueshell.api.business.guest.Guest;
 import net.blueshell.api.business.user.User;
 import net.blueshell.api.daos.Dao;
 import net.blueshell.api.db.SessionWrapper;
@@ -33,13 +34,20 @@ public class EventSignUpDao extends SessionWrapper<EventSignUp> implements Dao<E
     }
 
     public EventSignUp getByGuestAccessToken(String accessToken) {
+        // Idk how to do this in 1 query
         EventSignUp obj;
         try (Session session = sessionFactory.openSession()) {
             Transaction t = session.beginTransaction();
-            var query = session.createQuery("from EventSignUp where EventSignUp.guest.accessToken = :accessToken");
-            query.setParameter("accessToken", accessToken);
+            var guestQuery = session.createQuery("from Guest where accessToken = :accessToken");
+            guestQuery.setParameter("accessToken", accessToken);
+            var guests = guestQuery.list();
+            Guest guest = guests.isEmpty() ? null : (Guest) guests.get(0);
+
+            var query = session.createQuery("from EventSignUp where guest = :guest");
+            query.setParameter("guest", guest);
             var objs = query.list();
             obj = objs.isEmpty() ? null : (EventSignUp) objs.get(0);
+
             t.commit();
             session.close();
         }
