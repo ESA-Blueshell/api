@@ -26,6 +26,6 @@ public class EventGuestSignUpDTO {
     private String answers;
 
     public Guest toGuest() {
-        return new Guest(name, discord, email, );
+        return new Guest(name, discord, email);
     }
 }
