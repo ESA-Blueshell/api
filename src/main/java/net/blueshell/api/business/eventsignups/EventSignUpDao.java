@@ -36,7 +36,7 @@ public class EventSignUpDao extends SessionWrapper<EventSignUp> implements Dao<E
         EventSignUp obj;
         try (Session session = sessionFactory.openSession()) {
             Transaction t = session.beginTransaction();
-            var query = session.createQuery("from EventSignUp inner join EventSignUp.guest where Guest.accessToken = :accessToken");
+            var query = session.createQuery("from EventSignUp where EventSignUp.guest.accessToken = :accessToken");
             query.setParameter("accessToken", accessToken);
             var objs = query.list();
             obj = objs.isEmpty() ? null : (EventSignUp) objs.get(0);
