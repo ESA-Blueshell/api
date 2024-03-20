@@ -61,7 +61,7 @@ public class EmailModule {
     }
 
     public void sendGuestSignUpEmail(EventSignUp signUp) {
-        sendEmail(signUp.getGuest().getEmail(), GUEST_SIGNUP_EMAIL_SUBJECT, String.format(GUEST_SIGNUP_EMAIL_CONTENT, signUp.getGuest().getName(), signUp.getEvent().getTitle(), Util.getMd5Hash(String.valueOf(signUp.getId()))));
+        sendEmail(signUp.getGuest().getEmail(), GUEST_SIGNUP_EMAIL_SUBJECT, String.format(GUEST_SIGNUP_EMAIL_CONTENT, signUp.getGuest().getName(), signUp.getEvent().getTitle(), signUp.getGuest().getAccessToken()));
     }
 
     private void sendEmail(String toEmail, String subject, String content) {
