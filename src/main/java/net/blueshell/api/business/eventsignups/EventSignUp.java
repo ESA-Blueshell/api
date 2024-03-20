@@ -62,18 +62,6 @@ public class EventSignUp implements Serializable {
         this.signedUpAt = signedUpAt;
     }
 
-
-
-    @JsonProperty("user")
-    public Long getUserId() {
-        return getUser() == null ? null : getUser().getId();
-    }
-
-    @JsonProperty("guest")
-    public Long getGuestId() {
-        return getGuest() == null ? null : getGuest().getId();
-    }
-
     @JsonProperty("event")
     public Long getEventId() {
         return getEvent() == null ? null : getEvent().getId();
