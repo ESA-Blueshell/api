@@ -13,8 +13,6 @@ import java.util.Objects;
 @Data
 public class Guest {
 
-    private static final BCrypt
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
