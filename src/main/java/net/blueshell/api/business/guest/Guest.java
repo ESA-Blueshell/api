@@ -1,6 +1,7 @@
 package net.blueshell.api.business.guest;
 
 import lombok.Data;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -11,6 +12,8 @@ import java.util.Objects;
 @Table(name = "guests")
 @Data
 public class Guest {
+
+    private static final BCrypt
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +27,9 @@ public class Guest {
     private String email;
     @Column(name = "created_at")
     private Timestamp createdAt;
+    @Column(name = "access_token")
+    private String accessToken;
+
 
     public Guest() {
     }
@@ -33,6 +39,8 @@ public class Guest {
         this.discord = discord;
         this.email = email;
         this.createdAt = Timestamp.from(Instant.now());
+        this.accessToken = BCrypt.hashpw(name + discord + email + this.createdAt, BCrypt.gensalt())
+                .replace("/", "");
     }
 
 

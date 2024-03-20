@@ -32,12 +32,12 @@ public class EventSignUpDao extends SessionWrapper<EventSignUp> implements Dao<E
         return obj;
     }
 
-    public EventSignUp getByHashedId(String hashedId) {
+    public EventSignUp getByGuestAccessToken(String accessToken) {
         EventSignUp obj;
         try (Session session = sessionFactory.openSession()) {
             Transaction t = session.beginTransaction();
-            var query = session.createQuery("from EventSignUp where md5(id) = :hashedId");
-            query.setParameter("hashedId", hashedId);
+            var query = session.createQuery("from EventSignUp inner join EventSignUp.guest where Guest.accessToken = :accessToken");
+            query.setParameter("accessToken", accessToken);
             var objs = query.list();
             obj = objs.isEmpty() ? null : (EventSignUp) objs.get(0);
             t.commit();

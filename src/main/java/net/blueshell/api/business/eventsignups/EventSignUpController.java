@@ -59,9 +59,9 @@ public class EventSignUpController extends AuthorizationController {
     }
 
     //TODO: rename all the endpoints in this class, it is getting confusing
-    @GetMapping(value = "/events/signups/byHash/{id}")
-    public Object getSignUpByHashedId(@PathVariable("id") String hashedId) {
-        EventSignUp signUp = signUpDao.getByHashedId(hashedId);
+    @GetMapping(value = "/events/signups/byAccessToken/{accessToken}")
+    public Object getSignUpByHashedId(@PathVariable("accessToken") String accessToken) {
+        EventSignUp signUp = signUpDao.getByGuestAccessToken(accessToken);
         if (signUp == null) {
             return StatusCodes.NOT_FOUND;
         }
