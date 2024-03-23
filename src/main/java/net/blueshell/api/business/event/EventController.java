@@ -23,14 +23,17 @@ import java.util.stream.Collectors;
 @RestController
 public class EventController extends AuthorizationController {
 
-    @Autowired
-    private EventDao dao;
-    @Autowired
-    private EventRepository eventRepository;
-    @Autowired
-    private StorageService storageService;
-    @Autowired
-    private GoogleCalendarService calendarService;
+    private final EventDao dao;
+    private final EventRepository eventRepository;
+    private final StorageService storageService;
+    private final GoogleCalendarService calendarService;
+
+    public EventController(EventDao dao, EventRepository eventRepository, StorageService storageService, GoogleCalendarService calendarService) {
+        this.dao = dao;
+        this.eventRepository = eventRepository;
+        this.storageService = storageService;
+        this.calendarService = calendarService;
+    }
 
 
     @PreAuthorize("hasAuthority('COMMITTEE')")
