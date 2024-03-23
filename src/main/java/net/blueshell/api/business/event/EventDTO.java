@@ -79,7 +79,7 @@ public class EventDTO {
             promo = null;
         } else {
             String filename = storageService.store(base64Image, fileExtension);
-            String downloadURL = StorageService.getDownloadURI(filename);
+            String downloadURL = storageService.getDownloadURI(filename);
 
             promo = new Picture(filename, downloadURL, uploader);
             pictureDao.create(promo);

@@ -58,7 +58,7 @@ public class FileController {
         String filename = storageService.store(file);
 
         assert filename != null;
-        String uri = StorageService.getDownloadURI(filename);
+        String uri = storageService.getDownloadURI(filename);
 
         return new UploadFileResponse(filename, uri, file.getContentType(), file.getSize());
     }

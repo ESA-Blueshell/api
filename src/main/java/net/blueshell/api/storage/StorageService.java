@@ -2,6 +2,7 @@ package net.blueshell.api.storage;
 
 import com.google.api.client.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -29,13 +30,17 @@ public class StorageService {
 
     private final Path rootLocation;
 
+    @Value("${app.url}")
+    private static String appUrl;
+
     @Autowired
     public StorageService(StorageProperties properties) {
         this.rootLocation = Paths.get(properties.getLocation());
     }
 
-    public static String getDownloadURI(String filename) {
-        return ServletUriComponentsBuilder.fromCurrentContextPath()
+    public String getDownloadURI(String filename) {
+        return ServletUriComponentsBuilder
+                .fromHttpUrl(appUrl)
                 .path("/download/")
                 .path(filename)
                 .toUriString()
