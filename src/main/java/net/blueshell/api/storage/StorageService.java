@@ -31,7 +31,7 @@ public class StorageService {
     private final Path rootLocation;
 
     @Value("${app.url}")
-    private static String appUrl;
+    private String appUrl;
 
     @Autowired
     public StorageService(StorageProperties properties) {
