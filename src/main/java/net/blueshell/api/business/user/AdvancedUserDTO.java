@@ -185,7 +185,7 @@ public class AdvancedUserDTO {
         if (getSignature() != null) {
             // The signature comes from vue-signature-pad which always gives a PNG
             String filename = storageService.store(getSignature(), ".png");
-            String downloadURL = StorageService.getDownloadURI(filename);
+            String downloadURL = storageService.getDownloadURI(filename);
 
             Picture signature = new Picture(filename, downloadURL, user);
             pictureDao.create(signature);
