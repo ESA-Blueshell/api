@@ -3,10 +3,16 @@ package net.blueshell.api.business.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import net.blueshell.api.business.picture.Picture;
+import net.blueshell.api.business.picture.PictureDao;
+import net.blueshell.api.storage.StorageService;
+import net.blueshell.api.util.TimeUtil;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * DTO for communicating account changes after the initial account.
@@ -15,6 +21,8 @@ import java.sql.Timestamp;
 public class AdvancedUserDTO {
 
     public static final UserDao dao = new UserDao();
+
+    private static final PictureDao pictureDao = new PictureDao();
 
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -90,6 +98,21 @@ public class AdvancedUserDTO {
     @JsonProperty
     private int startStudyYear;
 
+    @JsonProperty
+    private boolean ehbo;
+
+    @JsonProperty
+    private boolean bhv;
+
+    @JsonProperty
+    private String signature;
+
+    @JsonProperty
+    private Date signatureDate;
+
+    @JsonProperty
+    private String signatureCity;
+
     @JsonIgnore
     public String getPassword() {
         return password;
@@ -135,6 +158,49 @@ public class AdvancedUserDTO {
             user.setDiscord(getDiscord());
         }
         return user;
+    }
+
+    public void toMember(User user, StorageService storageService) {
+        if (isEhbo()) {
+            user.addRole(Role.EHBO);
+        }
+        if (isBhv()) {
+            user.addRole(Role.BHV);
+        }
+        if (getDateOfBirth() != null) {
+            user.setDateOfBirth(new Timestamp(getDateOfBirth().getTime()));
+        }
+        if (getPhoneNumber() != null) {
+            user.setPhoneNumber(getPhoneNumber().replaceAll("\\s", ""));
+        }
+        if (getPostalCode() != null) {
+            user.setPostalCode(getPostalCode());
+        }
+        if (getCity() != null) {
+            user.setCity(getCity());
+        }
+
+        user.setNewsletter(isNewsletter());
+
+        if (getSignature() != null) {
+            // The signature comes from vue-signature-pad which always gives a PNG
+            String filename = storageService.store(getSignature(), ".png");
+            String downloadURL = StorageService.getDownloadURI(filename);
+
+            Picture signature = new Picture(filename, downloadURL, user);
+            pictureDao.create(signature);
+
+
+            user.setSignature(signature);
+            user.setSignatureDate(getSignatureDate());
+            user.setSignatureCity(getSignatureCity());
+
+            user.setConsentPrivacy(true); // Given that they signed the form they consent to our privacy policy
+
+            // Given that they have signed the form they are now a member
+            user.addRole(Role.MEMBER);
+            user.setMemberSince(new Timestamp(System.currentTimeMillis()));
+        }
     }
 
     public static AdvancedUserDTO fromUser(User user) {

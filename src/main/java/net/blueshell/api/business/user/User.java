@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 @Entity
@@ -152,6 +153,21 @@ public class User implements UserDetails {
     @Column(name = "authority")
     private Set<Role> roles;
 
+    @OneToOne
+    @JoinColumn(name = "signature_id")
+    @JsonIgnore
+    private Picture signature;
+
+    @Column(name = "signature_date")
+    @JsonIgnore
+    private Date signatureDate;
+
+    @Column(name = "signature_city")
+    @JsonIgnore
+    private String signatureCity;
+
+
+
     public User() {
     }
 
@@ -245,6 +261,9 @@ public class User implements UserDetails {
     }
 
     public void addRole(Role role) {
+        if (getRoles() == null) {
+            setRoles(new HashSet<>());
+        }
         getRoles().add(role);
     }
 

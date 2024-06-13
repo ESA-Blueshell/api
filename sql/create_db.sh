@@ -21,5 +21,6 @@ mysql -u $username --password=root$password $database < V7_users_other_defaults.
 mysql -u $username --password=root$password $database < V8_authorities_dropcolumn_username.sql
 mysql -u $username --password=root$password $database < V9_event_signup_delete_trigger.sql
 mysql -u $username --password=root$password $database < V10_fix_column_naming.sql
+mysql -u $username --password=root$password $database < V11_users_signature_fields.sql
 
 

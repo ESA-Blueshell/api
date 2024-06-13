@@ -6,6 +6,7 @@ import net.blueshell.api.business.user.request.PasswordResetRequest;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
 import net.blueshell.api.email.EmailModule;
+import net.blueshell.api.storage.StorageService;
 import net.blueshell.api.util.TimeUtil;
 import net.blueshell.api.util.Util;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,11 @@ public class UserController extends AuthorizationController {
     private static final long INITIAL_ACCOUNT_KEY_VALID_SECONDS = 3600 * 24 * 3; // 3 days
 
     private final UserDao dao = new UserDao();
+    private final StorageService storageService;
+
+    public UserController(StorageService storageService) {
+        this.storageService = storageService;
+    }
 
     @PreAuthorize("hasAuthority('BOARD')")
     @GetMapping(value = "/users/members")
@@ -59,7 +65,36 @@ public class UserController extends AuthorizationController {
             if (userWithSameName != null) {
                 throw new BadRequestException("Username is already taken.");
             }
-            fillInInitialFieldsAndSendMail(user);
+            fillInInitialFields(user);
+            dao.create(user);
+
+            sendEmail(user);
+            dao.update(user);
+        }
+
+        return StatusCodes.OK;
+    }
+
+    @PutMapping(value = "/createMember")
+    public Object createOrUpdateMember(@RequestBody AdvancedUserDTO userDto) {
+        if (!userDto.getUsername().matches("[a-zA-Z0-9]+")) {
+            return new BadRequestException("Invalid username, must only contain alphanumeric characters.");
+        }
+
+        User oldUser = dao.getById(userDto.getId());
+        User userWithSameName = dao.getByUsername(userDto.getUsername());
+
+        var user = userDto.mapToBasicUser();
+        if (oldUser == null) {
+            if (userWithSameName != null) {
+                throw new BadRequestException("Username is already taken.");
+            }
+            fillInInitialFields(user);
+            dao.create(user); // Create the user such that the signature can be assigned to them
+            userDto.toMember(user, this.storageService); // Assign membership info
+
+            sendEmail(user);
+            dao.update(user);
         }
         return StatusCodes.OK;
     }
@@ -78,21 +113,22 @@ public class UserController extends AuthorizationController {
         return StatusCodes.OK;
     }
 
-    private void fillInInitialFieldsAndSendMail(User user) {
+    private void fillInInitialFields(User user) {
         user.setCreatedAt(TimeUtil.of(LocalDateTime.now()));
-        user.setMemberSince(TimeUtil.of(LocalDateTime.of(3000, 1, 1, 0, 0)));
+        if (user.getMemberSince() == null) {
+            // When using createMember endpoint a correct value will already be set
+            user.setMemberSince(TimeUtil.of(LocalDateTime.of(3000, 1, 1, 0, 0)));
 
-        // Enabled by default.
-        user.setNewsletter(true);
+            // Enabled by default when using createUser.
+            user.setNewsletter(true);
+        }
+    }
 
-        dao.create(user);
-
-        // Only try doing email stuff once user has been successfully created
+    public void sendEmail(User user) {
         user.setResetType(ResetType.INITIAL_ACCOUNT_CREATION);
         user.setResetKey(Util.getRandomCapitalString(INITIAL_ACCOUNT_KEY_LENGTH));
         user.setResetKeyValidUntil(Timestamp.from(Instant.now().plusSeconds(INITIAL_ACCOUNT_KEY_VALID_SECONDS)));
         EmailModule.sendInitialKeyEmail(user);
-        dao.update(user);
     }
 
     @GetMapping(value = "/users/{id}")
