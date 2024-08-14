@@ -95,6 +95,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers(HttpMethod.GET, "/events/**").permitAll().and()
                 .authorizeRequests().antMatchers(HttpMethod.GET, "/download/**").permitAll().and()
                 .authorizeRequests().antMatchers(HttpMethod.GET, "/newsPageable**").permitAll().and()
+                .authorizeRequests().antMatchers(HttpMethod.GET, "/committees**").permitAll().and()
                 .authorizeRequests().antMatchers("/users/password").permitAll().and()
                 .authorizeRequests().antMatchers(HttpMethod.POST, "/events/signups/*/guest").permitAll().and()
                 .authorizeRequests().antMatchers(HttpMethod.PUT, "/events/*/signups/*").permitAll().and()
