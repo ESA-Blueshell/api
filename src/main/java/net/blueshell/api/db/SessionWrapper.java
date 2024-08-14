@@ -4,9 +4,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.util.List;
 
 public class SessionWrapper<T> {
@@ -23,9 +20,9 @@ public class SessionWrapper<T> {
         List<T> list = null;
         try (Session session = sessionFactory.openSession()) {
             Transaction t = session.beginTransaction();
-            CriteriaBuilder builder = session.getCriteriaBuilder();
-            CriteriaQuery<T> criteriaQuery = builder.createQuery(clazz);
-            Root<T> tRoot = criteriaQuery.from(clazz);
+            var builder = session.getCriteriaBuilder();
+            var criteriaQuery = builder.createQuery(clazz);
+            var tRoot = criteriaQuery.from(clazz);
             criteriaQuery.select(tRoot);
             list = session.createQuery(criteriaQuery).getResultList();
             t.commit();

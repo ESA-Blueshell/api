@@ -3,7 +3,7 @@ package net.blueshell.api.business.guest;
 import lombok.Data;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Objects;

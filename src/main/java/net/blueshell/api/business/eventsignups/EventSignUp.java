@@ -7,7 +7,7 @@ import net.blueshell.api.business.event.Event;
 import net.blueshell.api.business.guest.Guest;
 import net.blueshell.api.business.user.User;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;

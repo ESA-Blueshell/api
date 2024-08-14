@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import javax.validation.constraints.Email;
+import jakarta.validation.constraints.Email;
 
 @Data
 public class SimpleUserDTO {

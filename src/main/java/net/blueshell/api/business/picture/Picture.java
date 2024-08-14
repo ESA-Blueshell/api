@@ -6,7 +6,7 @@ import lombok.Data;
 import net.blueshell.api.business.event.Event;
 import net.blueshell.api.business.user.User;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Objects;

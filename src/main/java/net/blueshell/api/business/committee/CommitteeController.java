@@ -1,18 +1,15 @@
 package net.blueshell.api.business.committee;
 
+import jakarta.ws.rs.NotFoundException;
 import net.blueshell.api.business.user.Role;
 import net.blueshell.api.business.user.User;
 import net.blueshell.api.business.user.UserDao;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
-import net.blueshell.api.daos.Dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.NotFoundException;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;

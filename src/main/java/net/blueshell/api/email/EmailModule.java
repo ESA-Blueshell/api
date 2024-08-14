@@ -6,9 +6,9 @@ import net.blueshell.api.util.Util;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.*;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 
 @Component
 public class EmailModule {
@@ -46,7 +46,7 @@ public class EmailModule {
             "<br /><br />" +
             "Blueshell Esports";
 
-    private final Authenticator auth = new javax.mail.Authenticator() {
+    private final Authenticator auth = new jakarta.mail.Authenticator() {
         protected PasswordAuthentication getPasswordAuthentication() {
             return new PasswordAuthentication(email, password);
         }

@@ -10,7 +10,7 @@ import net.blueshell.api.business.user.User;
 import org.apache.tomcat.util.json.JSONParser;
 import org.apache.tomcat.util.json.ParseException;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.*;
