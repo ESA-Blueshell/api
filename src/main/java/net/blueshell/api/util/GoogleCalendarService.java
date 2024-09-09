@@ -115,13 +115,13 @@ public class GoogleCalendarService {
         preProcessedHtml = preProcessedHtml.replaceAll("</p>", "");
         googleEvent.setDescription(preProcessedHtml);
 
-        DateTime startDateTime = new DateTime(event.getStartTime().atZone(ZoneId.systemDefault()).toEpochSecond() * 1000);
+        DateTime startDateTime = new DateTime(event.getStartTime().atZone(ZoneId.of("Europe/Amsterdam")).toEpochSecond() * 1000);
         EventDateTime start = new EventDateTime()
                 .setDateTime(startDateTime)
                 .setTimeZone("Europe/Amsterdam");
         googleEvent.setStart(start);
 
-        DateTime endDateTime = new DateTime(event.getEndTime().atZone(ZoneId.systemDefault()).toEpochSecond() * 1000);
+        DateTime endDateTime = new DateTime(event.getEndTime().atZone(ZoneId.of("Europe/Amsterdam")).toEpochSecond() * 1000);
         EventDateTime end = new EventDateTime()
                 .setDateTime(endDateTime)
                 .setTimeZone("Europe/Amsterdam");
