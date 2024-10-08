@@ -6,6 +6,7 @@ import lombok.Data;
 import net.blueshell.api.business.committee.CommitteeMembership;
 import net.blueshell.api.business.contribution.Contribution;
 import net.blueshell.api.business.picture.Picture;
+import net.blueshell.api.business.signature.Signature;
 import net.blueshell.api.util.TimeUtil;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -153,18 +154,9 @@ public class User implements UserDetails {
     @Column(name = "authority")
     private Set<Role> roles;
 
-    @OneToOne
-    @JoinColumn(name = "signature_id")
+    @OneToOne(mappedBy = "user")
     @JsonIgnore
-    private Picture signature;
-
-    @Column(name = "signature_date")
-    @JsonIgnore
-    private Date signatureDate;
-
-    @Column(name = "signature_city")
-    @JsonIgnore
-    private String signatureCity;
+    private Signature signature;
 
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
