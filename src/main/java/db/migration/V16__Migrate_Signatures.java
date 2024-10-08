@@ -3,6 +3,7 @@ package db.migration;
 import org.flywaydb.core.api.migration.BaseJavaMigration;
 import org.flywaydb.core.api.migration.Context;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,7 +46,9 @@ public class V16__Migrate_Signatures extends BaseJavaMigration {
         }
 
         Properties properties = new Properties();
-        try (InputStream input = new FileInputStream("src/main/resources/application.properties")) {
+        String filePath = new File("").getAbsolutePath() + "/src/main/resources/application.properties";
+        System.out.println("PATH: " + filePath);
+        try (InputStream input = new FileInputStream(filePath)) {
             properties.load(input);
         }
         String storageLocation = properties.getProperty("storage.location");
