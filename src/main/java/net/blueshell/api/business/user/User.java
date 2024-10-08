@@ -158,6 +158,17 @@ public class User implements UserDetails {
     @JsonIgnore
     private Signature signature;
 
+    @Column(name = "online_signup")
+    private boolean onlineSignup = false;
+
+    @Column(name = "ehbo")
+    private boolean ehbo = false;
+
+    @Column(name = "in_brevo")
+    private boolean inBrevo = false;
+
+    @Column(name = "bhv")
+    private boolean bhv = false;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Contribution> contributions;

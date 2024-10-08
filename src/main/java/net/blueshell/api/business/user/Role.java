@@ -1,19 +1,13 @@
 package net.blueshell.api.business.user;
 
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public enum Role {
     GUEST("GUEST"),
     COMPANY("COMPANY"),
     MEMBER("MEMBER", GUEST),
-    VEGAN("VEGAN", MEMBER),
-    EHBO("EHBO", MEMBER),
-    BHV("BHV", MEMBER),
+    VEGAN("VEGAN"),
     COMMITTEE("COMMITTEE", MEMBER),
     BOARD("BOARD", COMMITTEE),
     TREASURER("TREASURER", BOARD),
