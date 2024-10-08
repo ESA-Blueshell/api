@@ -3,10 +3,7 @@ package net.blueshell.api.controller;
 import net.blueshell.api.storage.StorageService;
 import net.blueshell.api.storage.UploadFileResponse;
 import org.springframework.core.io.Resource;
-import org.springframework.http.CacheControl;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +27,9 @@ public class FileController {
     @GetMapping("/download/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> downloadFile(@PathVariable String filename) {
+        if (filename.startsWith("signatures")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
 
         Resource resource = storageService.loadAsResource(filename);
 

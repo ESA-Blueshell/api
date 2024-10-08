@@ -8,7 +8,6 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +32,35 @@ public class UserDao extends SessionWrapper<User> implements Dao<User> {
         }
         return obj;
     }
+
+    public User getByEmail(String email) {
+        User obj;
+        try (Session session = sessionFactory.openSession()) {
+            Transaction t = session.beginTransaction();
+            var query = session.createQuery("from User where email = :email");
+            query.setParameter("email", email);
+            var objs = query.list();
+            obj = objs.size() == 0 ? null : (User) objs.get(0);
+            t.commit();
+            session.close();
+        }
+        return obj;
+    }
+
+    public User getByPhoneNumber(String phoneNumber) {
+        User obj;
+        try (Session session = sessionFactory.openSession()) {
+            Transaction t = session.beginTransaction();
+            var query = session.createQuery("from User where phoneNumber = :phoneNumber");
+            query.setParameter("phoneNumber", phoneNumber);
+            var objs = query.list();
+            obj = objs.size() == 0 ? null : (User) objs.get(0);
+            t.commit();
+            session.close();
+        }
+        return obj;
+    }
+
 
     public List<User> list(Boolean isMember) {
         List<User> obj = new ArrayList<>();

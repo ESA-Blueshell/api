@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import net.blueshell.api.business.committee.CommitteeMembership;
+import net.blueshell.api.business.contribution.Contribution;
 import net.blueshell.api.business.picture.Picture;
+import net.blueshell.api.business.signature.Signature;
 import net.blueshell.api.util.TimeUtil;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,7 +19,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.Date;
 import java.util.stream.Collectors;
 
 @Entity
@@ -153,20 +154,24 @@ public class User implements UserDetails {
     @Column(name = "authority")
     private Set<Role> roles;
 
-    @OneToOne
-    @JoinColumn(name = "signature_id")
+    @OneToOne(mappedBy = "user")
     @JsonIgnore
-    private Picture signature;
+    private Signature signature;
 
-    @Column(name = "signature_date")
-    @JsonIgnore
-    private Date signatureDate;
+    @Column(name = "online_signup")
+    private boolean onlineSignup = false;
 
-    @Column(name = "signature_city")
-    @JsonIgnore
-    private String signatureCity;
+    @Column(name = "ehbo")
+    private boolean ehbo = false;
 
+    @Column(name = "in_brevo")
+    private boolean inBrevo = false;
 
+    @Column(name = "bhv")
+    private boolean bhv = false;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Contribution> contributions;
 
     public User() {
     }
