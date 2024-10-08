@@ -78,6 +78,23 @@ public class StorageService {
         }
     }
 
+    public String storeSignature(String base64String, String fileExtension) {
+        String filename = "signatures/" + base64String.hashCode() + fileExtension;
+        try {
+            byte[] bytes = Base64.decodeBase64(base64String);
+
+
+            String path = this.rootLocation.resolve(filename).toString();
+            try (FileOutputStream outputStream = new FileOutputStream(path)) {
+                outputStream.write(bytes);
+            }
+            return filename;
+        } catch (IOException e) {
+            throw new StorageException("Failed to store file " + filename, e);
+        }
+    }
+
+
     public String store(String base64String, String fileExtension) {
 
         String filename = base64String.hashCode() + fileExtension;

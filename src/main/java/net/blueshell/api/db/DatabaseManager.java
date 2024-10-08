@@ -64,7 +64,8 @@ public class DatabaseManager {
                 News.class,
                 User.class,
                 CommitteeMembership.class,
-                Guest.class
+                Guest.class,
+                Signature.class
         ).forEach(configuration::addAnnotatedClass);
 
         config = configuration;
