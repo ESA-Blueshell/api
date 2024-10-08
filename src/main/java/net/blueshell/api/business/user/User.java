@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import net.blueshell.api.business.committee.CommitteeMembership;
+import net.blueshell.api.business.contribution.Contribution;
 import net.blueshell.api.business.picture.Picture;
 import net.blueshell.api.util.TimeUtil;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,7 +18,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.Date;
 import java.util.stream.Collectors;
 
 @Entity
@@ -167,6 +167,8 @@ public class User implements UserDetails {
     private String signatureCity;
 
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Contribution> contributions;
 
     public User() {
     }
