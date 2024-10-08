@@ -2,12 +2,15 @@ package net.blueshell.api.db;
 
 import net.blueshell.api.business.committee.Committee;
 import net.blueshell.api.business.committee.CommitteeMembership;
+import net.blueshell.api.business.contribution.Contribution;
+import net.blueshell.api.business.contribution.ContributionPeriod;
 import net.blueshell.api.business.event.Event;
 import net.blueshell.api.business.event.EventFeedback;
 import net.blueshell.api.business.eventsignups.EventSignUp;
 import net.blueshell.api.business.guest.Guest;
 import net.blueshell.api.business.news.News;
 import net.blueshell.api.business.picture.Picture;
+import net.blueshell.api.business.signature.Signature;
 import net.blueshell.api.business.sponsor.Sponsor;
 import net.blueshell.api.business.user.User;
 import org.hibernate.Session;
@@ -63,6 +66,8 @@ public class DatabaseManager {
                 Sponsor.class,
                 News.class,
                 User.class,
+                Contribution.class,
+                ContributionPeriod.class,
                 CommitteeMembership.class,
                 Guest.class,
                 Signature.class
