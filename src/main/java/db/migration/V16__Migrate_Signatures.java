@@ -23,7 +23,9 @@ import java.util.stream.Collectors;
 public class V16__Migrate_Signatures extends BaseJavaMigration {
     public void migrate(Context context) throws Exception {
         Connection connection = context.getConnection();
-
+        String storageLocation = "uploads";
+        Path rootLocation = Paths.get(storageLocation).toAbsolutePath();
+        System.out.println("ROOT: " + rootLocation);
         // Disable auto-commit mode
         boolean originalAutoCommit = connection.getAutoCommit();
         connection.setAutoCommit(false);
@@ -45,17 +47,10 @@ public class V16__Migrate_Signatures extends BaseJavaMigration {
             }
         }
 
-        Properties properties = new Properties();
-        String filePath = new File("").getAbsolutePath() + "/src/main/resources/application.properties";
-        System.out.println("PATH: " + filePath);
-        try (InputStream input = new FileInputStream(filePath)) {
-            properties.load(input);
-        }
-        String storageLocation = properties.getProperty("storage.location");
-        if (storageLocation == null) {
-            throw new Exception("Property 'storage.location' not found in application.properties");
-        }
-        Path rootLocation = Paths.get(storageLocation);
+
+//        String storageLocation = "./uploads";
+//        Path rootLocation = Paths.get(storageLocation).toAbsolutePath();
+//        System.out.println("ROOT: " + rootLocation);
         if (!signatureIds.isEmpty()) {
             String sigIds = signatureIds.stream().map(String::valueOf).collect(
                     Collectors.joining(",", "(", ")")
