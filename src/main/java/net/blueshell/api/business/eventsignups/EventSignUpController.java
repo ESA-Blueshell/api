@@ -8,7 +8,7 @@ import net.blueshell.api.business.user.User;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
 import net.blueshell.api.daos.Dao;
-import net.blueshell.api.email.EmailModule;
+import net.blueshell.api.service.BrevoEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +25,7 @@ public class EventSignUpController extends AuthorizationController {
     private Dao<Guest> guestDao;
 
     @Autowired
-    private EmailModule emailModule;
+    private BrevoEmailService emailService;
 
 
     @GetMapping(value = "/events/signups")
@@ -159,7 +159,7 @@ public class EventSignUpController extends AuthorizationController {
         signUpDao.create(signUp);
 
         // Send email to guest
-        emailModule.sendGuestSignUpEmail(signUp);
+        emailService.sendGuestSignUpEmail(signUp);
 
         return signUp;
     }

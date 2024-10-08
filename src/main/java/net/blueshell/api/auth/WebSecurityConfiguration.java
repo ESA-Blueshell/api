@@ -22,7 +22,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.sql.DataSource;
 import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * https://www.javacodegeeks.com/2019/03/centralized_-authorization_-oauth2_jwt.html
@@ -88,7 +87,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 // dont authenticate this particular request
                 .authorizeRequests().antMatchers("/authenticate").permitAll().and()
-                .authorizeRequests().antMatchers("/createMember").permitAll().and()
                 .authorizeRequests().antMatchers("/createAccount").permitAll().and()
                 .authorizeRequests().antMatchers("/enableAccount").permitAll().and()
                 .authorizeRequests().antMatchers(HttpMethod.GET, "/news/**").permitAll().and()
@@ -100,6 +98,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers(HttpMethod.POST, "/events/signups/*/guest").permitAll().and()
                 .authorizeRequests().antMatchers(HttpMethod.PUT, "/events/*/signups/*").permitAll().and()
                 .authorizeRequests().antMatchers(HttpMethod.DELETE, "/events/*/signups/*").permitAll().and()
+                .authorizeRequests().antMatchers(HttpMethod.GET, "/contributionPeriods").permitAll().and()
 
                 // all other requests need to be authenticated
                 .authorizeRequests().anyRequest().authenticated()
@@ -122,44 +121,4 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-    /*
-    @Override
-    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication().dataSource(dataSource)
-                .usersByUsernameQuery("SELECT username, password, enabled FROM users where username = ?")
-                .authoritiesByUsernameQuery("SELECT username, authority FROM authorities WHERE username = ?");
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
-                .authorizeRequests()
-//                .antMatchers("/", "/login", "/oauth", "/api/oauth/token").permitAll() // Change back once we decide to go from basic auth to something more proper
-                .anyRequest().authenticated()
-                .anyRequest().permitAll()
-                .and()
-                .httpBasic()
-        ;
-    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList("*"));
-        configuration.setAllowedMethods(Collections.singletonList("*"));
-        configuration.setAllowedHeaders(Collections.singletonList("*"));
-        configuration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-*/
-
 }
