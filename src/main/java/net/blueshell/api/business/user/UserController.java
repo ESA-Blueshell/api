@@ -121,7 +121,7 @@ public class UserController extends AuthorizationController {
         }
 
         User userWithSamePhone = dao.getByPhoneNumber(userDto.getPhoneNumber());
-        if (userWithSamePhone != null) {
+        if (userWithSamePhone != null && user.getId() != userWithSamePhone.getId()) {
             return new ResponseEntity<>("Phone number is already taken.", HttpStatus.BAD_REQUEST);
         }
 
