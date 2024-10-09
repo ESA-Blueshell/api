@@ -3,10 +3,7 @@ package db.migration;
 import org.flywaydb.core.api.migration.BaseJavaMigration;
 import org.flywaydb.core.api.migration.Context;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,7 +14,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class V16__Migrate_Signatures extends BaseJavaMigration {
@@ -47,10 +43,6 @@ public class V16__Migrate_Signatures extends BaseJavaMigration {
             }
         }
 
-
-//        String storageLocation = "./uploads";
-//        Path rootLocation = Paths.get(storageLocation).toAbsolutePath();
-//        System.out.println("ROOT: " + rootLocation);
         if (!signatureIds.isEmpty()) {
             String sigIds = signatureIds.stream().map(String::valueOf).collect(
                     Collectors.joining(",", "(", ")")
