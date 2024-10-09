@@ -145,7 +145,7 @@ public class AdvancedUserDTO {
             user.setLastName(getLastName());
         }
         if (getEmail() != null) {
-            user.setEmail(getEmail());
+            user.setEmail(getEmail().toLowerCase());
         }
         if (getDiscord() != null) {
             user.setDiscord(getDiscord());
