@@ -4,6 +4,8 @@ import net.blueshell.api.business.signature.Signature;
 import net.blueshell.api.business.signature.SignatureDao;
 import net.blueshell.api.storage.StorageService;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -22,7 +24,7 @@ public class UserModule {
         signatureDao.create(signature);
         user.setSignature(signature);
 
-        user.setMemberSince(user.getCreatedAt());
+        user.setMemberSince(Timestamp.from(Instant.now()));
         user.addRole(Role.MEMBER);
         user.setOnlineSignup(true);
         user.setConsentPrivacy(true);
