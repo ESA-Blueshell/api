@@ -290,7 +290,9 @@ public class UserController extends AuthorizationController {
             user.setResetKey(Util.getRandomCapitalString(INITIAL_ACCOUNT_KEY_LENGTH));
             user.setResetKeyValidUntil(Timestamp.from(Instant.now().plusSeconds(INITIAL_ACCOUNT_KEY_VALID_SECONDS)));
             brevoEmailService.sendAccountCreationEmail(user);
-            brevoEmailService.sendInitialMembershipEmail(user);
+            if (user.hasRole(Role.MEMBER)) {
+                brevoEmailService.sendInitialMembershipEmail(user);
+            }
         } else {
             user.setResetKey(Util.getRandomCapitalString(PASSWORD_RESET_KEY_LENGTH));
             user.setResetKeyValidUntil(Timestamp.from(Instant.now().plusSeconds(PASSWORD_RESET_KEY_VALID_SECONDS)));
