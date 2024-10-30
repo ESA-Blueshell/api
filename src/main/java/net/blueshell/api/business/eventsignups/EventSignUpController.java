@@ -91,7 +91,7 @@ public class EventSignUpController extends AuthorizationController {
     public Object createSignUp(@PathVariable("id") String eventId, @RequestBody(required = false) String formAnswers) {
         User authedUser = getPrincipal();
         if (authedUser == null) {
-            return StatusCodes.UNAUTHORIZED;
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not logged in.");
         }
 
         Event event = eventDao.getById(Long.parseLong(eventId));
