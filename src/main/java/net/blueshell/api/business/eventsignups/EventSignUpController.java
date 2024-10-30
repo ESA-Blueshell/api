@@ -10,8 +10,11 @@ import net.blueshell.api.controller.AuthorizationController;
 import net.blueshell.api.daos.Dao;
 import net.blueshell.api.service.BrevoEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import javax.ws.rs.NotFoundException;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
@@ -92,16 +95,29 @@ public class EventSignUpController extends AuthorizationController {
         }
 
         Event event = eventDao.getById(Long.parseLong(eventId));
-        if (event == null || !event.canSee(authedUser)) {
-            return StatusCodes.NOT_FOUND;
+        if (event == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Could not find an open event with id %s", eventId));
         }
-        if (!event.isSignUp() || (!authedUser.hasRole(Role.MEMBER) && event.isMembersOnly())) {
-            return StatusCodes.FORBIDDEN;
+
+        if (!event.canSee(authedUser)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    String.format("Could not find eventId %s cannot be viewed by userId %s", eventId, authedUser.getId()));
+        }
+
+        if (!event.isSignUp()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    String.format("Event %s is not available for signup.", eventId));
+        }
+
+        if (!authedUser.hasRole(Role.MEMBER) && event.isMembersOnly()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    String.format("UserId %s cannot join eventId %s as it is member-only.", authedUser.getId(), eventId));
         }
 
         // Check if the formAnswers are formatted correctly
         if (event.getSignUpForm() != null && !event.validateAnswers(formAnswers)) {
-            return StatusCodes.BAD_REQUEST;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "The signup form answers are invalid.");
         }
 
         // Check if we're updating an existing sign-up or not
