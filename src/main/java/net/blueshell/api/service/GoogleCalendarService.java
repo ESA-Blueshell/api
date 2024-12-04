@@ -1,4 +1,4 @@
-package net.blueshell.api.util;
+package net.blueshell.api.service;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
