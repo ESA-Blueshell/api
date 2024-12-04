@@ -6,15 +6,18 @@ import lombok.Data;
 import net.blueshell.api.business.event.Event;
 import net.blueshell.api.business.guest.Guest;
 import net.blueshell.api.business.user.User;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 @Table(name = "event_signups")
 @Data
+@Where(clause = "deleted_at IS NULL")
 public class EventSignUp implements Serializable {
 
     @Id
@@ -41,6 +44,10 @@ public class EventSignUp implements Serializable {
 
     @Column(name = "signed_up_at")
     private LocalDateTime signedUpAt;
+
+    @Column(name = "deleted_at")
+    private Timestamp deletedAt;
+
 
     public EventSignUp() {
     }

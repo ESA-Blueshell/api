@@ -10,7 +10,6 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Date;
-import java.util.Objects;
 
 @Getter
 @Entity
@@ -50,17 +49,11 @@ public class Signature {
         createdAt = Timestamp.from(Instant.now());
     }
 
-    public Signature(String name, String url, User user, Date date, String city) {
+    public Signature(String name, String url, Date date, String city) {
         this();
         this.name = name;
         this.url = url;
-        this.user = user;
         this.date = date;
         this.city = city;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }

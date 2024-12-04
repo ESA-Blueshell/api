@@ -1,10 +1,9 @@
 package net.blueshell.api.business.news;
 
+import net.blueshell.api.business.user.Role;
+import net.blueshell.api.business.user.UserDao;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
-import net.blueshell.api.daos.Dao;
-import net.blueshell.api.business.user.UserDao;
-import net.blueshell.api.business.user.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

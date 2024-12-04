@@ -4,7 +4,7 @@ import lombok.Data;
 import net.blueshell.api.util.Util;
 
 @Data
-public class EnableAccountRequest {
+public class ActivateUserRequest {
 
     private String username;
 
@@ -13,4 +13,5 @@ public class EnableAccountRequest {
     public boolean isValid() {
         return !Util.isNullOrEmpty(username) && !Util.isNullOrEmpty(token);
     }
+
 }

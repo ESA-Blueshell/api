@@ -9,15 +9,18 @@ import net.blueshell.api.business.user.Role;
 import net.blueshell.api.business.user.User;
 import org.apache.tomcat.util.json.JSONParser;
 import org.apache.tomcat.util.json.ParseException;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
 @Table(name = "events")
 @Data
+@Where(clause = "deleted_at IS NULL")
 public class Event {
 
     @Id
@@ -87,6 +90,8 @@ public class Event {
     @Column(name = "sign_up_form")
     private String signUpForm;
 
+    @Column(name = "deleted_at")
+    private Timestamp deletedAt;
 
     public Event() {
     }

@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import net.blueshell.api.business.user.User;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -13,6 +15,7 @@ import java.util.Set;
 @Entity
 @Table(name = "committees")
 @Data
+@Where(clause = "deleted_at IS NULL")
 public class Committee {
 
     @Id
@@ -22,6 +25,9 @@ public class Committee {
     private String name;
 
     private String description;
+
+    @Column(name = "deleted_at")
+    private Timestamp deletedAt;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "committee")
     @JsonIgnore

@@ -162,6 +162,12 @@
             <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>be.woutschoovaerts</groupId>
+            <artifactId>mollie</artifactId>
+            <version>4.4.3</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -198,6 +204,19 @@
                     <target>11</target>
                 </configuration>
             </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.flywaydb</groupId>-->
+<!--                <artifactId>flyway-maven-plugin</artifactId>-->
+<!--                <version>5.2.4</version>-->
+<!--                <configuration>-->
+<!--                    <url>jdbc:mysql://db:3306?autoReconnect=true&amp;useSSL=false&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true</url>-->
+<!--                    <user>root</user>-->
+<!--                    <password>BlueShell2024!</password>-->
+<!--                    <schemas>-->
+<!--                        <schema>blueshell</schema>-->
+<!--                    </schemas>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 

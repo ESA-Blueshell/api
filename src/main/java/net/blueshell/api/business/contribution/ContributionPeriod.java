@@ -3,14 +3,17 @@ package net.blueshell.api.business.contribution;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
 @Entity
 @Table(name = "contribution_periods")
+@Where(clause = "deleted_at IS NULL")
 public class ContributionPeriod {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,4 +46,7 @@ public class ContributionPeriod {
     @Column(name="list_id")
     @Setter
     private Long listId;
+
+    @Column(name = "deleted_at")
+    private Timestamp deletedAt;
 }

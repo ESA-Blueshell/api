@@ -1,65 +1,85 @@
 package net.blueshell.api.business.user;
 
 import net.blueshell.api.business.signature.Signature;
-import net.blueshell.api.business.signature.SignatureDao;
+import net.blueshell.api.business.user.request.ActivateMemberRequest;
+import net.blueshell.api.business.user.request.PasswordResetRequest;
 import net.blueshell.api.storage.StorageService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.sql.Timestamp;
-import java.time.Instant;
+import java.security.SecureRandom;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.regex.Pattern;
 
 public class UserModule {
 
-    private static final UserDao dao = new UserDao();
-    private static final SignatureDao signatureDao = new SignatureDao();
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private static final String CHAR_SET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*()-_=+<>?";
+    private static final int PASSWORD_LENGTH = 12;
+    private static final SecureRandom random = new SecureRandom();
 
-    public static void makeMember(AdvancedUserDTO userDto, User user, StorageService storageService) {
-        // The signature comes from vue-signature-pad which always gives a PNG
-        String filename = storageService.storeSignature(userDto.getSignature(), ".png");
-        String downloadURL = storageService.getDownloadURI(filename);
+    public static String generatePassword() {
+        StringBuilder password = new StringBuilder(PASSWORD_LENGTH);
 
-        Signature signature = new Signature(filename, downloadURL, user, userDto.getSignatureDate(), userDto.getSignatureCity());
-        signatureDao.create(signature);
-        user.setSignature(signature);
+        for (int i = 0; i < PASSWORD_LENGTH; i++) {
+            int index = random.nextInt(CHAR_SET.length());
+            password.append(CHAR_SET.charAt(index));
+        }
 
-        user.setMemberSince(Timestamp.from(Instant.now()));
-        user.addRole(Role.MEMBER);
-        user.setOnlineSignup(true);
-        user.setConsentPrivacy(true);
+        return password.toString();
     }
 
-
-    public static void applyUserDtoToUser(AdvancedUserDTO dto, User user) {
-        applyIfFieldIsNotNull(user, dto.getGender(), User::setGender);
-        applyIfFieldIsNotNull(user, dto.getDateOfBirth(), User::setDateOfBirth);
+    public static void applyEditableFields(User user, AdvancedUserDTO dto) {
         applyIfFieldIsNotNull(user, dto.getDiscord(), User::setDiscord);
-        applyIfFieldIsNotNullAndPassesVerifyCheck(user, dto.getEmail(), User::setEmail, UserModule::verifyEmail);
-        applyIfFieldIsNotNull(user, dto.getPhoneNumber(), User::setPhoneNumber);
-        applyIfFieldIsNotNull(user, dto.getAddress(), User::setAddress);
         applyIfFieldIsNotNull(user, dto.getSteamid(), User::setSteamid);
+        applyIfFieldIsNotNull(user, dto.getPhoneNumber(), User::setPhoneNumber);
         applyIfFieldIsNotNull(user, dto.getPostalCode(), User::setPostalCode);
+        applyIfFieldIsNotNull(user, dto.getAddress(), User::setAddress);
         applyIfFieldIsNotNull(user, dto.getCity(), User::setCity);
         applyIfFieldIsNotNull(user, dto.getCountry(), User::setCountry);
         applyIfFieldIsNotNull(user, dto.isNewsletter(), User::setNewsletter);
         applyIfFieldIsNotNull(user, dto.isPhotoConsent(), User::setPhotoConsent);
         applyIfFieldIsNotNull(user, dto.getNationality(), User::setNationality);
-        applyIfFieldIsNotNull(user, dto.getStudentNumber(), User::setStudentNumber);
-        applyIfFieldIsNotNull(user, dto.getStudy(), User::setStudy);
-        applyIfFieldIsNotNull(user, dto.getStartStudyYear(), User::setStartStudyYear);
         user.setEhbo(dto.isEhbo());
         user.setBhv(dto.isBhv());
     }
 
-    private static Boolean verifyEmail(String email) {
-        return Pattern.matches("^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", email);
+    public static void applyCreationFields(User user, AdvancedUserDTO dto) {
+        applyIfFieldIsNotNull(user, dto.getUsername(), User::setUsername);
+        if (dto.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        } else {
+            user.setPassword(passwordEncoder.encode(generatePassword()));
+        }
     }
 
-    private static <T> void applyIfFieldIsNotNullAndPassesVerifyCheck(User user, T obj, BiConsumer<User, T> applier, Function<T, Boolean> verifier) {
-        if (obj != null && verifier.apply(obj)) {
-            applier.accept(user, obj);
+    public static void applyCreationFields(User user, ActivateMemberRequest dto) {
+        applyIfFieldIsNotNull(user, dto.getUsername(), User::setUsername);
+        if (dto.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        } else {
+            user.setPassword(passwordEncoder.encode(generatePassword()));
         }
+    }
+
+    // Fields that can only be updated by a secretary or admin
+    public static void applyAdminFields(User user, AdvancedUserDTO dto) {
+        applyIfFieldIsNotNull(user, dto.getInitials(), User::setInitials);
+        applyIfFieldIsNotNull(user, dto.getFirstName(), User::setFirstName);
+        applyIfFieldIsNotNull(user, dto.getPrefix(), User::setPrefix);
+        applyIfFieldIsNotNull(user, dto.getLastName(), User::setLastName);
+        applyIfFieldIsNotNull(user, dto.getEmail().toLowerCase(), User::setEmail);
+        applyIfFieldIsNotNull(user, dto.getDateOfBirth(), User::setDateOfBirth);
+        applyIfFieldIsNotNull(user, dto.getGender(), User::setGender);
+        applyIfFieldIsNotNull(user, dto.getStudentNumber(), User::setStudentNumber);
+        applyIfFieldIsNotNull(user, dto.getStudy(), User::setStudy);
+        applyIfFieldIsNotNull(user, dto.getStartStudyYear(), User::setStartStudyYear);
+    }
+
+    public static void activateAccount(User user) {
+        user.setResetKey(null);
+        user.setResetType(null);
+        user.setResetKeyValidUntil(null);
+        user.setEnabled(true);
     }
 
     private static <T> void applyIfFieldIsNotNull(User user, T obj, BiConsumer<User, T> applier) {
@@ -68,4 +88,17 @@ public class UserModule {
         }
     }
 
+    public static void setPassword(User user, PasswordResetRequest request) {
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        user.setResetKey(null);
+        user.setResetKeyValidUntil(null);
+        user.setResetType(null);
+    }
+
+    public static void storeSignature(User user, AdvancedUserDTO dto, StorageService storageService) {
+        if (user.getSignature() == null && dto.getSignature() != null) {
+            Signature signature = dto.getSignature().mapToSignature(storageService);
+            user.setSignature(signature);
+        }
+    }
 }

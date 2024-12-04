@@ -1,0 +1,3 @@
+UPDATE users
+SET reset_key = 'ACCOUNT_ACTIVATION'
+WHERE reset_key = 'INITIAL_ACCOUNT_CREATION';

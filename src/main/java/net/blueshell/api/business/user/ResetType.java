@@ -1,6 +1,7 @@
 package net.blueshell.api.business.user;
 
 public enum ResetType {
-    INITIAL_ACCOUNT_CREATION,
+    USER_ACTIVATION,
+    MEMBER_ACTIVATION,
     PASSWORD_RESET
 }

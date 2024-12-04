@@ -1,5 +1,6 @@
 package net.blueshell.api.business.contribution;
 
+import net.blueshell.api.business.user.User;
 import net.blueshell.api.daos.Dao;
 import net.blueshell.api.db.SessionWrapper;
 import org.hibernate.Session;
@@ -28,23 +29,13 @@ public class ContributionDao extends SessionWrapper<Contribution> implements Dao
         }
     }
 
-    public void createAll(List<Contribution> contributions) {
+    public List<Contribution> getContributionsByPeriod(ContributionPeriod contributionPeriod) {
         try (Session session = sessionFactory.openSession()) {
-            Transaction t = session.beginTransaction();
-            int batchSize = 20;
-            for (int i = 0; i < contributions.size(); i++) {
-                session.save(contributions.get(i));
-                if (i % batchSize == 0) {
-                    session.flush();
-                    session.clear();
-                }
-            }
-            t.commit();
+            var query = session.createQuery("from Contribution where contributionPeriod = :contributionPeriod", Contribution.class);
+            query.setParameter("contributionPeriod", contributionPeriod);
+            List<Contribution> contributions = query.getResultList();
             session.close();
+            return contributions;
         }
-    }
-
-    public void getContributionsByPeriod(ContributionPeriod contributionPeriod) {
-
     }
 }

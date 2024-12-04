@@ -1,12 +1,8 @@
 package net.blueshell.api.service;
 
-import net.blueshell.api.business.contribution.ContributionDao;
 import net.blueshell.api.business.contribution.ContributionPeriod;
-import net.blueshell.api.business.contribution.ContributionPeriodDao;
 import net.blueshell.api.business.user.Role;
 import net.blueshell.api.business.user.User;
-import net.blueshell.api.business.user.UserDao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import sendinblue.ApiClient;
@@ -27,16 +23,8 @@ public class BrevoContactService {
     @Value("${brevo.apiKey}")
     private String apiKey;
 
-    @Autowired
-    private UserDao dao;
-
-    @Autowired
-    private ContributionDao contributionDao;
-
-    @Autowired
-    private ContributionPeriodDao contributionPeriodDao;
-    @Autowired
-    private UserDao userDao;
+    @Value("${brevo.folders.contributionPeriodsId}")
+    private Long contributionPeriodsFolder;
 
     private ContactsApi getContactsApi() {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
@@ -47,117 +35,95 @@ public class BrevoContactService {
         return new ContactsApi();
     }
 
-    private Map<String, Object> updateAttributes(User user) {
-        Map<String, Object> attributes = new HashMap<>();
-        if (user.getFirstName() != null) {
-            attributes.put("FIRSTNAME", user.getFirstName());
-        }
-        if (user.getLastName() != null) {
-            attributes.put("LASTNAME", user.getLastName());
-        }
-        if (user.getPhoneNumber() != null) {
-            attributes.put("SMS", user.getPhoneNumber());
-            attributes.put("WHATSAPP", user.getPhoneNumber());
-        }
-        if (user.hasRole(Role.MEMBER)) {
-            attributes.put("IS_MEMBER", user.hasRole(Role.MEMBER));
-        }
-        attributes.put("EXT_ID", user.getId());
-        attributes.put("NEWSLETTER", user.isNewsletter());
-        attributes.put("ONLINE_SIGNUP", user.isOnlineSignup());
-        return attributes;
-    }
-
-    public void createOrUpdateContact(User user) {
-        user = setInBrevo(user);
-
-        if (user.isInBrevo()) {
-            updateContact(user);
-        } else {
-            createContact(user);
-        }
-    }
-
-    public User setInBrevo(User user) {
-        if (user.isInBrevo()) {
+    public User setContactId(User user) {
+        if (user.getContactId() != null) {
             return user;
         }
 
         try {
             ContactsApi api = getContactsApi();
             // If no exception thrown, the contact exists
-            api.getContactInfo(user.getEmail(), null, null);
-            user.setInBrevo(true);
-        } catch (ApiException e) {
-            user.setInBrevo(false);
+            GetExtendedContactDetails details = api.getContactInfo(user.getEmail(), null, null);
+            user.setContactId(details.getId());
+        } catch (ApiException ignored) {
         }
-        userDao.update(user);
-        return userDao.getById(user.getId());
+
+        return user;
     }
 
-    public void createContact(User user) {
-        try {
-            ContactsApi api = getContactsApi();
-            CreateContact createContact = new CreateContact();
-            createContact.setEmail(user.getEmail());
-            Map<String, Object> attributes = updateAttributes(user);
-            createContact.setAttributes(attributes);
-            api.createContact(createContact);
-            user.setInBrevo(true);
-            dao.update(user);
-        } catch (ApiException e) {
-            System.out.println(e.getResponseBody());
+    public void createOrUpdateContact(User user) throws ApiException {
+        user = setContactId(user);
+
+        if (user.getContactId() != null) {
+            updateContact(user);
+        } else {
+            createContact(user);
         }
     }
 
-    public void createListForContributionPeriod(ContributionPeriod contributionPeriod) {
-        try {
-            ContactsApi api = getContactsApi();
-            CreateList createList = new CreateList();
-            String periodName = String.format("Contribution Paid %s - %s", contributionPeriod.getStartDate().toString(), contributionPeriod.getEndDate().toString());
-            createList.name(periodName);
-            createList.setFolderId(18L);
-            CreateModel createModel = api.createList(createList);
-            contributionPeriod.setListId(createModel.getId());
-        } catch (ApiException e) {
-            System.out.println(e.getResponseBody());
-        }
+    private void createContact(User user) throws ApiException {
+        ContactsApi api = getContactsApi();
+        CreateContact createContact = new CreateContact();
+        createContact.setEmail(user.getEmail());
+        Map<String, Object> attributes = updateAttributes(user);
+        createContact.setAttributes(attributes);
+        CreateUpdateContactModel response = api.createContact(createContact);
+        user.setContactId(response.getId());
     }
 
-    public void addToPaidList(ContributionPeriod contributionPeriod, User user) {
-        try {
-            ContactsApi api = getContactsApi();
-            List<String> emails = new ArrayList<String>();
-            emails.add(user.getEmail());
-            AddContactToList contactEmails = new AddContactToList();
-            contactEmails.setEmails(emails);
-            api.addContactToList(contributionPeriod.getListId(), contactEmails);
-        } catch (ApiException e) {
-            System.out.println(e.getResponseBody());
-        }
+    private void updateContact(User user) throws ApiException {
+        ContactsApi api = getContactsApi();
+        UpdateContact updateContact = new UpdateContact();
+        updateContact.setAttributes(updateAttributes(user));
+        api.updateContact(user.getContactId().toString(), updateContact);
     }
 
-    public void removeFromPaidList(ContributionPeriod contributionPeriod, User user) {
-        try {
-            ContactsApi api = getContactsApi();
-            List<String> emails = new ArrayList<String>();
-            emails.add(user.getEmail());
-            RemoveContactFromList contactEmails = new RemoveContactFromList();
-            contactEmails.setEmails(emails);
-            api.removeContactFromList(contributionPeriod.getListId(), contactEmails);
-        } catch (ApiException e) {
-            System.out.println(e.getResponseBody());
-        }
+    private Map<String, Object> updateAttributes(User user) {
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("FIRSTNAME", user.getFirstName());
+        attributes.put("LASTNAME", user.getLastName());
+        attributes.put("SMS", user.getPhoneNumber());
+        attributes.put("WHATSAPP", user.getPhoneNumber());
+        attributes.put("IS_MEMBER", user.hasRole(Role.MEMBER));
+        attributes.put("EXT_ID", user.getId());
+        attributes.put("NEWSLETTER", user.isNewsletter());
+        attributes.put("INCASSO", user.isIncasso());
+        attributes.put("MEMBER_TYPE", user.getMemberType());
+        attributes.put("SURNAME_PREFIX", user.getPrefix());
+        attributes.put("COUNTRY", user.getCountry());
+        attributes.put("CITY", user.getCity());
+        attributes.put("STREET", user.getStreet());
+        attributes.put("EMAIL", user.getEmail());
+        // Do not overwrite the database with empty data.
+        attributes.entrySet().removeIf(entry -> entry.getValue() == null);
+        return attributes;
     }
 
-    public void updateContact(User user) {
-        try {
-            ContactsApi api = getContactsApi();
-            UpdateContact updateContact = new UpdateContact();
-            updateContact.setAttributes(updateAttributes(user));
-            api.updateContact(user.getEmail(), updateContact);
-        } catch (ApiException e) {
-            System.out.println(e.getResponseBody());
-        }
+    public void createContributionPeriodList(ContributionPeriod contributionPeriod) throws ApiException {
+        ContactsApi api = getContactsApi();
+        CreateList createList = new CreateList();
+        String periodName = String.format("Contribution Paid %d - %d", contributionPeriod.getStartDate().getYear(), contributionPeriod.getEndDate().getYear());
+        createList.name(periodName);
+        createList.setFolderId(contributionPeriodsFolder);
+        CreateModel createModel = api.createList(createList);
+        contributionPeriod.setListId(createModel.getId());
+    }
+
+    public void addToContributionPeriodList(ContributionPeriod contributionPeriod, User user) throws ApiException {
+        ContactsApi api = getContactsApi();
+        List<Long> ids = new ArrayList<>();
+        ids.add(user.getContactId());
+        AddContactToList contactEmails = new AddContactToList();
+        contactEmails.setIds(ids);
+        api.addContactToList(contributionPeriod.getListId(), contactEmails);
+    }
+
+    public void removeFromContributionPeriodList(ContributionPeriod contributionPeriod, User user) throws ApiException {
+        ContactsApi api = getContactsApi();
+        List<Long> ids = new ArrayList<>();
+        ids.add(user.getContactId());
+        RemoveContactFromList contactEmails = new RemoveContactFromList();
+        contactEmails.setIds(ids);
+        api.removeContactFromList(contributionPeriod.getListId(), contactEmails);
     }
 }

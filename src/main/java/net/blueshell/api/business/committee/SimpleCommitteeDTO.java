@@ -2,9 +2,6 @@ package net.blueshell.api.business.committee;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class SimpleCommitteeDTO {
 
     @JsonProperty("id")

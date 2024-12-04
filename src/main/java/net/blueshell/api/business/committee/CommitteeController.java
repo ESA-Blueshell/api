@@ -5,14 +5,13 @@ import net.blueshell.api.business.user.User;
 import net.blueshell.api.business.user.UserDao;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
-import net.blueshell.api.daos.Dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.NotFoundException;
-import java.util.HashSet;
-import java.util.Set;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -105,12 +104,13 @@ public class CommitteeController extends AuthorizationController {
 
     @PreAuthorize("hasAuthority('BOARD')")
     @DeleteMapping(value = "/committees/{id}")
-    public Object deleteCommitteeById(@PathVariable("id") String id) {
-        Committee committee = dao.getById(Long.parseLong(id));
+    public Object deleteCommitteeById(@PathVariable("id") Long id) {
+        Committee committee = dao.getById(id);
         if (committee == null) {
             return StatusCodes.NOT_FOUND;
         }
-        dao.delete(Long.parseLong(id));
+        committee.setDeletedAt(Timestamp.from(Instant.now()));
+        dao.update(committee);
         return StatusCodes.OK;
     }
 }

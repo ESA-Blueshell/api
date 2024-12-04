@@ -4,6 +4,7 @@ import net.blueshell.api.business.contribution.ContributionPeriod;
 import net.blueshell.api.business.contribution.ContributionPeriodRepository;
 import net.blueshell.api.business.eventsignups.EventSignUp;
 import net.blueshell.api.business.user.User;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,9 +17,10 @@ import sibModel.SendSmtpEmail;
 import sibModel.SendSmtpEmailTo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -27,52 +29,82 @@ public class BrevoEmailService {
     @Value("${brevo.apiKey}")
     private String apiKey;
 
+    @Value("${brevo.templates.userActivationId}")
+    private Long userActivationTemplateId;
+
+    @Value("${brevo.templates.memberActivationId}")
+    private Long memberActivationTemplateId;
+
+    @Value("${brevo.templates.eventSignupId}")
+    private Long eventSignupTemplateId;
+
+    @Value("${brevo.templates.passwordResetId}")
+    private Long passwordResetTemplateId;
+
+    @Value("${brevo.templates.contributionId}")
+    private Long contributionTemplateId;
+
+    @Value("${brevo.templates.contributionReminderId}")
+    private Long contributionReminderTemplateId;
+
+    @Value("${frontend.url}")
+    private String frontendUrl;
+
     @Autowired
     ContributionPeriodRepository contributionPeriodRepository;
 
-    public void sendAccountCreationEmail(User user) {
+    public void sendUserActivationEmail(User user) {
         Properties params = new Properties();
-        params.setProperty("link", String.format("https://esa-blueshell.nl/account/enable?username=%s&token=%s", user.getUsername(), user.getResetKey()));
-        params.setProperty("username", user.getUsername());
-        sendEmail(user.getEmail(), 61L, params);
+        params.setProperty("link", String.format(this.frontendUrl + "/account/activate?username=%s&token=%s", user.getUsername(), user.getResetKey()));
+        sendEmail(Collections.singletonList(user.getEmail()), this.userActivationTemplateId, params);
+    }
+
+    public void sendMemberActivationEmail(User user) {
+        Properties params = new Properties();
+        params.setProperty("link", String.format(this.frontendUrl + "/account/activate?token=%s", user.getResetKey()));
+        sendEmail(Collections.singletonList(user.getEmail()), this.memberActivationTemplateId, params);
     }
 
     public void sendPasswordResetEmail(User user) {
         Properties params = new Properties();
-        params.setProperty("link", String.format("https://esa-blueshell.nl/login/reset-password?username=%s&token=%s", user.getUsername(), user.getResetKey()));
-        params.setProperty("firstName", user.getFirstName());
-        sendEmail(user.getEmail(), 63L, params);
+        params.setProperty("link", String.format(this.frontendUrl + "/login/reset-password?username=%s&token=%s", user.getUsername(), user.getResetKey()));
+        sendEmail(Collections.singletonList(user.getEmail()), this.passwordResetTemplateId, params);
     }
 
-    public void sendGuestSignUpEmail(EventSignUp signUp) {
+    public void sendEventSignupEmail(EventSignUp signUp) {
         Properties params = new Properties();
-        params.setProperty("link", String.format("https://esa-blueshell.nl/events/signups/edit/%s", signUp.getGuest().getAccessToken()));
-        params.setProperty("name", signUp.getGuest().getName());
+        params.setProperty("link", String.format(this.frontendUrl + "/events/signups/edit/%s", signUp.getGuest().getAccessToken()));
         params.setProperty("eventTitle", signUp.getEvent().getTitle());
-        sendEmail(signUp.getGuest().getEmail(), 62L, params);
+        sendEmail(Collections.singletonList(signUp.getGuest().getEmail()), this.eventSignupTemplateId, params);
     }
 
-    public void sendInitialMembershipEmail(User user) {
-        List<ContributionPeriod> contributionPeriods = contributionPeriodRepository.findCurrentContributionPeriod();
-        Properties params = new Properties();
-        if (contributionPeriods.isEmpty()) {
-            params.setProperty("contributionNote", "*The prices shown are for the previous year and are subject to " +
-                    "change for the coming year at the General Members Meeting in September");
-            contributionPeriods = contributionPeriodRepository.findLatestContributionPeriod();
-        }
+    public void sendContributionEmail(User user) {
+        List<ContributionPeriod> contributionPeriods = contributionPeriodRepository.findCurrentOrLatestContributionPeriod();
         if (!contributionPeriods.isEmpty()) {
             ContributionPeriod contributionPeriod = contributionPeriods.get(0);
-            params.setProperty("firstName", user.getFirstName());
-            params.setProperty("startDate", contributionPeriod.getStartDate().toString());
-            params.setProperty("endDate", contributionPeriod.getEndDate().toString());
-            params.setProperty("halfYearFee", String.valueOf(contributionPeriod.getHalfYearFee()));
-            params.setProperty("fullYearFee", String.valueOf(contributionPeriod.getFullYearFee()));
-            params.setProperty("alumniFee", String.valueOf(contributionPeriod.getAlumniFee()));
-            sendEmail(user.getEmail(), 65L, params);
+            Properties params = getParams(contributionPeriod);
+            sendEmail(Collections.singletonList(user.getEmail()), this.contributionTemplateId, params);
         }
     }
 
-    private void sendEmail(String toEmail, Long templateId, Properties params) {
+    public void sendContributionReminderEmail(List<User> users, ContributionPeriod contributionPeriod) {
+        Properties params = getParams(contributionPeriod);
+        List<String> emails = users.stream().map(User::getEmail).collect(Collectors.toList());
+        sendEmail(emails, this.contributionTemplateId, params);
+    }
+
+    @NotNull
+    private static Properties getParams(ContributionPeriod contributionPeriod) {
+        Properties params = new Properties();
+        params.setProperty("startDate", contributionPeriod.getStartDate().toString());
+        params.setProperty("endDate", contributionPeriod.getEndDate().toString());
+        params.setProperty("halfYearFee", String.valueOf(contributionPeriod.getHalfYearFee()));
+        params.setProperty("fullYearFee", String.valueOf(contributionPeriod.getFullYearFee()));
+        params.setProperty("alumniFee", String.valueOf(contributionPeriod.getAlumniFee()));
+        return params;
+    }
+
+    private void sendEmail(List<String> toEmails, Long templateId, Properties params) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         // Configure API key authorization: api-key
         ApiKeyAuth apiKey = (ApiKeyAuth) defaultClient.getAuthentication("api-key");
@@ -84,9 +116,12 @@ public class BrevoEmailService {
 
             // Set the recipient for the mail
             List<SendSmtpEmailTo> toList = new ArrayList<SendSmtpEmailTo>();
-            SendSmtpEmailTo to = new SendSmtpEmailTo();
-            to.setEmail(toEmail);
-            toList.add(to);
+            for (String toEmail : toEmails) {
+                SendSmtpEmailTo to = new SendSmtpEmailTo();
+                to.setEmail(toEmail);
+                toList.add(to);
+            }
+
 
             // Set send to, params and template id
             sendSmtpEmail.to(toList);
@@ -96,9 +131,6 @@ public class BrevoEmailService {
             api.sendTransacEmail(sendSmtpEmail);
         } catch (ApiException e) {
             System.out.println(e.getResponseBody());
-            System.out.println(e.getResponseHeaders());
-            System.out.println(e.getCode());
-            e.printStackTrace();
         }
     }
 }

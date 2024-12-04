@@ -1,8 +1,8 @@
 package net.blueshell.api.business.news;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import net.blueshell.api.business.user.UserDao;
 import net.blueshell.api.business.user.User;
+import net.blueshell.api.business.user.UserDao;
 
 import java.sql.Timestamp;
 

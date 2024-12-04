@@ -1,9 +1,12 @@
 package net.blueshell.api.business.user;
 
+import net.blueshell.api.business.contribution.ContributionDao;
+import net.blueshell.api.business.contribution.ContributionPeriodDao;
 import net.blueshell.api.daos.Dao;
 import net.blueshell.api.db.SessionWrapper;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +17,11 @@ import java.util.stream.Collectors;
 @Component
 @DependsOn("dataSource")
 public class UserDao extends SessionWrapper<User> implements Dao<User> {
+    @Autowired
+    private ContributionPeriodDao contributionPeriodDao;
+
+    @Autowired
+    private ContributionDao contributionDao;
 
     public UserDao() {
         super(User.class);
@@ -26,7 +34,21 @@ public class UserDao extends SessionWrapper<User> implements Dao<User> {
             var query = session.createQuery("from User where username = :name");
             query.setParameter("name", username);
             var objs = query.list();
-            obj = objs.size() == 0 ? null : (User) objs.get(0);
+            obj = objs.isEmpty() ? null : (User) objs.get(0);
+            t.commit();
+            session.close();
+        }
+        return obj;
+    }
+
+    public User getByResetKey(String resetKey) {
+        User obj;
+        try (Session session = sessionFactory.openSession()) {
+            Transaction t = session.beginTransaction();
+            var query = session.createQuery("from User where resetKey = :resetKey");
+            query.setParameter("resetKey", resetKey);
+            var objs = query.list();
+            obj = objs.isEmpty() ? null : (User) objs.get(0);
             t.commit();
             session.close();
         }
@@ -40,7 +62,7 @@ public class UserDao extends SessionWrapper<User> implements Dao<User> {
             var query = session.createQuery("from User where email = :email");
             query.setParameter("email", email);
             var objs = query.list();
-            obj = objs.size() == 0 ? null : (User) objs.get(0);
+            obj = objs.isEmpty() ? null : (User) objs.get(0);
             t.commit();
             session.close();
         }
@@ -54,7 +76,7 @@ public class UserDao extends SessionWrapper<User> implements Dao<User> {
             var query = session.createQuery("from User where phoneNumber = :phoneNumber");
             query.setParameter("phoneNumber", phoneNumber);
             var objs = query.list();
-            obj = objs.size() == 0 ? null : (User) objs.get(0);
+            obj = objs.isEmpty() ? null : (User) objs.get(0);
             t.commit();
             session.close();
         }

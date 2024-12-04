@@ -5,9 +5,8 @@ import net.blueshell.api.business.user.Role;
 import net.blueshell.api.business.user.User;
 import net.blueshell.api.constants.StatusCodes;
 import net.blueshell.api.controller.AuthorizationController;
+import net.blueshell.api.service.GoogleCalendarService;
 import net.blueshell.api.storage.StorageService;
-import net.blueshell.api.util.GoogleCalendarService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,7 +33,6 @@ public class EventController extends AuthorizationController {
         this.storageService = storageService;
         this.calendarService = calendarService;
     }
-
 
     @PreAuthorize("hasAuthority('COMMITTEE')")
     @PostMapping(value = "/events")
@@ -139,7 +137,6 @@ public class EventController extends AuthorizationController {
                 .collect(Collectors.toList());
     }
 
-
     @GetMapping(value = "/events/eventPageable")
     Page<Event> eventPageable(Pageable pageable) {
         return eventRepository.findAll(pageable);
@@ -225,5 +222,4 @@ public class EventController extends AuthorizationController {
         dao.update(newEvent);
         return StatusCodes.OK;
     }
-
 }

@@ -175,7 +175,7 @@ public class EventSignUpController extends AuthorizationController {
         signUpDao.create(signUp);
 
         // Send email to guest
-        emailService.sendGuestSignUpEmail(signUp);
+        emailService.sendEventSignupEmail(signUp);
 
         return signUp;
     }

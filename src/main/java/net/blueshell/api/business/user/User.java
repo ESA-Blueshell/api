@@ -3,11 +3,14 @@ package net.blueshell.api.business.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import net.blueshell.api.business.committee.CommitteeMembership;
 import net.blueshell.api.business.contribution.Contribution;
 import net.blueshell.api.business.picture.Picture;
 import net.blueshell.api.business.signature.Signature;
 import net.blueshell.api.util.TimeUtil;
+import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
@@ -24,8 +28,10 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "users")
 @Data
+@Where(clause = "deleted_at IS NULL")
 public class User implements UserDetails {
 
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -102,8 +108,16 @@ public class User implements UserDetails {
     @JsonIgnore
     private ResetType resetType;
 
-    @Column(name = "contribution_paid")
-    private boolean contributionPaid;
+    @Getter
+    @Setter
+    @Enumerated(EnumType.STRING)
+    @Column(name = "member_type", nullable = false)
+    private MemberType memberType;
+
+    @Getter
+    @Setter
+    @Column(name = "incasso", nullable = false)
+    private boolean incasso;
 
     @Column(name = "consent_privacy")
     private boolean consentPrivacy;
@@ -158,14 +172,11 @@ public class User implements UserDetails {
     @JsonIgnore
     private Signature signature;
 
-    @Column(name = "online_signup")
-    private boolean onlineSignup = false;
-
     @Column(name = "ehbo")
     private boolean ehbo = false;
 
-    @Column(name = "in_brevo")
-    private boolean inBrevo = false;
+    @Column(name="contact_id")
+    private Long contactId;
 
     @Column(name = "bhv")
     private boolean bhv = false;
@@ -174,24 +185,20 @@ public class User implements UserDetails {
     private Set<Contribution> contributions;
 
     public User() {
+        this.createdAt = Timestamp.from(Instant.now());
+        this.memberSince = Timestamp.valueOf(LocalDateTime.of(3000, 1, 1, 0, 0));
+        this.memberType = MemberType.REGULAR;
+        this.incasso = false;
+        addRole(Role.GUEST);
     }
 
     public User(String username, String password, String firstName, String lastName, String email) {
         this();
-        createdAt = Timestamp.from(Instant.now());
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     @JsonProperty("profilePicture")
@@ -302,5 +309,4 @@ public class User implements UserDetails {
         }
         return firstName + " " + prefix + " " + lastName;
     }
-
 }
