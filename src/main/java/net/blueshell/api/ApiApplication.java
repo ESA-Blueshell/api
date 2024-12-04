@@ -12,11 +12,5 @@ public class ApiApplication {
     public static void main(String[] args) {
         System.setProperty("server.servlet.context-path", "/api");
         SpringApplication.run(ApiApplication.class, args);
-        initEvents();
     }
-
-    private static void initEvents() {
-        // Nothing atm
-    }
-
 }

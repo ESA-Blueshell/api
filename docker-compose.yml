@@ -1,17 +1,24 @@
-version: "3.5"
 services:
   api:
     build: .
-    depends_on: 
+    depends_on:
       - db
     ports:
       - "8080:8080"
+    expose:
+      - "8080"
+    env_file:
+      - .dev.env
+    volumes:
+      - './:/usr/app:rw'
   db:
     image: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: blueshell
-      MYSQL_DATABASE: blueshell
-      MYSQL_USER: tim
-      MYSQL_PASSWORD: blueshell
-    volumes: 
+    env_file:
+      - .dev.env
+    expose:
+      - "3306"
+    ports:
+      - "3306:3306"
+    command: --log-bin-trust-function-creators=1
+    volumes:
       - "./data:/var/lib/mysql"
