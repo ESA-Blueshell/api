@@ -3,69 +3,81 @@ package net.blueshell.api.auth;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 @Component
-public class JwtTokenUtil implements Serializable {
+public class JwtTokenUtil {
 
-    public static final long JWT_TOKEN_VALIDITY = 72 * 60 * 60 * 1000; // 72 hours, 3 days
+    @Value("${app.jwt.secret}")
+    private String secret;
 
-    private static final String secret = "secret"; // TODO: Change on prod
+    @Value("${app.jwt.expiration}")
+    private long expiration;
 
-    //retrieve username from jwt token
-    public String getUsernameFromToken(String token) {
-        return getClaimFromToken(token, Claims::getSubject);
-    }
-
-    //retrieve expiration date from jwt token
-    public Date getExpirationDateFromToken(String token) {
-        return getClaimFromToken(token, Claims::getExpiration);
-    }
-
-    public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = getAllClaimsFromToken(token);
-        return claimsResolver.apply(claims);
-    }
-    //for retrieveing any information from token we will need the secret key
-    private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-    }
-
-    //check if the token has expired
-    private Boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
-    }
-
-    //generate token for user
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        return doGenerateToken(claims, userDetails.getUsername());
+        if (userDetails instanceof net.blueshell.api.model.User user) {
+            claims.put("userId", user.getId());
+            claims.put("roles", user.getRoles());
+        }
+        return buildToken(claims, userDetails.getUsername());
     }
 
-    // while creating the token -
-    // 1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID
-    // 2. Sign the JWT using the HS512 algorithm and secret key.
-    // 3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
-    //   compaction of the JWT to a URL-safe string
-    private String doGenerateToken(Map<String, Object> claims, String subject) {
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
-                .signWith(SignatureAlgorithm.HS512, secret).compact();
+    private String buildToken(Map<String, Object> claims, String subject) {
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
-    //validate token
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = getUsernameFromToken(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    public boolean isTokenValid(String token) {
+        try {
+            return !isTokenExpired(token);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    private boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
+    }
+
+    private Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
+    }
+
+    private Key getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
 }
