@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Sjonnie
  * Created on 7/27/2018.
- *
+ * <p>
  * Class that wraps every callable/runnable inside a try/catch block to ensure that Exceptions are caught.
  * http://code.nomad-labs.com/2011/12/09/mother-fk-the-scheduledexecutorservice/
  */
@@ -57,7 +57,7 @@ public class CatchingScheduledThreadPoolExecutor extends ScheduledThreadPoolExec
     }
 
     private class LogOnExceptionRunnable implements Runnable {
-        private Runnable runnable;
+        private final Runnable runnable;
 
         public LogOnExceptionRunnable(Runnable runnable) {
             super();
@@ -80,7 +80,7 @@ public class CatchingScheduledThreadPoolExecutor extends ScheduledThreadPoolExec
     }
 
     private class LogOnExceptionCallable<V> implements Callable<V> {
-        private Callable<V> callable;
+        private final Callable<V> callable;
 
         public LogOnExceptionCallable(Callable<V> callable) {
             super();

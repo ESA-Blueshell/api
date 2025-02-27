@@ -1,14 +1,33 @@
 package net.blueshell.api.controller;
 
-import net.blueshell.api.storage.StorageService;
-import net.blueshell.api.storage.UploadFileResponse;
+import jakarta.ws.rs.BadRequestException;
+import net.blueshell.api.base.BaseController;
+import net.blueshell.api.dto.FileDTO;
+import net.blueshell.api.dto.UploadFileResponse;
+import net.blueshell.api.enums.FileType;
+import net.blueshell.api.model.Event;
+import net.blueshell.api.model.File;
+import net.blueshell.api.model.User;
+import net.blueshell.api.repository.FileRepository;
+import net.blueshell.api.service.EventService;
+import net.blueshell.api.service.FileService;
+import net.blueshell.api.service.UserService;
+import org.apache.tika.mime.MimeTypeException;
+import org.apache.tika.mime.MimeTypes;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.http.*;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -16,34 +35,29 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Controller
-public class FileController {
+public class FileController extends BaseController<FileService, FileRepository> {
 
-    private final StorageService storageService;
+    private final UserService userService;
+    private final EventService eventService;
 
-    public FileController(StorageService storageService) {
-        this.storageService = storageService;
+    @Autowired
+    public FileController(FileService service, FileRepository repository, UserService userService, EventService eventService) {
+        super(service, repository);
+        this.userService = userService;
+        this.eventService = eventService;
     }
 
     @GetMapping("/download/{filename:.+}")
     @ResponseBody
+    @PreAuthorize("hasPermission(#filename, 'File', 'See')")
     public ResponseEntity<Resource> downloadFile(@PathVariable String filename) {
-        if (filename.startsWith("signatures")) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
-        Resource resource = storageService.loadAsResource(filename);
+        File file = service.findByName(filename);
+        Resource resource = service.loadAsResource(file);
 
         HttpHeaders headers = new HttpHeaders();
-        // If the file is a pdf, open it in a new tab
-        if (filename.endsWith(".pdf")) {
-            headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.add("content-disposition", "inline;filename=\"" + resource.getFilename() + "\"");
-        } else if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png")) {
-            headers.setContentType(MediaType.IMAGE_JPEG);
-            headers.add("content-disposition", "inline;filename=\"" + resource.getFilename() + "\"");
-        } else {
-            headers.add("content-disposition", "attachment;filename=\"" + resource.getFilename() + "\"");
-        }
+        headers.setContentType(file.getMediaType());
+        headers.setContentDispositionFormData("attachment", file.getName());
+
         return ResponseEntity
                 .ok()
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.DAYS).cachePublic())
@@ -51,63 +65,29 @@ public class FileController {
                 .body(resource);
     }
 
-    @PostMapping("/upload")
-    @PreAuthorize("hasAuthority('COMMITTEE')")
-    @ResponseBody
-    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
-        String filename = storageService.store(file);
-
-        assert filename != null;
-        String uri = storageService.getDownloadURI(filename);
-
-        return new UploadFileResponse(filename, uri, file.getContentType(), file.getSize());
-    }
-
-
-    @GetMapping("/bazinga")
-    @ResponseBody
-    public String getHtml() {
-        return "<!DOCTYPE html>\n" +
-                "<html lang=\"en\">\n" +
-                "<head>\n" +
-                "  <meta charset=\"utf-8\">\n" +
-                "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
-                "  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\">\n" +
-                "  <meta name=\"robots\" content=\"noindex\">\n" +
-                "  <title>AWOOOOGA</title>\n" +
-                "</head>\n" +
-                "<body>\n" +
-                "<noscript>\n" +
-                "  <strong>No javascript?? CRIIIIIIIIINGE</strong>\n" +
-                "</noscript>\n" +
-                "\n" +
-                "\n" +
-                "<div id=\"container\">\n" +
-                "</div>\n" +
-                "</body>\n" +
-                "</html>\n" +
-                "<script>\n" +
-                "    let image = document.createElement('img');\n" +
-                "    image.src = 'https://esa-blueshell.nl/api/download/' + Math.ceil(Math.random() * 6) + '.jpg'\n" +
-                "    image.style.cursor = 'pointer'\n" +
-                "    image.addEventListener('click', () => {\n" +
-                "        window.open(\"https://images-ext-2.discordapp.net/external/E179MQwXxZUFkccEPIOG-xS8VPBuQdLi4ZnrNXglcpM/%3F1296494117/https/i.kym-cdn.com/photos/images/newsfeed/000/096/044/trollface.jpg\")\n" +
-                "    })\n" +
-                "\n" +
-                "    document.getElementById('container').insertAdjacentElement('afterbegin', image)\n" +
-                "    let done = false\n" +
-                "    function changeSize() {\n" +
-                "        if (image.clientWidth) {\n" +
-                "            done = true\n" +
-                "            window.resizeTo(image.clientWidth + 100, image.clientHeight + 100)\n" +
-                "        }\n" +
-                "        if (!done) {\n" +
-                "            setTimeout(changeSize, 50)\n" +
-                "        }\n" +
-                "    }\n" +
-                "\n" +
-                "    changeSize()\n" +
-                "\n" +
-                "</script>\n";
-    }
+//    @PostMapping("users/{userId}/debitMandate")
+//    @PreAuthorize("hasPermission(#userId, 'User', 'Edit')")
+//    public UploadFileResponse uploadUserDebitMandate(@PathVariable Long userId, @RequestBody File file) throws IOException {
+//        User user = userService.findById(userId);
+//        file.setName(user.getUsername());
+//        return service.uploadFile(FileType.DEBIT_MANDATE, user.getFullName(), file, "pdf");
+//    }
+//
+//
+//    @PostMapping("users/{userId}/membershipForm")
+//    @PreAuthorize("hasPermission(#userId, 'User', 'Edit')")
+//    public UploadFileResponse uploadMembershipForm(@PathVariable Long userId, @RequestBody FileDTO dto) throws IOException {
+//        User user = userService.findById(userId);
+//        dto.setType(FileType.MEMBERSHIP_FORM);
+//        dto.setName(user.getUsername());
+//        return service.uploadFile(FileType.DEBIT_MANDATE, user.getFullName(), file, "pdf");
+//    }
+//
+//    private String extractExtension(String contentType) {
+//        try {
+//            return MimeTypes.getDefaultMimeTypes().forName(contentType).getExtension();
+//        } catch (MimeTypeException e) {
+//            throw new BadRequestException("Unsupported file type");
+//        }
+//    }
 }

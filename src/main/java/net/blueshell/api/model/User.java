@@ -1,0 +1,308 @@
+package net.blueshell.api.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+import lombok.Data;
+import net.blueshell.api.common.enums.ResetType;
+import net.blueshell.api.common.enums.Role;
+import net.blueshell.api.common.util.TimeUtil;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+import net.blueshell.api.business.committee.CommitteeMembership;
+import net.blueshell.api.business.contribution.Contribution;
+import net.blueshell.api.business.picture.Picture;
+import net.blueshell.api.business.signature.Signature;
+import net.blueshell.api.util.TimeUtil;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Entity
+@Table(name = "users")
+@SQLDelete(sql = "UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLRestriction("deleted_at IS NULL")
+@Data
+public class User implements UserDetails {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column
+    private String username;
+
+    @Column
+    private String password;
+
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column
+    private String prefix;
+
+    @Column
+    private String initials;
+
+    @Column
+    private String address;
+
+    @Column(name = "house_number")
+    private String houseNumber;
+
+    @Column(name = "postal_code")
+    private String postalCode;
+
+    @Column
+    private String city;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column
+    private String email;
+
+    @Column(name = "student_number")
+    private String studentNumber;
+
+    @Column(name = "date_of_birth")
+    private Timestamp dateOfBirth;
+
+    @Column(name = "created_at")
+    private Timestamp createdAt;
+
+    @Column(name = "member_since")
+    private Timestamp memberSince;
+
+    @Column
+    private String discord;
+
+    @Column
+    private String steamid;
+
+    @Column
+    private boolean newsletter;
+
+    @Column
+    private boolean enabled;
+
+    @Column(name = "reset_key")
+    private String resetKey;
+
+    @Column(name = "reset_key_valid_until")
+    private Timestamp resetKeyValidUntil;
+
+    @Column(name = "reset_type")
+    @Enumerated(EnumType.STRING)
+    private ResetType resetType;
+
+    @Column(name = "consent_privacy")
+    private boolean consentPrivacy;
+
+    @Column(name = "consent_gdpr")
+    private boolean consentGdpr;
+
+    @Column
+    private String gender;
+
+    @Column
+    private String street;
+
+    @Column
+    private String country;
+
+    @Column(name = "photo_consent")
+    private boolean photoConsent;
+
+    @Column
+    private String nationality;
+
+    @OneToOne
+    @JoinColumn(name = "profile_picture")
+    private File profilePicture;
+
+    @Column(name = "deleted_at")
+    private Timestamp deletedAt;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonIgnore
+    @NotFound(action = NotFoundAction.IGNORE)
+    private Set<CommitteeMembership> committeeMembers;
+
+    @JoinTable(name = "authorities", joinColumns = @JoinColumn(name = "user_id"))
+    @ElementCollection(targetClass = Role.class)
+    @Enumerated(EnumType.STRING)
+    @JsonIgnore
+    @Column(name = "authority")
+    private Set<Role> roles;
+
+    @OneToOne
+    @JoinColumn(name = "signature_id")
+    @JsonIgnore
+    private File signature;
+
+    @Column(name = "ehbo")
+    private boolean ehbo = false;
+
+    @Column(name = "contact_id")
+    private Long contactId;
+
+    @Column(name = "bhv")
+    private boolean bhv = false;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Contribution> contributions;
+
+    @OneToOne(mappedBy = "user")
+    private Membership membership;
+
+    @OneToOne
+    @JoinColumn(name = "creator_id")
+    private User creator;
+
+    public User() {
+        this.createdAt = Timestamp.from(Instant.now());
+        this.memberSince = Timestamp.valueOf(LocalDateTime.of(3000, 1, 1, 0, 0));
+        addRole(Role.GUEST);
+    }
+
+    public User(String username, String password, String firstName, String lastName, String email) {
+        this();
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+
+    @JsonProperty("profilePicture")
+    public Long getProfilePictureId() {
+        return getProfilePicture() == null ? 0 : getProfilePicture().getId();
+    }
+
+    @JsonProperty("committees")
+    public Set<Long> getCommitteeIds() {
+        Set<Long> set = new HashSet<>();
+        if (getCommitteeMembers() == null) {
+            return set;
+        }
+        for (CommitteeMember cm : getCommitteeMembers()) {
+            set.add(cm.getCommitteeId());
+        }
+        return set;
+    }
+
+    @JsonProperty("roles")
+    public Set<String> getRoleStrings() {
+        Set<String> set = new HashSet<>();
+        if (getRoles() == null) {
+            return set;
+        }
+        // Go through all inherited roles
+        for (Role role : roles.stream().flatMap(role -> role.getAllInheritedRoles().stream()).collect(Collectors.toList())) {
+            set.add(role.getReprString());
+        }
+        return set;
+    }
+
+    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
+
+    @JsonProperty("password")
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    public boolean hasRole(Role role) {
+        return getRoles().stream().anyMatch(r -> r.matchesRole(role));
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        var auths = new HashSet<GrantedAuthority>();
+        if (getRoles() == null) {
+            return auths;
+        }
+
+        for (var role : getRoles()) {
+            auths.add(new SimpleGrantedAuthority(role.getReprString()));
+        }
+
+        return auths;
+    }
+
+    public void addRole(Role role) {
+        if (getRoles() == null) {
+            setRoles(new HashSet<>());
+        }
+        getRoles().add(role);
+    }
+
+    public void removeRole(Role role) {
+        getRoles().remove(role);
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    public void setEmail(String email) {
+        this.email = email.toLowerCase();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled && (getDeletedAt() == null || !TimeUtil.hasExpired(getDeletedAt()));
+    }
+
+    public String getFullName() {
+        if (prefix == null || prefix.isEmpty()) {
+            return firstName + " " + lastName;
+        }
+        return firstName + " " + prefix + " " + lastName;
+    }
+
+    public String getSantizedFullName() {
+        return getFullName().replaceAll("[^a-zA-Z0-9\\s]", "").trim().replaceAll("\\s+", "-");
+    }
+}

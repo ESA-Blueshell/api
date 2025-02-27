@@ -1,0 +1,29 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+    env_file:
+      - .env
+    volumes:
+      - './:/usr/app:rw'
+  db:
+    image: mariadb:10.11.10
+    env_file:
+      - .env
+    expose:
+      - "3306"
+    ports:
+      - "3306:3306"
+    command: --log-bin-trust-function-creators=1
+    environment:
+      - MARIADB_AUTO_UPGRADE=1
+    volumes:
+      - "./data_mariadb:/var/lib/mysql:rw"
+      - "./db_dump_prod.sql:/docker-entrypoint-initdb.d/init.sql"
