@@ -5,7 +5,7 @@ import jakarta.ws.rs.NotFoundException;
 import net.blueshell.api.base.BaseModelService;
 import net.blueshell.api.common.enums.ResetType;
 import net.blueshell.api.common.enums.Role;
-import net.blueshell.api.common.util.Util;
+import net.blueshell.api.util.Util;
 import net.blueshell.api.controller.request.ActivationRequest;
 import net.blueshell.api.controller.request.PasswordResetRequest;
 import net.blueshell.api.exception.ResourceNotFoundException;

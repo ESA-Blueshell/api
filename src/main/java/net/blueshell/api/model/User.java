@@ -150,10 +150,10 @@ public class User implements UserDetails {
     @Column(name = "authority")
     private Set<Role> roles;
 
-    @OneToOne
-    @JoinColumn(name = "signature_id")
-    @JsonIgnore
-    private File signature;
+    @JsonProperty("signature")
+    public File getSignature() {
+        return membership != null ? membership.getSignature() : null;
+    }
 
     @Column(name = "ehbo")
     private boolean ehbo = false;

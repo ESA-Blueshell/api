@@ -42,4 +42,12 @@ public enum Role {
         }
         return res;
     }
+
+    public Collection<Object> getAuthorities() {
+        return Collections.singleton(getAllInheritedRoles());
+    }
+
+    public Object getName() {
+        return this.reprString;
+    }
 }

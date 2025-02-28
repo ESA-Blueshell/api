@@ -1,4 +1,4 @@
-package net.blueshell.api.common.util;
+package net.blueshell.api.util;
 
 import java.security.SecureRandom;
 import java.util.Random;

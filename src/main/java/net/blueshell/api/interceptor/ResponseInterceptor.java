@@ -27,7 +27,7 @@ public class ResponseInterceptor implements ResponseBodyAdvice<Object> {
             // Handle collections or arrays of models if needed
             if (body instanceof Iterable) {
                 for (Object item : (Iterable<?>) body) {
-                    if (item instanceof BaseModel) {
+                    if (!(item instanceof BaseModel)) {
                         throw new IllegalStateException("Direct return of model objects inside collections is forbidden. Use a DTO instead.");
                     }
                 }
