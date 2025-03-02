@@ -8,6 +8,8 @@ import net.blueshell.api.business.contribution.Contribution;
 import net.blueshell.api.business.picture.Picture;
 import net.blueshell.api.business.signature.Signature;
 import net.blueshell.api.util.TimeUtil;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -142,6 +144,7 @@ public class User implements UserDetails {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonIgnore
+    @NotFound(action = NotFoundAction.IGNORE)
     private Set<CommitteeMembership> committeeMemberships;
 
     @JoinTable(
