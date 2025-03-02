@@ -8,6 +8,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -30,6 +31,9 @@ public class Committee {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "committee")
     @JsonIgnore
     private Set<CommitteeMembership> members;
+
+    @Column(name = "deleted_at")
+    private Timestamp deletedAt;
 
     public Committee() {
     }

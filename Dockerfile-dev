@@ -1,0 +1,11 @@
+FROM maven:3.6.1-jdk-11-slim
+WORKDIR /usr/app
+
+# Copy only the pom to cache dependencies (source code will be mounted)
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+EXPOSE 8080
+
+# Run a full clean install then start Spring Boot in dev mode
+CMD ["sh", "-c", "mvn clean install && mvn spring-boot:run -Dspring-boot.run.fork=false"]

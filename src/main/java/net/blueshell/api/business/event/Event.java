@@ -9,6 +9,8 @@ import net.blueshell.api.business.user.Role;
 import net.blueshell.api.business.user.User;
 import org.apache.tomcat.util.json.JSONParser;
 import org.apache.tomcat.util.json.ParseException;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import java.math.BigInteger;
@@ -37,6 +39,7 @@ public class Event {
     @OneToOne
     @JoinColumn(name = "committee_id")
     @JsonIgnore
+    @NotFound(action = NotFoundAction.IGNORE)
     private Committee committee;
 
     @JoinColumn(name = "title")
