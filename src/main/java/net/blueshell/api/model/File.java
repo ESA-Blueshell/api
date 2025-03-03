@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import net.blueshell.api.base.BaseModel;
-import net.blueshell.api.enums.FileType;
+import net.blueshell.api.common.enums.FileType;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.http.MediaType;

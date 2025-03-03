@@ -1,4 +1,4 @@
-package net.blueshell.api.converter;
+package net.blueshell.api.model.converter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

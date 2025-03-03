@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import net.blueshell.api.base.BaseModel;
-import net.blueshell.api.converter.FormAnswerListConverter;
+import net.blueshell.api.model.converter.FormAnswerListConverter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 

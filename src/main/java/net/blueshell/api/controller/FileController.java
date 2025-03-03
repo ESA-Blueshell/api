@@ -1,19 +1,11 @@
 package net.blueshell.api.controller;
 
-import jakarta.ws.rs.BadRequestException;
 import net.blueshell.api.base.BaseController;
-import net.blueshell.api.dto.FileDTO;
-import net.blueshell.api.dto.UploadFileResponse;
-import net.blueshell.api.enums.FileType;
-import net.blueshell.api.model.Event;
 import net.blueshell.api.model.File;
-import net.blueshell.api.model.User;
 import net.blueshell.api.repository.FileRepository;
 import net.blueshell.api.service.EventService;
 import net.blueshell.api.service.FileService;
 import net.blueshell.api.service.UserService;
-import org.apache.tika.mime.MimeTypeException;
-import org.apache.tika.mime.MimeTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
@@ -22,12 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**

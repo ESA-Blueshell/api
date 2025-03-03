@@ -1,14 +1,11 @@
 package net.blueshell.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Convert;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import net.blueshell.api.base.DTO;
-import net.blueshell.api.converter.FormQuestionListConverter;
-import net.blueshell.api.model.File;
 import net.blueshell.api.model.FormQuestion;
 
 import java.util.List;

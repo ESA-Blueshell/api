@@ -1,4 +1,4 @@
-package net.blueshell.api.enums;
+package net.blueshell.api.common.enums;
 
 import lombok.Getter;
 

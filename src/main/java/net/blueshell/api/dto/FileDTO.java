@@ -1,12 +1,9 @@
 package net.blueshell.api.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import net.blueshell.api.base.DTO;
 import net.blueshell.api.dto.user.SimpleUserDTO;
-import net.blueshell.api.enums.FileType;
-import net.blueshell.api.validation.group.Administration;
-import net.blueshell.api.validation.group.Creation;
+import net.blueshell.api.common.enums.FileType;
 import org.springframework.http.MediaType;
 
 import java.sql.Timestamp;

@@ -6,10 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import net.blueshell.api.base.BaseModel;
-import net.blueshell.api.common.enums.Role;
-import net.blueshell.api.converter.FormQuestionListConverter;
-import org.apache.tomcat.util.json.JSONParser;
-import org.apache.tomcat.util.json.ParseException;
+import net.blueshell.api.model.converter.FormQuestionListConverter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
