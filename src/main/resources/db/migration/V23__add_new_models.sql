@@ -4,6 +4,7 @@ CREATE TABLE board_documents
     board_id BIGINT                NULL,
     name     VARCHAR(255)          NULL,
     file_id  BIGINT                NULL,
+    deleted_at  datetime              NULL,
     CONSTRAINT pk_board_documents PRIMARY KEY (id)
 );
 
@@ -13,6 +14,7 @@ CREATE TABLE board_members
     board_id   BIGINT                NULL,
     user_id    BIGINT                NULL,
     picture_id BIGINT                NULL,
+    deleted_at  datetime              NULL,
     CONSTRAINT pk_board_members PRIMARY KEY (id)
 );
 
@@ -24,6 +26,7 @@ CREATE TABLE boards
     candidate  VARCHAR(255)          NULL,
     start_date date                  NULL,
     end_date   date                  NULL,
+    deleted_at  datetime              NULL,
     CONSTRAINT pk_boards PRIMARY KEY (id)
 );
 
@@ -46,6 +49,7 @@ CREATE TABLE files
     media_type  VARCHAR(255)          NULL,
     size        BIGINT                NULL,
     type        VARCHAR(255)          NULL,
+    deleted_at  datetime              NULL,
     CONSTRAINT pk_files PRIMARY KEY (id)
 );
 
@@ -58,6 +62,7 @@ CREATE TABLE memberships
     type         VARCHAR(2555)         NULL,
     signature_id BIGINT                NULL,
     incasso      BIT(1)                NOT NULL,
+    deleted_at  datetime              NULL,
     CONSTRAINT pk_memberships PRIMARY KEY (id)
 );
 

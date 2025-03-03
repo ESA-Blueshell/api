@@ -21,7 +21,7 @@ INSERT INTO signature_file_mapping (signature_id, file_id)
 SELECT s.id,
        f.id
 FROM signatures s
-         JOIN files f ON s.name = f.name;
+         JOIN files f ON s.name = f.name COLLATE utf8mb4_general_ci;
 
 -- Insert data into memberships using the captured file IDs
 INSERT INTO memberships (user_id,

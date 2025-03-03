@@ -1,7 +1,6 @@
-package net.blueshell.api.controller;
+package net.blueshell.api.auth;
 
 import jakarta.validation.Valid;
-import net.blueshell.api.auth.JwtTokenUtil;
 import net.blueshell.api.common.enums.Role;
 import net.blueshell.api.controller.request.JwtRequest;
 import net.blueshell.api.controller.response.JwtResponse;

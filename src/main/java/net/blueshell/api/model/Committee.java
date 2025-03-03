@@ -8,8 +8,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.sql.Timestamp;
-import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -32,7 +30,6 @@ public class Committee implements BaseModel {
     private String description;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "committee")
-    @JsonIgnore
     private Set<CommitteeMember> committeeMembers;
 
     @Column(name = "deleted_at")

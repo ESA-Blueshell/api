@@ -49,7 +49,7 @@ public class UserController extends AdvancedController<UserService, AdvancedUser
     }
 
     @PutMapping(value = "/{userId}")
-    @PreAuthorize("hasPermission('User', #userId, 'change')")
+    @PreAuthorize("hasPermission('User', #userId, 'write')")
     public AdvancedUserDTO update(@ApiParam(name = "Id of the user") @PathVariable("userId") Long userId,
                                   @Validated(Update.class) @RequestBody AdvancedUserDTO dto) throws ApiException {
         dto.setId(userId);
@@ -95,7 +95,7 @@ public class UserController extends AdvancedController<UserService, AdvancedUser
     }
 
     @GetMapping(value = "/{userId}")
-    @PreAuthorize("hasPermission(#userId, 'User', 'See')")
+    @PreAuthorize("hasPermission(#userId, 'User', 'read')")
     public AdvancedUserDTO getById(@ApiParam(name = "Id of the user") @PathVariable("userId") Long userId) {
         User user = service.findById(userId);
         return advancedMapper.toDTO(user);
@@ -110,13 +110,13 @@ public class UserController extends AdvancedController<UserService, AdvancedUser
     }
 
     @DeleteMapping(value = "/{userId}")
-    @PreAuthorize("hasPermission(#userId, 'User', 'Delete')")
+    @PreAuthorize("hasPermission(#userId, 'User', 'delete')")
     public void delete(@PathVariable("userId") Long userId) {
         service.delete(userId);
     }
 
     @PutMapping(value = "/{userId}/roles")
-    @PreAuthorize("hasPermission(#userId, 'User', 'ChangeRole')")
+    @PreAuthorize("hasPermission(#userId, 'User', 'changeRole')")
     public AdvancedUserDTO toggleRole(@ApiParam(name = "Id of the user") @PathVariable("userId") Long userId,
                                       @NotBlank @RequestParam(value = "role", required = true) Role role) {
         User user = service.toggleRole(userId, role);
@@ -124,7 +124,7 @@ public class UserController extends AdvancedController<UserService, AdvancedUser
     }
 
     @GetMapping(value = "/brevo")
-    @PreAuthorize("hasPermission(#email, 'User', 'GetBrevo')")
+    @PreAuthorize("hasPermission(#email, 'User', 'getBrevo')")
     public AdvancedUserDTO getFromBrevo(@NotBlank @RequestParam String email) throws NoSuchFieldException, ApiException, IllegalAccessException {
         User user = service.getFromBrevo(email);
         return advancedMapper.toDTO(user);

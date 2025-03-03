@@ -3,6 +3,7 @@ package net.blueshell.api.security;
 import net.blueshell.api.base.AuthorizationBase;
 import net.blueshell.api.base.BaseModelService;
 import net.blueshell.api.base.BaseRepository;
+import net.blueshell.api.model.User;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.security.core.Authentication;
 
@@ -16,12 +17,11 @@ public abstract class BasePermissionEvaluator<T, ID, S extends BaseModelService<
     protected final S service;
     protected final Map<String, BiFunction<T, Authentication, Boolean>> permissionsMap = new HashMap<>() {
     };
-    private final Class<T> domainType;
+    public final Class<T> domainType;
 
     public BasePermissionEvaluator(S service) {
         this.service = service;
         this.domainType = determineDomainType();
-        registerPermissions();
     }
 
     private Class<T> determineDomainType() {
@@ -34,46 +34,10 @@ public abstract class BasePermissionEvaluator<T, ID, S extends BaseModelService<
         return castedType;
     }
 
-    abstract boolean canSee(T t, Authentication authentication);
-
-    abstract boolean canEdit(T t, Authentication authentication);
-
-    abstract boolean canDelete(T t, Authentication authentication);
-
-    protected void registerPermissions() {
-        permissionsMap.put("see", this::canSee);
-        permissionsMap.put("edit", this::canEdit);
-        permissionsMap.put("delete", this::canDelete);
-    }
-
     boolean supports(Class<?> domainClass) {
         return domainType.isAssignableFrom(domainClass);
     }
 
-    public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
-        if (authentication == null || targetDomainObject == null || permission == null) {
-            return false;
-        }
-        try {
-            @SuppressWarnings("unchecked")
-            T t = (T) targetDomainObject;
-            BiFunction<T, Authentication, Boolean> permissionCheck = permissionsMap.get(permission.toString());
-            if (permissionCheck == null) {
-                return false;
-            }
-            return permissionCheck.apply(t, authentication);
-        } catch (ClassCastException | IllegalArgumentException e) {
-            return false;
-        }
-    }
-
-    public boolean hasPermission(Authentication authentication, Serializable targetId, Object permission) {
-        if (authentication == null || targetId == null || permission == null) {
-            return false;
-        }
-        @SuppressWarnings("unchecked")
-        ID id = (ID) targetId;
-        T domainObject = service.findById(id);
-        return hasPermission(authentication, domainObject, permission);
-    }
+    public abstract boolean hasPermission(Authentication authentication, Object targetDomainObject, String string);
+    public abstract boolean hasPermissionId(Authentication authentication, Object targetId, String string);
 }

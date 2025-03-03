@@ -1,16 +1,17 @@
 package net.blueshell.api.controller.request;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.blueshell.api.base.DTO;
 
 import java.io.Serializable;
 
-@Setter
-@Getter
+@EqualsAndHashCode(callSuper = true)
+@Data
+@JsonTypeInfo(use = JsonTypeInfo.Id.NONE) // disables type id handling for this class
 public class JwtRequest extends DTO implements Serializable {
     private static final long serialVersionUID = 5926468583005150707L;
-
     private String username;
     private String password;
 
@@ -18,7 +19,7 @@ public class JwtRequest extends DTO implements Serializable {
     }
 
     public JwtRequest(String username, String password) {
-        this.setUsername(username);
-        this.setPassword(password);
+        this.username = username;
+        this.password = password;
     }
 }

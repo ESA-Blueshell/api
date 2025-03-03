@@ -1,10 +1,3 @@
--- Add soft delete fields to all models
-ALTER TABLE committee_members
-    ADD COLUMN deleted_at DATETIME;
-
-ALTER TABLE committees
-    ADD COLUMN deleted_at DATETIME;
-
 ALTER TABLE contribution_periods
     ADD COLUMN deleted_at DATETIME;
 

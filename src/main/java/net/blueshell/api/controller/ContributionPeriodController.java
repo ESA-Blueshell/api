@@ -26,8 +26,8 @@ public class ContributionPeriodController extends BaseController<ContributionPer
     }
 
     @GetMapping
-    public List<ContributionPeriod> getContributionPeriods() {
-        return service.findAll();
+    public List<ContributionPeriodDTO> getContributionPeriods() {
+        return mapper.toDTOs(service.findAll());
     }
 
     @PreAuthorize("hasAuthority('BOARD')")

@@ -9,11 +9,6 @@ import net.blueshell.api.common.enums.Role;
 import net.blueshell.api.common.util.TimeUtil;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
-import net.blueshell.api.business.committee.CommitteeMembership;
-import net.blueshell.api.business.contribution.Contribution;
-import net.blueshell.api.business.picture.Picture;
-import net.blueshell.api.business.signature.Signature;
-import net.blueshell.api.util.TimeUtil;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.springframework.security.core.GrantedAuthority;
@@ -140,8 +135,7 @@ public class User implements UserDetails {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonIgnore
-    @NotFound(action = NotFoundAction.IGNORE)
-    private Set<CommitteeMembership> committeeMembers;
+    private Set<CommitteeMember> committeeMembers;
 
     @JoinTable(name = "authorities", joinColumns = @JoinColumn(name = "user_id"))
     @ElementCollection(targetClass = Role.class)
@@ -269,21 +263,6 @@ public class User implements UserDetails {
 
     public void removeRole(Role role) {
         getRoles().remove(role);
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
     }
 
     public void setEmail(String email) {
