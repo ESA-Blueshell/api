@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mariadb://db:${MYSQL_PORT}/${MYSQL_DATABASE}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    url: jdbc:mariadb://db:3306/blueshell?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
@@ -31,9 +31,6 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.web.ErrorMvcAutoConfiguration
 
   mvc:
     dispatch-options-request: true

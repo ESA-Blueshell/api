@@ -4,7 +4,7 @@ import net.blueshell.api.base.BaseMapper;
 import net.blueshell.api.common.enums.Role;
 import net.blueshell.api.dto.user.AdvancedUserDTO;
 import net.blueshell.api.mapping.MembershipMapper;
-import net.blueshell.api.model.Membership;
+import net.blueshell.api.model.Member;
 import net.blueshell.api.model.User;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,9 +93,9 @@ public abstract class AdvancedUserMapper extends BaseMapper<User, AdvancedUserDT
             }
         }
 
-        if (dto.getMembership() != null && user.getMembership() == null) {
-            Membership membership = membershipMapper.fromDTO(dto.getMembership());
-            user.setMembership(membership);
+        if (dto.getMember() != null && user.getMember() == null) {
+            Member member = membershipMapper.fromDTO(dto.getMember());
+            user.setMember(member);
             user.addRole(Role.MEMBER);
             user.setConsentPrivacy(true);
         }

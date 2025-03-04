@@ -1,10 +1,8 @@
 package net.blueshell.api.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import net.blueshell.api.base.BaseModel;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -13,7 +11,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "contributions")
-@Getter
+@Data
 @SQLDelete(sql = "UPDATE contributions SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
 public class Contribution implements BaseModel {
@@ -23,27 +21,20 @@ public class Contribution implements BaseModel {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id")
-    @Setter
-    @JsonIgnore
     private User user;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "membership_id")
-    @Setter
-    @JsonIgnore
-    private Membership membership;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Column(name = "paid")
-    @Setter
     private Boolean paid;
 
     @Column(name = "reminded_at")
-    @Setter
     private Timestamp remindedAt;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "contribution_period_id")
-    @Setter
     private ContributionPeriod contributionPeriod;
 
     @Column(name = "deleted_at")

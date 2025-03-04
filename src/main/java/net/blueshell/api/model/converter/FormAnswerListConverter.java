@@ -12,12 +12,12 @@ import net.blueshell.api.model.FormAnswer;
 import java.util.List;
 
 @Converter
-public class FormAnswerListConverter implements AttributeConverter<List<FormAnswer>, String> {
+public class FormAnswerListConverter implements AttributeConverter<List<Object>, String> {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public String convertToDatabaseColumn(List<FormAnswer> attribute) {
+    public String convertToDatabaseColumn(List<Object> attribute) {
         if (attribute == null || attribute.isEmpty()) {
             return null;
         }
@@ -29,12 +29,12 @@ public class FormAnswerListConverter implements AttributeConverter<List<FormAnsw
     }
 
     @Override
-    public List<FormAnswer> convertToEntityAttribute(String dbData) {
+    public List<Object> convertToEntityAttribute(String dbData) {
         if (dbData == null || dbData.isBlank()) {
             return new ArrayList<>();
         }
         try {
-            return objectMapper.readValue(dbData, new TypeReference<List<FormAnswer>>() {});
+            return objectMapper.readValue(dbData, new TypeReference<List<Object>>() {});
         } catch (Exception e) {
             throw new RuntimeException("JSON conversion error when reading FormAnswer list", e);
         }

@@ -30,7 +30,7 @@ public class Committee implements BaseModel {
     private String description;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "committee")
-    private Set<CommitteeMember> committeeMembers;
+    private Set<CommitteeMember> members;
 
     @Column(name = "deleted_at")
     private Timestamp deletedAt;
@@ -41,8 +41,8 @@ public class Committee implements BaseModel {
     @JsonProperty("members")
     public Set<Long> getMemberIds() {
         Set<Long> set = new HashSet<>();
-        if (getCommitteeMembers() != null) {
-            for (CommitteeMember cm : getCommitteeMembers()) {
+        if (getMembers() != null) {
+            for (CommitteeMember cm : getMembers()) {
                 set.add(cm.getUserId());
             }
         }
@@ -64,12 +64,12 @@ public class Committee implements BaseModel {
     }
 
     public boolean hasMember(String username) {
-        return getCommitteeMembers().stream()
+        return getMembers().stream()
                 .map(CommitteeMember::getUser)
                 .anyMatch(user -> user.getUsername().equalsIgnoreCase(username));
     }
 
     public boolean hasMember(User user) {
-        return getCommitteeMembers().stream().anyMatch(cm -> cm.getUser().equals(user));
+        return getMembers().stream().anyMatch(cm -> cm.getUser().equals(user));
     }
 }

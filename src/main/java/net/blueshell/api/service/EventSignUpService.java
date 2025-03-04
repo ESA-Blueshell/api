@@ -17,17 +17,14 @@ import java.util.List;
 @Service
 public class EventSignUpService extends BaseModelService<EventSignUp, Long, EventSignUpRepository> {
 
-    private final GuestService guestService;
     private final EventService eventService;
     private final EmailService emailService;
 
     @Autowired
     public EventSignUpService(EventSignUpRepository repository,
-                              GuestService guestService,
                               EventService eventService,
                               EmailService emailService) {
         super(repository);
-        this.guestService = guestService;
         this.eventService = eventService;
         this.emailService = emailService;
     }

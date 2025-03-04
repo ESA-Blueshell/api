@@ -26,13 +26,13 @@ public abstract class AdvancedCommitteeMapper extends BaseMapper<Committee, Adva
     protected CommitteeMemberRepository committeeMemberRepository;
 
 
-    @Mapping(target = "committeeMembers", ignore = true)
+    @Mapping(target = "members", ignore = true)
     public abstract Committee fromDTO(AdvancedCommitteeDTO dto);
 
     @AfterMapping
     protected void afterFromDTO(AdvancedCommitteeDTO dto,
                                 @MappingTarget Committee committee) {
-        if (dto.getCommitteeMembers() != null) {
+        if (dto.getMembers() != null) {
             // Option 1
 //            HashSet<CommitteeMember> newMembers = new HashSet<>(memberMapper.fromDTOList(dto.getMembers(), committee));
 //            HashSet<CommitteeMember> oldMembers = new HashSet<>(committee.getMembers());
@@ -48,21 +48,21 @@ public abstract class AdvancedCommitteeMapper extends BaseMapper<Committee, Adva
 
             // Option 2
 
-            committee.setCommitteeMembers(
-                    new HashSet<>(memberMapper.fromDTOs(dto.getCommitteeMembers()))
+            committee.setMembers(
+                    new HashSet<>(memberMapper.fromDTOs(dto.getMembers()))
             );
         }
     }
 
-    @Mapping(target = "committeeMembers", ignore = true)
+    @Mapping(target = "members", ignore = true)
     public abstract AdvancedCommitteeDTO toDTO(Committee committee);
 
     @AfterMapping
     protected void afterToDTO(Committee committee,
                               @MappingTarget AdvancedCommitteeDTO dto) {
-        if (committee.getCommitteeMembers() != null) {
-            dto.setCommitteeMembers(
-                    memberMapper.toDTOs(new ArrayList<>(committee.getCommitteeMembers()))
+        if (committee.getMembers() != null) {
+            dto.setMembers(
+                    memberMapper.toDTOs(new ArrayList<>(committee.getMembers()))
             );
         }
     }

@@ -87,7 +87,7 @@ public class UserController extends AdvancedController<UserService, AdvancedUser
     public List<AdvancedUserDTO> getAll(@PathParam("isMember") boolean isMember) {
         List<User> users;
         if (isMember) {
-            users = service.findByRoles(Collections.singleton(Role.MEMBER));
+            users = service.findByMemberNotNull();
         } else {
             users = service.findAll();
         }

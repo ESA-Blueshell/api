@@ -4,8 +4,10 @@ import net.blueshell.api.base.BaseRepository;
 import net.blueshell.api.common.enums.Role;
 import net.blueshell.api.model.File;
 import net.blueshell.api.model.User;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -41,9 +43,9 @@ public interface UserRepository extends BaseRepository<User, Long> {
 
     boolean existsByPhoneNumberAndIdNot(String phoneNumber, Long id);
 
-    List<User> findByRoles(Set<Role> roles);
+    List<User> findByMemberNotNull();
 
-    Optional<User> findByMembershipSignature(File signature);
+    Optional<User> findByMemberSignature(File signature);
 
     Optional<User> findByProfilePicture(File profilePicture);
 }

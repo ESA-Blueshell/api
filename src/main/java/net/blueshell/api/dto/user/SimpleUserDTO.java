@@ -3,9 +3,11 @@ package net.blueshell.api.dto.user;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.blueshell.api.base.DTO;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class SimpleUserDTO extends DTO {
 
     @JsonProperty

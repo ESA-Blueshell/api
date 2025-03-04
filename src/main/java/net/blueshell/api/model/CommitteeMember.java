@@ -30,7 +30,6 @@ public class CommitteeMember implements BaseModel {
     private Committee committee;
 
     @Column(name = "deleted_at")
-    @JsonIgnore
     private Timestamp deletedAt;
 
     private String role;

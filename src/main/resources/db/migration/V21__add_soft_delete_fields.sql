@@ -1,3 +1,6 @@
+ALTER TABLE committee_members
+    ADD COLUMN deleted_at DATETIME;
+
 ALTER TABLE contribution_periods
     ADD COLUMN deleted_at DATETIME;
 

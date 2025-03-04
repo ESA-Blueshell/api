@@ -7,8 +7,6 @@ import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import java.util.stream.Stream;
-
 @Mapper(componentModel = "spring")
 public abstract class ContributionMapper extends BaseMapper<Contribution, ContributionDTO> {
 
@@ -23,6 +21,6 @@ public abstract class ContributionMapper extends BaseMapper<Contribution, Contri
     @Mapping(target = "deletedAt", ignore = true)
     @Mapping(target = "paid", ignore = true)
     @Mapping(target = "remindedAt", ignore = true)
-    @Mapping(target = "membership", ignore = true)
+    @Mapping(target = "member", ignore = true)
     public abstract Contribution fromDTO(ContributionDTO dto);
 }

@@ -53,7 +53,7 @@ CREATE TABLE files
     CONSTRAINT pk_files PRIMARY KEY (id)
 );
 
-CREATE TABLE memberships
+CREATE TABLE members
 (
     id           BIGINT AUTO_INCREMENT NOT NULL,
     user_id      BIGINT                NULL,
@@ -63,7 +63,7 @@ CREATE TABLE memberships
     signature_id BIGINT                NULL,
     incasso      BIT(1)                NOT NULL,
     deleted_at  datetime              NULL,
-    CONSTRAINT pk_memberships PRIMARY KEY (id)
+    CONSTRAINT pk_members PRIMARY KEY (id)
 );
 
 ALTER TABLE boards
@@ -88,10 +88,10 @@ ALTER TABLE committee_members
     ADD CONSTRAINT FK_COMMITTEE_MEMBERS_ON_COMMITTEE FOREIGN KEY (committee_id) REFERENCES committees (id);
 
 ALTER TABLE contributions
-    ADD COLUMN membership_id BIGINT;
+    ADD COLUMN member_id BIGINT;
 
 ALTER TABLE contributions
-    ADD CONSTRAINT FK_CONTRIBUTIONS_ON_MEMBERSHIP FOREIGN KEY (membership_id) REFERENCES memberships (id);
+    ADD CONSTRAINT FK_CONTRIBUTIONS_ON_MEMBER FOREIGN KEY (member_id) REFERENCES members (id);
 
 ALTER TABLE event_pictures
     ADD CONSTRAINT FK_EVENT_PICTURES_ON_EVENT FOREIGN KEY (event_id) REFERENCES events (id);
@@ -105,11 +105,11 @@ ALTER TABLE event_signups
 ALTER TABLE files
     ADD CONSTRAINT FK_FILES_ON_UPLOADER FOREIGN KEY (uploader_id) REFERENCES users (id);
 
-ALTER TABLE memberships
-    ADD CONSTRAINT FK_MEMBERSHIPS_ON_SIGNATURE FOREIGN KEY (signature_id) REFERENCES files (id);
+ALTER TABLE members
+    ADD CONSTRAINT FK_MEMBERS_ON_SIGNATURE FOREIGN KEY (signature_id) REFERENCES files (id);
 
-ALTER TABLE memberships
-    ADD CONSTRAINT FK_MEMBERSHIPS_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
+ALTER TABLE members
+    ADD CONSTRAINT FK_MEMBERS_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
 
 ALTER TABLE sponsors
     ADD CONSTRAINT FK_SPONSORS_ON_LOGO FOREIGN KEY (logo_id) REFERENCES files (id);

@@ -7,10 +7,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.blueshell.api.base.DTO;
 import net.blueshell.api.common.enums.MemberType;
 import net.blueshell.api.common.enums.Role;
-import net.blueshell.api.dto.MembershipDTO;
+import net.blueshell.api.dto.MemberDTO;
 import net.blueshell.api.dto.SignatureDTO;
 import net.blueshell.api.validation.group.Administration;
 import net.blueshell.api.validation.group.Creation;
@@ -24,6 +25,7 @@ import java.util.Set;
 
 @Data
 @UniqueUser
+@EqualsAndHashCode(callSuper = false)
 public class AdvancedUserDTO extends DTO {
 
     @NotNull(groups = {Update.class})
@@ -98,7 +100,7 @@ public class AdvancedUserDTO extends DTO {
     private SignatureDTO signature;
 
     @Valid
-    private MembershipDTO membership;
+    private MemberDTO member;
 
     @JsonProperty
     @NotNull(groups = {Member.class, Update.class})

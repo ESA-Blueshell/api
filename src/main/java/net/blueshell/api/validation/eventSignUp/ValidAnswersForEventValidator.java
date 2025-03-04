@@ -34,7 +34,7 @@ public class ValidAnswersForEventValidator implements ConstraintValidator<ValidA
         }
 
         List<FormQuestion> questions = event.getSignUpForm();
-        List<FormAnswer> answers = dto.getFormAnswers();
+        List<Object> answers = dto.getFormAnswers();
 
         if (questions.size() != answers.size()) {
             return false;

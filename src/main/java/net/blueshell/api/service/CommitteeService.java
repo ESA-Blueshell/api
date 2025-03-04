@@ -26,7 +26,7 @@ public class CommitteeService extends BaseModelService<Committee, Long, Committe
 
     public void createCommittee(Committee committee) {
         repository.save(committee);
-        for (CommitteeMember member : committee.getCommitteeMembers()) {
+        for (CommitteeMember member : committee.getMembers()) {
             User user = member.getUser();
             userService.addRole(user, Role.COMMITTEE);
         }

@@ -1,13 +1,14 @@
 package net.blueshell.api.dto;
-import lombok.Data;
-import net.blueshell.api.model.File;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.blueshell.api.base.DTO;
 
 import java.util.Date;
 
 @Data
-public class MembershipDTO extends DTO {
+@EqualsAndHashCode(callSuper = false)
+public class MemberDTO extends DTO {
 
     private Date date;
 

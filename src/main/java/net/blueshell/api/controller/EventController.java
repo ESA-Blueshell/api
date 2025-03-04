@@ -2,6 +2,7 @@ package net.blueshell.api.controller;
 
 import io.swagger.annotations.ApiParam;
 import jakarta.validation.Valid;
+import lombok.Data;
 import net.blueshell.api.base.BaseController;
 import net.blueshell.api.dto.EventDTO;
 import net.blueshell.api.mapping.EventMapper;
@@ -16,7 +17,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
@@ -48,19 +52,23 @@ public class EventController extends BaseController<EventService, EventMapper> {
         return ResponseEntity.ok(mapper.toDTO(event));
     }
 
-    @GetMapping
-    public ResponseEntity<Page<EventDTO>> getEvents(
-            @RequestParam(required = false) String from,
-            @RequestParam(required = false) String to,
-            Pageable pageable) {
+    public static LocalDate convertToLocalDateTime(String dateString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(dateString, formatter);
+    }
 
-        Page<Event> events = service.findAll(pageable);
+    @GetMapping
+    public ResponseEntity<List<EventDTO>> getEvents(
+            @RequestParam(required = false) LocalDate from,
+            @RequestParam(required = false) LocalDate to) {
+        List<Event> events = service.findBetweenDates(from, to);
         return ResponseEntity.ok(mapper.toDTOs(events));
     }
 
     @GetMapping("/upcoming")
     public List<EventDTO> getUpcomingEvents(@RequestParam(required = false, defaultValue = "false") boolean editable) {
-        List<Event> events = service.findAll();
+
+        List<Event> events = service.findUpcoming();
         return mapper.toDTOs(events);
     }
 
@@ -88,7 +96,6 @@ public class EventController extends BaseController<EventService, EventMapper> {
         return mapper.toDTOs(filteredEvents);
     }
 
-    //    TODO: Only return visible events
     @GetMapping("/pageable")
     public Page<EventDTO> getEventsPageable(Pageable pageable) {
         Page<Event> events = service.findAll(pageable);

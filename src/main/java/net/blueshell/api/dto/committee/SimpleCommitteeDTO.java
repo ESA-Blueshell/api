@@ -1,12 +1,12 @@
 package net.blueshell.api.dto.committee;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.blueshell.api.base.DTO;
 
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class SimpleCommitteeDTO extends DTO {
 
     @JsonProperty("id")
@@ -17,7 +17,4 @@ public class SimpleCommitteeDTO extends DTO {
 
     @JsonProperty("description")
     private String description;
-
-    public SimpleCommitteeDTO() {
-    }
 }

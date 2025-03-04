@@ -9,6 +9,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Repository
 public interface EventRepository extends BaseRepository<Event, Long> {
 
@@ -17,5 +22,16 @@ public interface EventRepository extends BaseRepository<Event, Long> {
     @Override
     Page<Event> findAll(@NotNull Pageable pageable);
 
+    @NotNull
+    @Query("SELECT e FROM Event e ORDER BY e.startTime DESC")
+    @Override
+    List<Event> findAll();
+
     Event findByBanner(File banner);
+
+    @Query("SELECT e FROM Event e WHERE e.startTime >= CURRENT_DATE ORDER BY e.startTime DESC")
+    List<Event> findUpcoming();
+
+    @Query("SELECT e FROM Event e WHERE e.startTime >= :from AND e.startTime <= :to ORDER BY e.startTime DESC")
+    List<Event> findStartTimeBetween(LocalDateTime from, LocalDateTime to);
 }

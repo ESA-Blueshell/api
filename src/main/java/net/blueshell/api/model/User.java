@@ -9,8 +9,6 @@ import net.blueshell.api.common.enums.Role;
 import net.blueshell.api.common.util.TimeUtil;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -128,6 +126,7 @@ public class User implements UserDetails {
 
     @OneToOne
     @JoinColumn(name = "profile_picture")
+    @JsonIgnore
     private File profilePicture;
 
     @Column(name = "deleted_at")
@@ -140,13 +139,12 @@ public class User implements UserDetails {
     @JoinTable(name = "authorities", joinColumns = @JoinColumn(name = "user_id"))
     @ElementCollection(targetClass = Role.class)
     @Enumerated(EnumType.STRING)
-    @JsonIgnore
     @Column(name = "authority")
     private Set<Role> roles;
 
-    @JsonProperty("signature")
+    @JsonIgnore
     public File getSignature() {
-        return membership != null ? membership.getSignature() : null;
+        return member != null ? member.getSignature() : null;
     }
 
     @Column(name = "ehbo")
@@ -162,10 +160,11 @@ public class User implements UserDetails {
     private Set<Contribution> contributions;
 
     @OneToOne(mappedBy = "user")
-    private Membership membership;
+    private Member member;
 
     @OneToOne
     @JoinColumn(name = "creator_id")
+    @JsonIgnore
     private User creator;
 
     public User() {

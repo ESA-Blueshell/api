@@ -27,7 +27,6 @@ public class EventSignUp implements BaseModel {
 
     @ManyToOne
     @JoinColumn(name = "event_id")
-    @JsonIgnore
     private Event event;
 
     @Column(name = "event_id", insertable=false, updatable=false)
@@ -35,7 +34,6 @@ public class EventSignUp implements BaseModel {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     private User user;
 
     @Column(name = "user_id", insertable=false, updatable=false)
@@ -43,12 +41,11 @@ public class EventSignUp implements BaseModel {
 
     @OneToOne
     @JoinColumn(name = "guest_id")
-    @JsonIgnore
     private Guest guest;
 
     @Convert(converter = FormAnswerListConverter.class)
     @Column(name = "form_answers", columnDefinition = "TEXT")
-    private List<FormAnswer> formAnswers;
+    private List<Object> formAnswers;
 
     @Column(name = "signed_up_at")
     private LocalDateTime signedUpAt;
@@ -56,30 +53,8 @@ public class EventSignUp implements BaseModel {
     @Column(name = "deleted_at")
     private Timestamp deletedAt;
 
-    public Long getUserId() {
-        return getUser() == null ? null : getUser().getId();
-    }
-
-    public Long getGuestId() {
-        return getGuest() == null ? null : getGuest().getId();
-    }
-
     @JsonProperty("event")
     public Long getEventId() {
         return getEvent() == null ? null : getEvent().getId();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        EventSignUp that = (EventSignUp) o;
-        return Objects.equals(user, that.user) &&
-                Objects.equals(event, that.event);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(user, event);
     }
 }

@@ -25,6 +25,7 @@ import sendinblue.ApiException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -87,10 +88,9 @@ public class UserService extends BaseModelService<User, Long, UserRepository> im
         return user.getId();
     }
 
-    public List<User> findByRoles(Set<Role> roles) {
-        return repository.findByRoles(roles);
+    public List<User> findByMemberNotNull() {
+        return repository.findByMemberNotNull();
     }
-
 
     @Transactional
     public User createUser(User user) throws ApiException {
@@ -225,7 +225,7 @@ public class UserService extends BaseModelService<User, Long, UserRepository> im
     }
 
     public User findBySignature(File signature) {
-        return repository.findByMembershipSignature(signature).orElseThrow(() -> new NotFoundException("User not found for signature: " + signature.getName()));
+        return repository.findByMemberSignature(signature).orElseThrow(() -> new NotFoundException("User not found for signature: " + signature.getName()));
     }
 
     public User findByProfilePicture(File profilePicture) {

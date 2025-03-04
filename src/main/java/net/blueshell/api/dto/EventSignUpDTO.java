@@ -3,7 +3,7 @@ package net.blueshell.api.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import lombok.Data;
-import lombok.Getter;
+import lombok.EqualsAndHashCode;
 import net.blueshell.api.base.DTO;
 import net.blueshell.api.model.FormAnswer;
 
@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @Data
-@Getter
+@EqualsAndHashCode(callSuper = false)
 public class EventSignUpDTO extends DTO {
 
     @JsonProperty
@@ -28,5 +28,5 @@ public class EventSignUpDTO extends DTO {
 
     @JsonProperty
     @Valid
-    private List<FormAnswer> formAnswers;
+    private List<Object> formAnswers;
 }

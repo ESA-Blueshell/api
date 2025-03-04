@@ -32,12 +32,10 @@ public class CommitteeController extends AdvancedController<CommitteeService, Ad
 
     @GetMapping()
     public List<? extends DTO> getCommittees(@RequestParam(required = false) boolean isMember) {
-        Function<Committee, Object> fromCommittee;
-        User signedInUser = getPrincipal();
-        if (signedInUser.hasRole(Role.BOARD)) {
+        if (getPrincipal().hasRole(Role.BOARD)) {
             return advancedMapper.toDTOs(service.findAll());
         } else if (isMember) {
-            return advancedMapper.toDTOs(service.findAllById(new ArrayList<>(signedInUser.getCommitteeIds())));
+            return advancedMapper.toDTOs(service.findAllById(new ArrayList<>(getPrincipal().getCommitteeIds())));
         }
 
         return simpleMapper.toDTOs(service.findAll());

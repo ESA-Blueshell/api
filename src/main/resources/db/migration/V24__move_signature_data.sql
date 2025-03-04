@@ -23,13 +23,13 @@ SELECT s.id,
 FROM signatures s
          JOIN files f ON s.name = f.name COLLATE utf8mb4_general_ci;
 
--- Insert data into memberships using the captured file IDs
-INSERT INTO memberships (user_id,
-                         start_date,
-                         end_date,
-                         type,
-                         signature_id,
-                         incasso)
+-- Insert data into members using the captured file IDs
+INSERT INTO members (user_id,
+                     start_date,
+                     end_date,
+                     type,
+                     signature_id,
+                     incasso)
 SELECT s.user_id,
        s.date    AS start_date,
        NULL      AS end_date,
