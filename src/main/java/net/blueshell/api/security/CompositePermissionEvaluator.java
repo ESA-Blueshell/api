@@ -21,7 +21,6 @@ public class CompositePermissionEvaluator implements PermissionEvaluator {
     }
 
     private Optional<BasePermissionEvaluator<?, ?, ?>> findEvaluator(Class<?> domainClass) {
-        System.out.println("find evaluator for " + domainClass);
         return evaluators.stream()
                 .filter(evaluator -> evaluator.supports(domainClass))
                 .findFirst();

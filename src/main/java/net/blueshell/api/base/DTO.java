@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import net.blueshell.api.dto.CommitteeMemberDTO;
 import net.blueshell.api.dto.committee.AdvancedCommitteeDTO;
 
+import java.io.Serializable;
+
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
@@ -14,5 +16,5 @@ import net.blueshell.api.dto.committee.AdvancedCommitteeDTO;
         @JsonSubTypes.Type(value = AdvancedCommitteeDTO.class, name = "committee"),
         @JsonSubTypes.Type(value = CommitteeMemberDTO.class, name = "committeeMember"),
 })
-public abstract class DTO extends AuthorizationBase {
+public abstract class DTO extends AuthorizationBase implements Serializable {
 }

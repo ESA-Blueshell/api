@@ -5,12 +5,14 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.blueshell.api.base.DTO;
 import net.blueshell.api.model.FormQuestion;
 
 import java.util.List;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class EventDTO extends DTO {
 
     @JsonProperty("committeeId")

@@ -34,9 +34,7 @@ public class EventController extends BaseController<EventService, EventMapper> {
     @PreAuthorize("hasAuthority('COMMITTEE')")
     @PostMapping
     public ResponseEntity<EventDTO> createEvent(@Valid @RequestBody EventDTO eventDTO) throws IOException {
-        User authedUser = getPrincipal();
         Event event = mapper.fromDTO(eventDTO);
-
         service.createEvent(event);
         return ResponseEntity.ok(mapper.toDTO(event));
     }
@@ -61,26 +59,9 @@ public class EventController extends BaseController<EventService, EventMapper> {
     }
 
     @GetMapping("/upcoming")
-    public Stream<EventDTO> getUpcomingEvents(@RequestParam(required = false, defaultValue = "false") boolean editable) {
-        User authedUser = getPrincipal();
-        List<Event> events = service.findAll(Pageable.unpaged()).getContent();
-
-        Predicate<Event> predicate = event -> {
-            if (!event.isVisible() && !editable) {
-                return false;
-            }
-            if (editable) {
-                return true;
-//                return event.canEdit(authedUser);
-            }
-            return true;
-        };
-
-        Stream<Event> filteredEvents = events.stream()
-                .filter(predicate)
-                .sorted(Comparator.comparing(Event::getStartTime));
-
-        return mapper.toDTOs(filteredEvents);
+    public List<EventDTO> getUpcomingEvents(@RequestParam(required = false, defaultValue = "false") boolean editable) {
+        List<Event> events = service.findAll();
+        return mapper.toDTOs(events);
     }
 
     @GetMapping("/past")

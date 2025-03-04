@@ -4,10 +4,9 @@ import lombok.Getter;
 import net.blueshell.api.base.DTO;
 import net.blueshell.api.common.enums.Role;
 
-import java.io.Serializable;
 import java.util.Set;
 
-public class JwtResponse extends DTO implements Serializable {
+public class JwtResponse extends DTO {
 
     private static final long serialVersionUID = -8091879091924046844L;
     private final String jwtToken;

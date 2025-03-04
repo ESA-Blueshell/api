@@ -26,10 +26,10 @@ public class Membership {
     private User user;
 
     @Column(name = "start_date")
-    private Date start_date;
+    private Date startDate;
 
     @Column(name = "end_date")
-    private Date end_date;
+    private Date endDate;
 
     @Column(name = "type")
     private MemberType type;

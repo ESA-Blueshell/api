@@ -2,6 +2,7 @@ package net.blueshell.api.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.ws.rs.NotFoundException;
 import net.blueshell.api.base.BaseController;
 import net.blueshell.api.dto.EventSignUpDTO;
 import net.blueshell.api.mapping.EventSignUpMapper;
@@ -28,11 +29,14 @@ public class EventSignUpController extends BaseController<EventSignUpService, Ev
 
     @GetMapping(value = "/events/signups")
     @PreAuthorize("principal != null")
-    public Stream<EventSignUpDTO> getMySignUps() {
+    public List<EventSignUpDTO> getMySignUps() {
         User user = getPrincipal();
+        if (user == null) {
+            throw new NotFoundException();
+        }
 
         List<EventSignUp> eventSignUps = service.findByUser(user);
-        return mapper.toDTOs(eventSignUps.stream());
+        return mapper.toDTOs(eventSignUps.stream()).toList();
     }
 
     @GetMapping(value = "/events/signups/{id}")

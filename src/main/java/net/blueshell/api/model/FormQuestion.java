@@ -14,12 +14,4 @@ public class FormQuestion implements BaseModel {
     @NotBlank
     private String type;
     private List<@NotBlank String> options;
-
-    @AssertTrue(message = "Options are required for radio and checkbox types")
-    public boolean isOptionsValid() {
-        if ("radio".equals(type) || "checkbox".equals(type)) {
-            return options != null && !options.isEmpty();
-        }
-        return true;
-    }
 }

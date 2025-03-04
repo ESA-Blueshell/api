@@ -82,10 +82,6 @@ public class UserService extends BaseModelService<User, Long, UserRepository> im
         return repository.existsByPhoneNumber(phoneNumber);
     }
 
-    public List<User> findAll() {
-        return repository.findAll();
-    }
-
     @Override
     protected Long extractId(User user) {
         return user.getId();
@@ -115,10 +111,9 @@ public class UserService extends BaseModelService<User, Long, UserRepository> im
     }
 
     @Transactional
-    public User updateUser(User user) throws ApiException {
+    public void updateUser(User user) throws ApiException {
         contactService.updateContact(user);
         repository.save(user);
-        return user;
     }
 
     private void sendUserActivationEmail(User user) throws ApiException {

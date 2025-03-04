@@ -6,6 +6,7 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import net.blueshell.api.model.FormQuestion;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Converter
@@ -24,6 +25,9 @@ public class FormQuestionListConverter implements AttributeConverter<List<FormQu
 
     @Override
     public List<FormQuestion> convertToEntityAttribute(String dbData) {
+        if (dbData == null || dbData.isEmpty()) {
+            return new ArrayList<>();
+        }
         try {
             return objectMapper.readValue(dbData, new TypeReference<List<FormQuestion>>() {
             });

@@ -44,12 +44,12 @@ public class JwtAuthenticationController {
 
         var token = jwtTokenUtil.generateToken(user);
 
-        var expirationTime = System.currentTimeMillis() + this.expiration;
+        var expirationTime = System.currentTimeMillis() + expiration;
 
         Set<Role> roles = user.getRoles();
         //Add all inherited roles
         roles.addAll(roles.stream().flatMap(role -> role.getAllInheritedRoles().stream()).toList());
-        return ResponseEntity.ok(new JwtResponse(token, user.getId(), user.getUsername(), expiration, roles));
+        return ResponseEntity.ok(new JwtResponse(token, user.getId(), user.getUsername(), expirationTime, roles));
     }
 
     private void authenticate(String username, String password) {

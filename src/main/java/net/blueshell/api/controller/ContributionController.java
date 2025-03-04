@@ -50,10 +50,17 @@ public class ContributionController extends BaseController<ContributionService, 
     }
 
     @PreAuthorize("hasAuthority('BOARD')")
-    @PutMapping("contribution_periods/{periodId}/contributions/remind")
+    @PutMapping("contributionPeriods/{periodId}/contributions/remind")
     public ResponseEntity<Object> sendContributionReminder(@PathVariable("periodId") Long periodId) throws ApiException {
         List<Contribution> unpaidContributions = service.findByContributionPeriodIdAndPaid(periodId, false);
         service.sendReminder(unpaidContributions);
         return StatusCodes.OK;
+    }
+
+    @PreAuthorize("hasAuthority('BOARD')")
+    @GetMapping("contributionPeriods/{periodId}/contributions")
+    public List<ContributionDTO> getContributionsByPeriodId(@PathVariable("periodId") Long periodId) throws ApiException {
+        List<Contribution> contributions = service.findByContributionPeriodId(periodId);
+        return mapper.toDTOs(contributions);
     }
 }

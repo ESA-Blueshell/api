@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import net.blueshell.api.model.FormAnswer;
 
 import java.util.List;
@@ -15,7 +18,7 @@ public class FormAnswerListConverter implements AttributeConverter<List<FormAnsw
 
     @Override
     public String convertToDatabaseColumn(List<FormAnswer> attribute) {
-        if (attribute == null) {
+        if (attribute == null || attribute.isEmpty()) {
             return null;
         }
         try {
@@ -28,7 +31,7 @@ public class FormAnswerListConverter implements AttributeConverter<List<FormAnsw
     @Override
     public List<FormAnswer> convertToEntityAttribute(String dbData) {
         if (dbData == null || dbData.isBlank()) {
-            return null;
+            return new ArrayList<>();
         }
         try {
             return objectMapper.readValue(dbData, new TypeReference<List<FormAnswer>>() {});

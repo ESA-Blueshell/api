@@ -84,7 +84,6 @@ public abstract class BaseModelService<T, ID, R extends BaseRepository<T,ID>> ex
     public List<T> findAll() {
         return repository.findAll();
     }
-
     /**
      * Retrieve paginated entities
      */
