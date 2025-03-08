@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -106,7 +107,7 @@ public class EventService extends BaseModelService<Event, Long, EventRepository>
         return repository.findByBanner(banner);
     }
 
-    public List<Event> findBetweenDates(LocalDate fromDate, LocalDate toDate) {
-        return repository.findStartTimeBetween(fromDate.atStartOfDay(), toDate.atTime(23, 59, 59));
+    public List<Event> findStartTimeBetween(LocalDateTime from, LocalDateTime to) {
+        return repository.findStartTimeBetween(from, to);
     }
 }

@@ -7,7 +7,7 @@ OUTPUT_FILE="java_code.txt"
 > "$OUTPUT_FILE"
 
 # Find all files ending with 'Controller.java' or 'Service.java' and write their contents to the output file
-find . -type f \( -name '*Service.java' -o -name '*Controller.java' -o -wholename '*/model/*.java' \) | while read -r file; do
+find . -type f \( -wholename '*/controller/*.java' \) | while read -r file; do
     echo "==== Contents of: $file ====" >> "$OUTPUT_FILE"
     cat "$file" >> "$OUTPUT_FILE"
     echo -e "\n\n" >> "$OUTPUT_FILE" # Add spacing between files

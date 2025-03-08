@@ -1,15 +1,25 @@
 spring:
   datasource:
-    url: jdbc:mariadb://test:3306/test?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
 
   jpa:
     show-sql: true
+    properties:
+      hibernate:
+        dialect:org.hibernate.dialect.H2Dialect
 
   devtools:
     restart:
       enabled: true
     livereload:
       enabled: true
+
+
+  flyway:
+    enabled: false
 
 brevo:
   apiKey: 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

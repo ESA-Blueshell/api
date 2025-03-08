@@ -15,6 +15,9 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class EventDTO extends DTO {
 
+    @JsonProperty("id")
+    private Long id;
+
     @JsonProperty("committeeId")
     private Long committeeId;
 

@@ -2,7 +2,6 @@ package net.blueshell.api.controller;
 
 import io.swagger.annotations.ApiParam;
 import jakarta.validation.Valid;
-import lombok.Data;
 import net.blueshell.api.base.BaseController;
 import net.blueshell.api.dto.EventDTO;
 import net.blueshell.api.mapping.EventMapper;
@@ -12,15 +11,14 @@ import net.blueshell.api.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.OffsetDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
@@ -52,16 +50,14 @@ public class EventController extends BaseController<EventService, EventMapper> {
         return ResponseEntity.ok(mapper.toDTO(event));
     }
 
-    public static LocalDate convertToLocalDateTime(String dateString) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return LocalDate.parse(dateString, formatter);
-    }
 
     @GetMapping
     public ResponseEntity<List<EventDTO>> getEvents(
-            @RequestParam(required = false) LocalDate from,
-            @RequestParam(required = false) LocalDate to) {
-        List<Event> events = service.findBetweenDates(from, to);
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            @RequestParam(required = false) OffsetDateTime from,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            @RequestParam(required = false) OffsetDateTime to) {
+        List<Event> events = service.findStartTimeBetween(from.toLocalDateTime(), to.toLocalDateTime());
         return ResponseEntity.ok(mapper.toDTOs(events));
     }
 
