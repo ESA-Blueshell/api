@@ -21,8 +21,8 @@
 //    @Override
 //    boolean canSee(Guest guest, Authentication authentication) {
 //        User user = (User) authentication.getPrincipal();
-////        Event event = signUp.getEvent();
-////        return user.hasRole(Role.BOARD) || signUp.getUser() == user || event.getCommittee().hasMember(user);
+//        Event event = signUp.getEvent();
+//        return user.hasRole(Role.BOARD) || signUp.getUser() == user || event.getCommittee().hasMember(user);
 //        return true;
 //    }
 //

@@ -1,15 +1,12 @@
 package net.blueshell.api.security;
 
 import net.blueshell.api.common.enums.Role;
-import net.blueshell.api.model.Event;
 import net.blueshell.api.model.User;
-import net.blueshell.api.service.EventService;
+import net.blueshell.api.security.base.BasePermissionEvaluator;
 import net.blueshell.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-
-import java.util.function.BiFunction;
 
 @Component
 public class UserPermission extends BasePermissionEvaluator<User, Long, UserService> {

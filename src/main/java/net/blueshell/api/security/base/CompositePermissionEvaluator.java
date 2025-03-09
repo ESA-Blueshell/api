@@ -1,11 +1,11 @@
-package net.blueshell.api.security;
+package net.blueshell.api.security.base;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
-import net.blueshell.api.model.*;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;

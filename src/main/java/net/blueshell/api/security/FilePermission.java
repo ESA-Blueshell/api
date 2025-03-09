@@ -1,89 +1,97 @@
-//package net.blueshell.api.security;
-//
-//import net.blueshell.api.common.enums.Role;
-//import net.blueshell.api.model.*;
-//import net.blueshell.api.repository.FileRepository;
-//import net.blueshell.api.repository.GuestRepository;
-//import net.blueshell.api.service.*;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.core.Authentication;
-//import org.springframework.stereotype.Component;
-//
-//import java.io.Serializable;
-//
-//@Component
-//public class FilePermission extends BasePermissionEvaluator<File, Long, FileService> {
-//
-//    final UserService userService;
-//    final EventService eventService;
-//    final SponsorService sponsorService;
-//
-//    @Autowired
-//    public FilePermission(FileService service, UserService userService, EventService eventService, SponsorService sponsorService) {
-//        super(service);
-//        this.userService = userService;
-//        this.eventService = eventService;
-//        this.sponsorService = sponsorService;
-//    }
-//
-//    @Override
-//    boolean canSee(File file, Authentication authentication) {
-//        if (hasAuthority(Role.BOARD)) {
-//            return true;
-//        }
-//
-//        return switch (file.getType()) {
-//            case SIGNATURE -> userService.findBySignature(file) == getPrincipal();
-//            case EVENT_BANNER -> {
-//                Event event = eventService.findByBanner(file);
-//                yield event.isVisible() || event.getCommittee().hasMember(getPrincipal());
-//            }
-//            case EVENT_PICTURE -> hasAuthority(Role.MEMBER);
-//            case PROFILE_PICTURE, DOCUMENT, SPONSOR_PICTURE -> true;
-//        };
-//    }
-//
-//    @Override
-//    boolean canEdit(File file, Authentication authentication) {
-//        if (hasAuthority(Role.BOARD)) {
-//            return true;
-//        }
-//
-//        return switch (file.getType()) {
-//            case EVENT_PICTURE -> {
-//                Event event = eventService.findByBanner(file);
-//                yield event.getCommittee().hasMember(getPrincipal());
-//            }
-//            default -> false; // the rest can only be edited by board
-//        };
-//    }
-//
-//    @Override
-//    boolean canDelete(File file, Authentication authentication) {
-//        if (hasAuthority(Role.BOARD)) {
-//            return true;
-//        }
-//
-//        return switch (file.getType()) {
-//            case EVENT_PICTURE -> {
-//                Event event = eventService.findByBanner(file);
-//                yield event.getCommittee().hasMember(getPrincipal());
-//            }
-//            case PROFILE_PICTURE -> {
-//                User user = userService.findByProfilePicture(file);
-//                yield user == getPrincipal();
-//            } // the rest can only be deleted by board
-//            default -> false;
-//        };
-//    }
-//
-//
-//    public boolean hasPermission(Authentication authentication, Serializable targetName, Object permission) {
-//        if (authentication == null || targetName == null || permission == null) {
-//            return false;
-//        }
-//
-//        File file = service.findByName(targetName.toString());
-//        return hasPermission(authentication, file, permission);
-//    }
-//}
+package net.blueshell.api.security;
+
+import net.blueshell.api.common.enums.FileType;
+import net.blueshell.api.common.enums.Role;
+import net.blueshell.api.model.Event;
+import net.blueshell.api.model.File;
+import net.blueshell.api.model.User;
+import net.blueshell.api.security.base.BasePermissionEvaluator;
+import net.blueshell.api.service.EventService;
+import net.blueshell.api.service.FileService;
+import net.blueshell.api.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
+
+@Component
+public class FilePermission extends BasePermissionEvaluator<File, Long, FileService> {
+
+    private final UserService userService;
+    private final EventService eventService;
+
+    @Autowired
+    public FilePermission(FileService service, UserService userService, EventService eventService) {
+        super(service);
+        this.userService = userService;
+        this.eventService = eventService;
+    }
+
+    @Override
+    public boolean hasPermission(Authentication authentication, Object targetDomainObject, String permission) {
+        if (authentication == null || targetDomainObject == null || permission == null) {
+            return false;
+        }
+        File file = (File) targetDomainObject;
+        User principal = (User) authentication.getPrincipal();
+
+        if (principal.hasRole(Role.BOARD)) {
+            return true;
+        }
+
+        return switch (permission) {
+            case "read" -> handleReadPermission(file, principal);
+            case "write" -> handleWritePermission(file, principal);
+            case "delete" -> handleDeletePermission(file, principal);
+            default -> false;
+        };
+    }
+
+    private boolean handleReadPermission(File file, User principal) {
+        switch (file.getType()) {
+            case SIGNATURE:
+                User user = userService.findBySignature(file);
+                return user != null && user.equals(principal);
+            case EVENT_BANNER:
+                Event event = eventService.findByBanner(file);
+                return event != null && (event.isVisible() || event.getCommittee().hasMember(principal));
+            case EVENT_PICTURE:
+                return principal.hasRole(Role.MEMBER);
+            case PROFILE_PICTURE:
+            case DOCUMENT:
+            case SPONSOR_PICTURE:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private boolean handleWritePermission(File file, User principal) {
+        if (file.getType() == FileType.EVENT_PICTURE) {
+            Event event = eventService.findByBanner(file);
+            return event != null && event.getCommittee().hasMember(principal);
+        }
+        return false;
+    }
+
+    private boolean handleDeletePermission(File file, User principal) {
+        switch (file.getType()) {
+            case EVENT_PICTURE:
+                Event event = eventService.findByBanner(file);
+                return event != null && event.getCommittee().hasMember(principal);
+            case PROFILE_PICTURE:
+                User user = userService.findByProfilePicture(file);
+                return user != null && user.equals(principal);
+            default:
+                return false;
+        }
+    }
+
+    @Override
+    public boolean hasPermissionId(Authentication authentication, Object targetId, String permission) {
+        if (authentication == null || targetId == null || permission == null) {
+            return false;
+        }
+        File file = service.findById((Long) targetId);
+        return file != null && hasPermission(authentication, file, permission);
+    }
+}

@@ -1,13 +1,10 @@
-package net.blueshell.api.security;
+package net.blueshell.api.security.base;
 
 import net.blueshell.api.base.AuthorizationBase;
 import net.blueshell.api.base.BaseModelService;
-import net.blueshell.api.base.BaseRepository;
-import net.blueshell.api.model.User;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.security.core.Authentication;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
