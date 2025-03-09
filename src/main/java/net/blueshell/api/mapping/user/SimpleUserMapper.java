@@ -20,7 +20,6 @@ public abstract class SimpleUserMapper extends BaseMapper<User, SimpleUserDTO> {
     @InheritInverseConfiguration(name = "toDTO")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "roles", ignore = true)
-    @Mapping(target = "signature", ignore = true)
     @Mapping(target = "profilePicture", ignore = true)
     @Mapping(target = "committeeMembers", ignore = true)
     @Mapping(target = "contributions", ignore = true)
@@ -30,6 +29,5 @@ public abstract class SimpleUserMapper extends BaseMapper<User, SimpleUserDTO> {
     @Mapping(target = "resetType", ignore = true)
     @Mapping(target = "deletedAt", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "memberSince", ignore = true)
     public abstract User fromDTO(SimpleUserDTO dto);
 }

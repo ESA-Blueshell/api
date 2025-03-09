@@ -79,9 +79,6 @@ public class User implements UserDetails {
     @Column(name = "created_at")
     private Timestamp createdAt;
 
-    @Column(name = "member_since")
-    private Timestamp memberSince;
-
     @Column
     private String discord;
 
@@ -143,11 +140,6 @@ public class User implements UserDetails {
     @Column(name = "authority")
     private Set<Role> roles;
 
-    @JsonIgnore
-    public File getSignature() {
-        return member != null ? member.getSignature() : null;
-    }
-
     @Column(name = "ehbo")
     private boolean ehbo = false;
 
@@ -173,7 +165,6 @@ public class User implements UserDetails {
 
     public User() {
         this.createdAt = Timestamp.from(Instant.now());
-        this.memberSince = Timestamp.valueOf(LocalDateTime.of(3000, 1, 1, 0, 0));
         addRole(Role.GUEST);
     }
 

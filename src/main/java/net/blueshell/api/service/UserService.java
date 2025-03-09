@@ -5,6 +5,7 @@ import jakarta.ws.rs.NotFoundException;
 import net.blueshell.api.base.BaseModelService;
 import net.blueshell.api.common.enums.ResetType;
 import net.blueshell.api.common.enums.Role;
+import net.blueshell.api.model.Member;
 import net.blueshell.api.util.Util;
 import net.blueshell.api.controller.request.ActivationRequest;
 import net.blueshell.api.controller.request.PasswordResetRequest;
@@ -22,8 +23,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sendinblue.ApiException;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -168,10 +171,17 @@ public class UserService extends BaseModelService<User, Long, UserRepository> im
 
         if (isMember) {
             user.addRole(Role.MEMBER);
-            user.setMemberSince(Timestamp.from(Instant.now()));
+            if (user.getMember() == null) {
+                Member member = new Member();
+                member.setStartDate(Date.from(Instant.now()));
+            } else {
+                user.getMember().setEndDate(null);
+            }
         } else {
             user.removeRole(Role.MEMBER);
-            user.setMemberSince(Timestamp.valueOf(LocalDateTime.of(3000, 1, 1, 0, 0)));
+            if (user.getMember() != null) {
+                user.getMember().setEndDate(Date.from(Instant.now()));
+            }
         }
 
         repository.save(user);

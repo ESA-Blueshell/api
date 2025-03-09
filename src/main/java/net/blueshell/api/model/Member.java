@@ -7,7 +7,7 @@ import net.blueshell.api.common.enums.MemberType;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.Set;
 
 @Entity

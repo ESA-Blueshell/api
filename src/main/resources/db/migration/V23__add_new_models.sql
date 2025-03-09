@@ -57,11 +57,12 @@ CREATE TABLE members
 (
     id           BIGINT AUTO_INCREMENT NOT NULL,
     user_id      BIGINT                NULL,
-    start_date   datetime              NULL,
-    end_date     datetime              NULL,
+    start_date   date                  NULL,
+    end_date     date                  NULL,
     type         VARCHAR(2555)         NULL,
+    city         VARCHAR(255)          NULL,
+    incasso      tinyint(1)            NULL,
     signature_id BIGINT                NULL,
-    incasso      BIT(1)                NOT NULL,
     deleted_at  datetime              NULL,
     CONSTRAINT pk_members PRIMARY KEY (id)
 );

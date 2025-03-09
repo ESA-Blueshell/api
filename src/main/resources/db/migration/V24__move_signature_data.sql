@@ -2,7 +2,9 @@
 CREATE TEMPORARY TABLE IF NOT EXISTS signature_file_mapping
 (
     signature_id BIGINT PRIMARY KEY,
-    file_id      BIGINT
+    file_id      BIGINT,
+    city         VARCHAR(255),
+    incasso      tinyint(1)
 );
 
 -- Insert relevant data from signatures into files, capturing the ID mapping
@@ -17,9 +19,10 @@ SELECT name,
 FROM signatures;
 
 -- Populate the temporary table with the mapping
-INSERT INTO signature_file_mapping (signature_id, file_id)
+INSERT INTO signature_file_mapping (signature_id, file_id, city)
 SELECT s.id,
-       f.id
+       f.id,
+       s.city
 FROM signatures s
          JOIN files f ON s.name = f.name COLLATE utf8mb4_general_ci;
 
@@ -28,17 +31,31 @@ INSERT INTO members (user_id,
                      start_date,
                      end_date,
                      type,
-                     signature_id,
-                     incasso)
-SELECT s.user_id,
+                     city,
+                     incasso,
+                     signature_id)
+SELECT s.user_id as user_id,
        s.date    AS start_date,
        NULL      AS end_date,
        'REGULAR' AS type,
-       m.file_id AS signature_id,
-       u.incasso AS incasso
+       s.city    AS city,
+       u.incasso AS incasso,
+       m.file_id AS signature_id
 FROM signatures s
          JOIN signature_file_mapping m ON s.id = m.signature_id
          JOIN users u ON u.id = s.user_id;
+
+
+INSERT INTO members (user_id, start_date, end_date, type, city, incasso, signature_id)
+SELECT u.id                 AS user_id,
+       DATE(u.member_since) AS start_date,
+       NULL                 AS end_date,
+       'REGULAR'            AS type,
+       NULL                 AS city,
+       u.incasso            AS incasso,
+       NULL                 AS signature_id
+FROM users u WHERE u.member_since <= CURRENT_TIME AND u.id NOT IN (SELECT user_id FROM members);
+
 
 -- Cleanup temporary table
 DROP TEMPORARY TABLE IF EXISTS signature_file_mapping;
@@ -145,3 +162,7 @@ DROP TEMPORARY TABLE IF EXISTS picture_file_mapping;
 
 -- Drop pictures table
 DROP TABLE pictures;
+
+ALTER TABLE users
+    DROP COLUMN member_since,
+    DROP COLUMN incasso;

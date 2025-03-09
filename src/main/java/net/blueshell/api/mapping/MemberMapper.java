@@ -14,7 +14,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-public abstract class MembershipMapper extends BaseMapper<Member, MemberDTO> {
+public abstract class MemberMapper extends BaseMapper<Member, MemberDTO> {
 
     @Autowired
     private FileMapper fileMapper;

@@ -3,7 +3,7 @@ package net.blueshell.api.mapping.user;
 import net.blueshell.api.base.BaseMapper;
 import net.blueshell.api.common.enums.Role;
 import net.blueshell.api.dto.user.AdvancedUserDTO;
-import net.blueshell.api.mapping.MembershipMapper;
+import net.blueshell.api.mapping.MemberMapper;
 import net.blueshell.api.model.Member;
 import net.blueshell.api.model.User;
 import org.mapstruct.*;
@@ -23,9 +23,8 @@ public abstract class AdvancedUserMapper extends BaseMapper<User, AdvancedUserDT
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private MembershipMapper membershipMapper;
+    private MemberMapper memberMapper;
 
-    // Utility method for Admin fields:
     public static void applyCreationFields(AdvancedUserDTO dto, User user) {
         applyIfFieldIsNotNull(user, dto.getInitials(), User::setInitials);
         applyIfFieldIsNotNull(user, dto.getFirstName(), User::setFirstName);
@@ -61,7 +60,6 @@ public abstract class AdvancedUserMapper extends BaseMapper<User, AdvancedUserDT
     @Mapping(target = "username", ignore = true)
     @Mapping(target = "roles", ignore = true)
     @Mapping(target = "email", ignore = true)
-    @Mapping(target = "signature", ignore = true)
     @Mapping(target = "enabled", ignore = true)
     @Mapping(target = "profilePicture", ignore = true)
     @Mapping(target = "committeeMembers", ignore = true)
@@ -71,7 +69,6 @@ public abstract class AdvancedUserMapper extends BaseMapper<User, AdvancedUserDT
     @Mapping(target = "resetType", ignore = true)
     @Mapping(target = "deletedAt", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "memberSince", ignore = true)
     @Mapping(target = "password", ignore = true)
     public abstract User fromDTO(AdvancedUserDTO dto);
 
@@ -94,7 +91,7 @@ public abstract class AdvancedUserMapper extends BaseMapper<User, AdvancedUserDT
         }
 
         if (dto.getMember() != null && user.getMember() == null) {
-            Member member = membershipMapper.fromDTO(dto.getMember());
+            Member member = memberMapper.fromDTO(dto.getMember());
             user.setMember(member);
             user.addRole(Role.MEMBER);
             user.setConsentPrivacy(true);
