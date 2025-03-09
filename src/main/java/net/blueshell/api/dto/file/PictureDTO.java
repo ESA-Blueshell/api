@@ -26,7 +26,7 @@ public class PictureDTO extends DTO {
     /**
      * Mime type of File
      */
-    private MediaType mediaType;
+    private String mediaType;
 
     private Long size;
 

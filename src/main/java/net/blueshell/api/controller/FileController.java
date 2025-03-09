@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -42,7 +43,7 @@ public class FileController extends BaseController<FileService, FileRepository> 
         Resource resource = service.loadAsResource(file);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(file.getMediaType());
+        headers.setContentType(MediaType.valueOf(file.getMediaType()));
         headers.setContentDispositionFormData("attachment", file.getName());
 
         return ResponseEntity

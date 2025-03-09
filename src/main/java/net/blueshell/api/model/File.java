@@ -8,7 +8,6 @@ import net.blueshell.api.base.BaseModel;
 import net.blueshell.api.common.enums.FileType;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
-import org.springframework.http.MediaType;
 
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -44,11 +43,12 @@ public class File implements BaseModel {
     private Timestamp createdAt;
 
     @Column(name = "media_type")
-    private MediaType mediaType;
+    private String mediaType;
 
     @Column(name = "size")
     private Long size;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private FileType type;
 

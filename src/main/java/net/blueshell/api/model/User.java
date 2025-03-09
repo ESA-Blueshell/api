@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 import net.blueshell.api.common.enums.ResetType;
 import net.blueshell.api.common.enums.Role;
 import net.blueshell.api.common.util.TimeUtil;
@@ -157,9 +158,12 @@ public class User implements UserDetails {
     private boolean bhv = false;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonIgnore
     private Set<Contribution> contributions;
 
     @OneToOne(mappedBy = "user")
+    @ToString.Exclude
     private Member member;
 
     @OneToOne

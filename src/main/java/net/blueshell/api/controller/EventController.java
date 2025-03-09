@@ -7,7 +7,7 @@ import net.blueshell.api.dto.EventDTO;
 import net.blueshell.api.mapping.EventMapper;
 import net.blueshell.api.model.Event;
 import net.blueshell.api.model.User;
-import net.blueshell.api.service.EventService;
+import net.blueshell.api.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,9 +28,18 @@ import java.util.stream.Stream;
 @RequestMapping("/events")
 public class EventController extends BaseController<EventService, EventMapper> {
 
+    private final EventSignUpService eventSignUpService;
+    private final GuestService guestService;
+    private final UserService userService;
+    private final FileService fileService;
+
     @Autowired
-    public EventController(EventService service, EventMapper mapper) {
+    public EventController(EventService service, EventMapper mapper, EventSignUpService eventSignUpService, GuestService guestService, UserService userService, FileService fileService) {
         super(service, mapper);
+        this.eventSignUpService = eventSignUpService;
+        this.guestService = guestService;
+        this.userService = userService;
+        this.fileService = fileService;
     }
 
     @PreAuthorize("hasAuthority('COMMITTEE')")
@@ -57,6 +66,9 @@ public class EventController extends BaseController<EventService, EventMapper> {
             @RequestParam(required = false) OffsetDateTime from,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             @RequestParam(required = false) OffsetDateTime to) {
+        System.out.println(fileService.findAll());
+        System.out.println(userService.findAll());
+        System.out.println(eventSignUpService.findAll());
         List<Event> events = service.findStartTimeBetween(from.toLocalDateTime(), to.toLocalDateTime());
         return ResponseEntity.ok(mapper.toDTOs(events));
     }

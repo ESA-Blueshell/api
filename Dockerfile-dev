@@ -2,9 +2,9 @@ FROM maven:3.9.9-eclipse-temurin-23
 WORKDIR /usr/app
 
 COPY pom.xml .
-RUN mvn dependency:go-offline
+RUN mvn install
 
 EXPOSE 8080
 
 ENV spring_profiles_active='dev'
-CMD ["sh", "-c", "mvn clean install && mvn spring-boot:run -Dspring-boot.run.fork=false"]
+CMD ["sh", "-c", "mvn clean install && mvn install && mvn spring-boot:run -Dspring-boot.run.fork=false"]

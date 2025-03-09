@@ -4,6 +4,7 @@ import net.blueshell.api.base.BaseModelService;
 import net.blueshell.api.dto.EventDTO;
 import net.blueshell.api.mapping.EventMapper;
 import net.blueshell.api.model.Event;
+import net.blueshell.api.model.EventSignUp;
 import net.blueshell.api.model.File;
 import net.blueshell.api.model.User;
 import net.blueshell.api.repository.EventRepository;

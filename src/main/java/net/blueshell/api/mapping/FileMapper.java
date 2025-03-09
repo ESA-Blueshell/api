@@ -45,7 +45,7 @@ public abstract class FileMapper extends BaseMapper<File, FileDTO> {
     protected void afterFromDTO(FileDTO dto, @MappingTarget File file) {
         String fileName = dto.getType().toString().toLowerCase() + "/";
 
-        MediaType mediaType = dto.getMediaType();
+        String mediaType = dto.getMediaType();
         String content = dto.getBase64Content();
         String fileExtension;
         try {

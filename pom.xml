@@ -28,6 +28,21 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-maven-plugin -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <version>3.4.3</version>
+        </dependency>
+
+
+        <!-- Development -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
 
         <!-- Testing -->
         <dependency>
@@ -41,20 +56,22 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>11.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-mysql</artifactId>
-            <version>11.0.1</version>
+            <version>11.3.4</version>
         </dependency>
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
             <version>3.3.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-mysql -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-mysql</artifactId>
+            <version>11.3.4</version>
         </dependency>
 
         <!-- Lombok -->
@@ -99,17 +116,6 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.restdocs</groupId>
-            <artifactId>spring-restdocs-mockmvc</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>capital.scalable</groupId>
-            <artifactId>spring-auto-restdocs-core</artifactId>
-            <version>2.0.11</version>
-            <scope>test</scope>
         </dependency>
 
         <!-- Google APIs -->
@@ -210,9 +216,18 @@
             <artifactId>tika-core</artifactId>
             <version>3.1.0</version>
         </dependency>
+
+        <!-- Junit -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.11.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.11.3</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -223,6 +238,12 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>net.blueshell.api.ApiApplication</mainClass>
+                    <jvmArguments>
+                        -Dspring.devtools.restart.enabled=true
+                    </jvmArguments>
+                </configuration>
             </plugin>
 
             <!-- Compiler Plugin -->
@@ -232,6 +253,7 @@
                 <version>3.13.0</version>
                 <configuration>
                     <release>23</release>
+                    <useIncrementalCompilation>false</useIncrementalCompilation>
                     <annotationProcessorPaths>
                         <annotationProcessorPath>
                             <groupId>org.projectlombok</groupId>
@@ -246,7 +268,21 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>net.blueshell.api.CalendarQuickstart</mainClass>
+                </configuration>
+            </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
@@ -257,47 +293,19 @@
                         <org.springframework.restdocs.outputDir>
                             ${project.build.directory}/generated-snippets
                         </org.springframework.restdocs.outputDir>
-                        <org.springframework.restdocs.javadocJsonDir>
-                            ${project.build.directory}/generated-javadoc-json
-                        </org.springframework.restdocs.javadocJsonDir>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
-            <!-- Javadoc Generation -->
             <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <extensions>true</extensions>
-                <executions>
-                    <execution>
-                        <id>generate-javadoc-json</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>javadoc-no-fork</goal>
-                        </goals>
-                        <configuration>
-                            <doclet>capital.scalable.restdocs.jsondoclet.ExtractDocumentationAsJsonDoclet</doclet>
-                            <docletArtifact>
-                                <groupId>capital.scalable</groupId>
-                                <artifactId>spring-auto-restdocs-json-doclet</artifactId>
-                                <version>2.0.11</version>
-                            </docletArtifact>
-                            <useStandardDocletOptions>false</useStandardDocletOptions>
-                            <show>package</show>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>capital.scalable</groupId>
-                <artifactId>spring-auto-restdocs-maven-plugin</artifactId>
-                <version>2.0.11</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <delimiters>
+                        <delimiter>@</delimiter>
+                    </delimiters>
+                    <useDefaultDelimiters>false</useDefaultDelimiters>
+                </configuration>
             </plugin>
         </plugins>
     </build>

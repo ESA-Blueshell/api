@@ -2,6 +2,7 @@ package net.blueshell.api.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 import net.blueshell.api.common.enums.MemberType;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -22,6 +23,7 @@ public class Member {
 
     @JoinColumn(name = "user_id")
     @OneToOne
+    @ToString.Exclude
     private User user;
 
     @Column(name = "start_date")
@@ -31,6 +33,7 @@ public class Member {
     private Date endDate;
 
     @Column(name = "type")
+    @Enumerated(EnumType.STRING)
     private MemberType type;
 
     @JoinColumn(name = "signature_id")

@@ -3,6 +3,7 @@ package net.blueshell.api.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 import net.blueshell.api.base.BaseModel;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -21,7 +22,12 @@ public class Contribution implements BaseModel {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ToString.Exclude
     private User user;
+
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private Long userId;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "member_id")

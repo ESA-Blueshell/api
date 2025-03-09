@@ -27,6 +27,7 @@ public class EventSignUp implements BaseModel {
 
     @ManyToOne
     @JoinColumn(name = "event_id")
+    @JsonIgnore
     private Event event;
 
     @Column(name = "event_id", insertable=false, updatable=false)
@@ -34,6 +35,7 @@ public class EventSignUp implements BaseModel {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @Column(name = "user_id", insertable=false, updatable=false)
@@ -43,8 +45,9 @@ public class EventSignUp implements BaseModel {
     @JoinColumn(name = "guest_id")
     private Guest guest;
 
+    @Column(name = "form_answers", columnDefinition = "JSON")
     @Convert(converter = FormAnswerListConverter.class)
-    @Column(name = "form_answers", columnDefinition = "TEXT")
+    @JsonIgnore
     private List<Object> formAnswers;
 
     @Column(name = "signed_up_at")
@@ -54,6 +57,7 @@ public class EventSignUp implements BaseModel {
     private Timestamp deletedAt;
 
     @JsonProperty("event")
+    @JsonIgnore
     public Long getEventId() {
         return getEvent() == null ? null : getEvent().getId();
     }
