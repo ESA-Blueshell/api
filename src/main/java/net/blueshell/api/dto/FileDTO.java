@@ -19,7 +19,7 @@ public class FileDTO extends DTO {
 
     private String url;
 
-    private SimpleUserDTO uploader;
+    private long uploaderId;
 
     private Timestamp createdAt;
 

@@ -1,6 +1,10 @@
 package net.blueshell.api.mapping.user;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import net.blueshell.api.base.BaseMapper;
+import net.blueshell.api.dto.CommitteeMemberDTO;
+import net.blueshell.api.dto.user.AdvancedUserDTO;
 import net.blueshell.api.dto.user.SimpleUserDTO;
 import net.blueshell.api.model.User;
 import org.mapstruct.InheritInverseConfiguration;

@@ -2,6 +2,8 @@ package net.blueshell.api.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -26,10 +28,19 @@ import java.util.Set;
 @Data
 @UniqueUser
 @EqualsAndHashCode(callSuper = false)
-public class AdvancedUserDTO extends DTO {
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = SimpleUserDTO.class, name = "simple"),
+        @JsonSubTypes.Type(value = AdvancedUserDTO.class, name = "advanced"),
+})
+public class AdvancedUserDTO extends SimpleUserDTO {
 
     @NotNull(groups = {Update.class})
-    private Long id;
+    private long id;
 
     @JsonProperty
     @NotBlank(groups = {Creation.class, Administration.class})

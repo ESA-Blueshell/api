@@ -1,5 +1,6 @@
 package net.blueshell.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -37,7 +38,11 @@ public class File implements BaseModel {
     @Getter
     @OneToOne
     @JoinColumn(name = "uploader_id")
+    @JsonIgnore
     private User uploader;
+
+    @Column(name = "uploader_id", insertable = false, updatable = false)
+    private long uploaderId;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
