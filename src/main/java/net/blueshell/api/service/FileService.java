@@ -4,7 +4,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.ws.rs.BadRequestException;
 import net.blueshell.api.base.BaseModelService;
 import net.blueshell.api.config.StorageConfig;
-import net.blueshell.api.dto.UploadFileResponse;
+import net.blueshell.api.controller.response.UploadFileResponse;
 import net.blueshell.api.common.enums.FileType;
 import net.blueshell.api.exception.FileNotFoundException;
 import net.blueshell.api.exception.StorageException;

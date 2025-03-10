@@ -49,10 +49,12 @@ public class UserController extends AdvancedController<UserService, AdvancedUser
     }
 
     @PutMapping(value = "/{userId}")
-    @PreAuthorize("hasPermission('User', #userId, 'write')")
+    @PreAuthorize("hasPermission(#userId, 'User', 'write')")
     public AdvancedUserDTO update(@ApiParam(name = "Id of the user") @PathVariable("userId") Long userId,
                                   @Validated(Update.class) @RequestBody AdvancedUserDTO dto) throws ApiException {
+        System.out.println("user id: " + userId);
         dto.setId(userId);
+        System.out.println("dto: " + dto);
         User user = advancedMapper.fromDTO(dto);
         service.updateUser(user);
         return advancedMapper.toDTO(user);
@@ -104,7 +106,7 @@ public class UserController extends AdvancedController<UserService, AdvancedUser
     @PutMapping(value = "/{id}/membership")
     @PreAuthorize("hasAuthority('BOARD')")
     public AdvancedUserDTO updateMembership(@ApiParam(name = "Id of the user") @PathVariable("id") Long userId,
-                                            @NotBlank @RequestParam(defaultValue = "isMember", required = true) Boolean isMember) {
+                                            @RequestParam(defaultValue = "isMember") Boolean isMember) {
         User user = service.updateMembership(userId, isMember);
         return advancedMapper.toDTO(user);
     }

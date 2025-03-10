@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+import net.blueshell.api.common.enums.MemberType;
 import net.blueshell.api.common.enums.ResetType;
 import net.blueshell.api.common.enums.Role;
 import net.blueshell.api.common.util.TimeUtil;
@@ -277,5 +278,13 @@ public class User implements UserDetails {
 
     public String getSantizedFullName() {
         return getFullName().replaceAll("[^a-zA-Z0-9\\s]", "").trim().replaceAll("\\s+", "-");
+    }
+
+    public MemberType getMemberType() {
+        return getMember() != null ? getMember().getMemberType() : null;
+    }
+
+    public boolean getIncasso(){
+        return getMember() != null && getMember().isIncasso();
     }
 }

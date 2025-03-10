@@ -23,7 +23,8 @@ public class UserPermission extends BasePermissionEvaluator<User, Long, UserServ
         User user = (User) object;
         User principal = (User) authentication.getPrincipal();
         return switch (permission) {
-            case "read", "write" -> principal.hasRole(Role.BOARD) || principal.getId() == user.getId();
+            case "read", "write", "delete" -> principal.hasRole(Role.BOARD) || principal.getId() == user.getId();
+            case "changeRole", "getBrevo" -> principal.hasRole(Role.BOARD);
             default -> false;
         };
     }

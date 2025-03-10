@@ -36,7 +36,7 @@ public class FileDTO extends DTO {
      */
     private String fileName;
 
-    private FileType type;
+    private FileType fileType;
 
     /**
      * The file content encoded in Base64.

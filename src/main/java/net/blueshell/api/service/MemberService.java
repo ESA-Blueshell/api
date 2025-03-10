@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class MembershipService extends BaseModelService<Member, Long, MemberRepository> {
+public class MemberService extends BaseModelService<Member, Long, MemberRepository> {
 
     @Autowired
-    public MembershipService(MemberRepository repository) {
+    public MemberService(MemberRepository repository) {
         super(repository);
     }
 

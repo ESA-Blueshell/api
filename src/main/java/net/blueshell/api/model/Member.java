@@ -7,6 +7,7 @@ import net.blueshell.api.common.enums.MemberType;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
@@ -19,7 +20,7 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @JoinColumn(name = "user_id")
     @OneToOne
@@ -27,14 +28,14 @@ public class Member {
     private User user;
 
     @Column(name = "start_date")
-    private Date startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date")
-    private Date endDate;
+    private LocalDate endDate;
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
-    private MemberType type;
+    private MemberType memberType;
 
     @JoinColumn(name = "signature_id")
     @OneToOne

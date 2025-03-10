@@ -58,7 +58,7 @@ public abstract class BaseModelService<T, ID, R extends BaseRepository<T,ID>> ex
      */
     @Transactional(readOnly = true)
     public T findById(ID id) {
-        return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Resource not found with id: " + id));
     }
 
     /**

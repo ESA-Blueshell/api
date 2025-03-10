@@ -144,9 +144,6 @@ public class AdvancedUserDTO extends SimpleUserDTO {
     private Timestamp createdAt;
 
     @JsonProperty
-    private Timestamp memberSince;
-
-    @JsonProperty
     private String gender;
 
     @JsonProperty

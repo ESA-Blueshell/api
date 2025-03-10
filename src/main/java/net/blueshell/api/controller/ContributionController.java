@@ -2,13 +2,12 @@ package net.blueshell.api.controller;
 
 import io.swagger.annotations.ApiParam;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.PathParam;
 import net.blueshell.api.base.BaseController;
 import net.blueshell.api.common.constants.StatusCodes;
 import net.blueshell.api.dto.ContributionDTO;
 import net.blueshell.api.mapping.ContributionMapper;
 import net.blueshell.api.model.Contribution;
-import net.blueshell.api.model.ContributionPeriod;
 import net.blueshell.api.service.ContributionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +31,17 @@ public class ContributionController extends BaseController<ContributionService, 
     public ContributionDTO create(@Valid @RequestBody ContributionDTO dto) throws ApiException {
         Contribution contribution = mapper.fromDTO(dto);
         service.createContribution(contribution);
+        return mapper.toDTO(contribution);
+    }
+
+    @PreAuthorize("hasAuthority('BOARD')")
+    @PutMapping("/contributions/{id}/paid")
+    public ContributionDTO paid(
+            @ApiParam(name = "Id of the contribution") @PathVariable("id") Long id,
+            @ApiParam(name = "Whether the contribution is paid") @PathParam("paid") boolean paid) throws ApiException {
+        Contribution contribution = service.findById(id);
+        contribution.setPaid(paid);
+        service.update(contribution);
         return mapper.toDTO(contribution);
     }
 

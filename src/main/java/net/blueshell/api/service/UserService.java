@@ -27,10 +27,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class UserService extends BaseModelService<User, Long, UserRepository> implements UserDetailsService {
@@ -45,15 +42,15 @@ public class UserService extends BaseModelService<User, Long, UserRepository> im
 
     private final EmailService emailService;
     private final ContactService contactService;
-    private final MembershipService membershipService;
+    private final MemberService memberService;
     private final RequestMapper requestMapper;
 
     @Autowired
-    public UserService(UserRepository repository, EmailService emailService, ContactService contactService, MembershipService membershipService, RequestMapper requestMapper) {
+    public UserService(UserRepository repository, EmailService emailService, ContactService contactService, MemberService memberService, RequestMapper requestMapper) {
         super(repository);
         this.emailService = emailService;
         this.contactService = contactService;
-        this.membershipService = membershipService;
+        this.memberService = memberService;
         this.requestMapper = requestMapper;
     }
 
@@ -173,14 +170,14 @@ public class UserService extends BaseModelService<User, Long, UserRepository> im
             user.addRole(Role.MEMBER);
             if (user.getMember() == null) {
                 Member member = new Member();
-                member.setStartDate(Date.from(Instant.now()));
+                member.setStartDate(LocalDate.now());
             } else {
                 user.getMember().setEndDate(null);
             }
         } else {
             user.removeRole(Role.MEMBER);
             if (user.getMember() != null) {
-                user.getMember().setEndDate(Date.from(Instant.now()));
+                user.getMember().setEndDate(LocalDate.now());
             }
         }
 

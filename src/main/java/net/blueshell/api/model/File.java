@@ -55,7 +55,7 @@ public class File implements BaseModel {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
-    private FileType type;
+    private FileType fileType;
 
     @Override
     public boolean equals(Object o) {

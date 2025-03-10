@@ -42,6 +42,7 @@ public class ContributionPeriodController extends BaseController<ContributionPer
     @PutMapping("/{id}")
     public ResponseEntity<ContributionPeriodDTO> updateContributionPeriod(@PathVariable("id") Long id,
                                                                           @Valid @RequestBody ContributionPeriodDTO dto) {
+        dto.setId(id);
         ContributionPeriod contributionPeriod = mapper.fromDTO(dto);
         contributionPeriod = service.update(contributionPeriod);
         return ResponseEntity.ok(mapper.toDTO(contributionPeriod));

@@ -10,7 +10,6 @@ import org.apache.tika.mime.MimeTypes;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
@@ -43,7 +42,10 @@ public abstract class FileMapper extends BaseMapper<File, FileDTO> {
 
     @AfterMapping
     protected void afterFromDTO(FileDTO dto, @MappingTarget File file) {
-        String fileName = dto.getType().toString().toLowerCase() + "/";
+        if (dto.getBase64Content() == null) {
+            return;
+        }
+        String fileName = dto.getFileType().toString().toLowerCase() + "/";
 
         String mediaType = dto.getMediaType();
         String content = dto.getBase64Content();

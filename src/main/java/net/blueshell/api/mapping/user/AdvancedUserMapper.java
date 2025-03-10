@@ -6,11 +6,15 @@ import net.blueshell.api.dto.user.AdvancedUserDTO;
 import net.blueshell.api.mapping.MemberMapper;
 import net.blueshell.api.model.Member;
 import net.blueshell.api.model.User;
+import net.blueshell.api.service.MemberService;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.security.SecureRandom;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.function.BiConsumer;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -24,6 +28,8 @@ public abstract class AdvancedUserMapper extends BaseMapper<User, AdvancedUserDT
     private PasswordEncoder passwordEncoder;
     @Autowired
     private MemberMapper memberMapper;
+    @Autowired
+    private MemberService memberService;
 
     public static void applyCreationFields(AdvancedUserDTO dto, User user) {
         applyIfFieldIsNotNull(user, dto.getInitials(), User::setInitials);
@@ -52,12 +58,11 @@ public abstract class AdvancedUserMapper extends BaseMapper<User, AdvancedUserDT
     public abstract AdvancedUserDTO toDTO(User user);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "initials", ignore = true)
     @Mapping(target = "firstName", ignore = true)
     @Mapping(target = "prefix", ignore = true)
     @Mapping(target = "lastName", ignore = true)
-    @Mapping(target = "username", ignore = true)
+    @Mapping(target = "username", conditionExpression = "java(hasAuthority(net.blueshell.api.common.enums.Role.BOARD))")
     @Mapping(target = "roles", ignore = true)
     @Mapping(target = "email", ignore = true)
     @Mapping(target = "enabled", ignore = true)
@@ -88,13 +93,22 @@ public abstract class AdvancedUserMapper extends BaseMapper<User, AdvancedUserDT
             if (hasAuthority(Role.BOARD)) {
                 user.setCreator(getPrincipal());
             }
-        }
 
-        if (dto.getMember() != null && user.getMember() == null) {
-            Member member = memberMapper.fromDTO(dto.getMember());
-            user.setMember(member);
-            user.addRole(Role.MEMBER);
-            user.setConsentPrivacy(true);
+            if (dto.getMember() != null && user.getMember() != null) {
+                dto.setId(user.getMember().getId());
+                Member member = memberMapper.fromDTO(dto.getMember());
+                member.setUser(user);
+                memberService.update(member);
+                user.setMember(member);
+            }
+
+            if (dto.getMember() != null && user.getMember() == null) {
+                Member member = memberMapper.fromDTO(dto.getMember());
+                member.setUser(user);
+                memberService.create(member);
+                user.addRole(Role.MEMBER);
+                user.setConsentPrivacy(true);
+            }
         }
     }
 }

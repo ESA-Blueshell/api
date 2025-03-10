@@ -5,10 +5,13 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 import net.blueshell.api.base.BaseModel;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @Entity
 @Table(name = "contributions")
@@ -23,6 +26,7 @@ public class Contribution implements BaseModel {
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotFound(action = NotFoundAction.IGNORE)
     @ToString.Exclude
     private User user;
 
@@ -57,5 +61,18 @@ public class Contribution implements BaseModel {
     @JsonProperty("userId")
     public Long getUserId() {
         return user != null ? user.getId() : null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Contribution that = (Contribution) o;
+        return id != null && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

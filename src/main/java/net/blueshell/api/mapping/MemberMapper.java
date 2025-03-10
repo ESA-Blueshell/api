@@ -13,6 +13,8 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
+
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public abstract class MemberMapper extends BaseMapper<Member, MemberDTO> {
 
@@ -27,9 +29,12 @@ public abstract class MemberMapper extends BaseMapper<Member, MemberDTO> {
     protected void afterFromDTO(MemberDTO dto, @MappingTarget Member member) {
         if (dto.getSignature() != null) {
             FileDTO signatureDTO = dto.getSignature();
-            signatureDTO.setType(FileType.SIGNATURE);
+            signatureDTO.setFileType(FileType.SIGNATURE);
             File signature = fileMapper.fromDTO(dto.getSignature());
             member.setSignature(signature);
+        }
+        if (member.getStartDate() == null) {
+            member.setStartDate(LocalDate.now());
         }
     }
 }
