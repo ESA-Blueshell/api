@@ -23,7 +23,7 @@ public class Contribution implements BaseModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotFound(action = NotFoundAction.IGNORE)
@@ -33,7 +33,7 @@ public class Contribution implements BaseModel {
     @Column(name = "user_id", insertable = false, updatable = false)
     private Long userId;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -43,7 +43,7 @@ public class Contribution implements BaseModel {
     @Column(name = "reminded_at")
     private Timestamp remindedAt;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "contribution_period_id")
     private ContributionPeriod contributionPeriod;
 
