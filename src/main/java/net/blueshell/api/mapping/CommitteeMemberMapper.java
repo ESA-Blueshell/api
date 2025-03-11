@@ -4,6 +4,8 @@ import net.blueshell.api.base.BaseMapper;
 import net.blueshell.api.dto.CommitteeMemberDTO;
 import net.blueshell.api.mapping.user.SimpleUserMapper;
 import net.blueshell.api.model.CommitteeMember;
+import net.blueshell.api.service.CommitteeService;
+import net.blueshell.api.service.UserService;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,8 +14,12 @@ public abstract class CommitteeMemberMapper extends BaseMapper<CommitteeMember, 
 
     @Autowired
     protected SimpleUserMapper simpleUserMapper; // Field injection instead of constructor
+    @Autowired
+    protected UserService userService;
+    @Autowired
+    protected CommitteeService committeeService;
 
-    @Mapping(target = "role", source = "role")
+
     @Mapping(target = "user", ignore = true)
     public abstract CommitteeMemberDTO toDTO(CommitteeMember member);
 
@@ -31,7 +37,10 @@ public abstract class CommitteeMemberMapper extends BaseMapper<CommitteeMember, 
     @AfterMapping
     protected void afterFromDTO(CommitteeMemberDTO dto, @MappingTarget CommitteeMember member) {
         if (dto.getUser() != null) {
-            member.setUser(simpleUserMapper.fromDTO(dto.getUser()));
+            member.setUser(userService.findById(dto.getUser().getId()));
+        }
+        if (dto.getCommitteeId() != null) {
+            member.setCommittee(committeeService.findById(dto.getCommitteeId()));
         }
     }
 }

@@ -1,6 +1,5 @@
 package net.blueshell.api.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -21,13 +20,19 @@ public class CommitteeMember implements BaseModel {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
+
+    @Column(name = "user_id")
+    private Long userId;
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "committee_id")
+    @JoinColumn(name = "committee_id", insertable = false, updatable = false)
     private Committee committee;
+
+    @Column(name = "committee_id")
+    private Long committeeId;
 
     @Column(name = "deleted_at")
     private Timestamp deletedAt;
@@ -65,6 +70,6 @@ public class CommitteeMember implements BaseModel {
     @Override
     public String toString() {
         return String.format("CommitteeMember={userId: %d, committeeId: %d, role: %s}",
-                user.getId(), committee.getId(), role);
+                userId, committeeId, role);
     }
 }

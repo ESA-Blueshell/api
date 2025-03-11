@@ -10,7 +10,7 @@ import net.blueshell.api.dto.user.SimpleUserDTO;
 @EqualsAndHashCode(callSuper = false)
 public class CommitteeMemberDTO extends DTO {
     private String role;
-    private long userId;
+    private Long userId;
     private SimpleUserDTO user;
-    private long committeeId;
+    private Long committeeId;
 }

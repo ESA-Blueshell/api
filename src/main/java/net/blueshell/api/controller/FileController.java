@@ -1,7 +1,9 @@
 package net.blueshell.api.controller;
 
 import net.blueshell.api.base.BaseController;
+import net.blueshell.api.controller.response.UploadFileResponse;
 import net.blueshell.api.model.File;
+import net.blueshell.api.model.User;
 import net.blueshell.api.repository.FileRepository;
 import net.blueshell.api.service.EventService;
 import net.blueshell.api.service.FileService;
@@ -16,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -53,8 +56,9 @@ public class FileController extends BaseController<FileService, FileRepository> 
                 .body(resource);
     }
 
+
 //    @PostMapping("users/{userId}/debitMandate")
-//    @PreAuthorize("hasPermission(#userId, 'User', 'Edit')")
+//    @PreAuthorize("hasPermission(#userId, 'User', 'signature')")
 //    public UploadFileResponse uploadUserDebitMandate(@PathVariable Long userId, @RequestBody File file) throws IOException {
 //        User user = userService.findById(userId);
 //        file.setName(user.getUsername());

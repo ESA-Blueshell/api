@@ -52,9 +52,7 @@ public class UserController extends AdvancedController<UserService, AdvancedUser
     @PreAuthorize("hasPermission(#userId, 'User', 'write')")
     public AdvancedUserDTO update(@ApiParam(name = "Id of the user") @PathVariable("userId") Long userId,
                                   @Validated(Update.class) @RequestBody AdvancedUserDTO dto) throws ApiException {
-        System.out.println("user id: " + userId);
         dto.setId(userId);
-        System.out.println("dto: " + dto);
         User user = advancedMapper.fromDTO(dto);
         service.updateUser(user);
         return advancedMapper.toDTO(user);
@@ -127,7 +125,7 @@ public class UserController extends AdvancedController<UserService, AdvancedUser
 
     @GetMapping(value = "/brevo")
     @PreAuthorize("hasPermission(#email, 'User', 'getBrevo')")
-    public AdvancedUserDTO getFromBrevo(@NotBlank @RequestParam String email) throws NoSuchFieldException, ApiException, IllegalAccessException {
+    public AdvancedUserDTO getFromBrevo(@RequestParam String email) throws NoSuchFieldException, ApiException, IllegalAccessException {
         User user = service.getFromBrevo(email);
         return advancedMapper.toDTO(user);
     }

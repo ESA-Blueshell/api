@@ -51,17 +51,17 @@ public class EventController extends BaseController<EventService, EventMapper> {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasPermission(#id, 'Event', 'see')")
-    public ResponseEntity<EventDTO> getEventById(
+    @PreAuthorize("hasPermission(#id, 'Event', 'read')")
+    public EventDTO getEventById(
             @ApiParam(name = "Id of the event")
             @PathVariable("id") Long id) {
         Event event = service.findById(id);
-        return ResponseEntity.ok(mapper.toDTO(event));
+        return mapper.toDTO(event);
     }
 
 
     @GetMapping
-    public ResponseEntity<List<EventDTO>> getEvents(
+    public List<EventDTO> getEvents(
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             @RequestParam(required = false) OffsetDateTime from,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -70,7 +70,7 @@ public class EventController extends BaseController<EventService, EventMapper> {
         System.out.println(userService.findAll());
         System.out.println(eventSignUpService.findAll());
         List<Event> events = service.findStartTimeBetween(from.toLocalDateTime(), to.toLocalDateTime());
-        return ResponseEntity.ok(mapper.toDTOs(events));
+        return mapper.toDTOs(events);
     }
 
     @GetMapping("/upcoming")
