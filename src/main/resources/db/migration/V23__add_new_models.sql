@@ -53,7 +53,7 @@ CREATE TABLE files
     CONSTRAINT pk_files PRIMARY KEY (id)
 );
 
-CREATE TABLE members
+CREATE TABLE memberships
 (
     id           BIGINT AUTO_INCREMENT NOT NULL,
     user_id      BIGINT                NULL,
@@ -64,7 +64,7 @@ CREATE TABLE members
     incasso      tinyint(1)            NULL,
     signature_id BIGINT                NULL,
     deleted_at  datetime              NULL,
-    CONSTRAINT pk_members PRIMARY KEY (id)
+    CONSTRAINT pk_memberships PRIMARY KEY (id)
 );
 
 ALTER TABLE boards
@@ -106,11 +106,11 @@ ALTER TABLE event_signups
 ALTER TABLE files
     ADD CONSTRAINT FK_FILES_ON_UPLOADER FOREIGN KEY (uploader_id) REFERENCES users (id);
 
-ALTER TABLE members
-    ADD CONSTRAINT FK_MEMBERS_ON_SIGNATURE FOREIGN KEY (signature_id) REFERENCES files (id);
+ALTER TABLE memberships
+    ADD CONSTRAINT FK_MEMBERSHIPS_ON_SIGNATURE FOREIGN KEY (signature_id) REFERENCES files (id);
 
-ALTER TABLE members
-    ADD CONSTRAINT FK_MEMBERS_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
+ALTER TABLE memberships
+    ADD CONSTRAINT FK_MEMBERSHIPS_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
 
 ALTER TABLE sponsors
     ADD CONSTRAINT FK_SPONSORS_ON_LOGO FOREIGN KEY (logo_id) REFERENCES files (id);

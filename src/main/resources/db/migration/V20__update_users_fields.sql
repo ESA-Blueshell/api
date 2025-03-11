@@ -1,4 +1,4 @@
--- Drop columns that are no longer needed and add new columns for member info and payment method
+-- Drop columns that are no longer needed and add new columns for membership info and payment method
 ALTER TABLE users
     DROP COLUMN contribution_paid,
     DROP COLUMN online_signup,

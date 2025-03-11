@@ -1,24 +1,18 @@
 package net.blueshell.api.controller;
 
 import net.blueshell.api.base.BaseController;
-import net.blueshell.api.controller.response.UploadFileResponse;
-import net.blueshell.api.model.File;
-import net.blueshell.api.model.User;
+import net.blueshell.api.model.*;
 import net.blueshell.api.repository.FileRepository;
-import net.blueshell.api.service.EventService;
-import net.blueshell.api.service.FileService;
-import net.blueshell.api.service.UserService;
+import net.blueshell.api.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.http.CacheControl;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,56 +24,55 @@ public class FileController extends BaseController<FileService, FileRepository> 
 
     private final UserService userService;
     private final EventService eventService;
+    private final MembershipService membershipService;
+    private final EventPictureService eventPictureService;
 
     @Autowired
-    public FileController(FileService service, FileRepository repository, UserService userService, EventService eventService) {
+    public FileController(FileService service, FileRepository repository, UserService userService, EventService eventService, MembershipService membershipService, EventPictureService eventPictureService) {
         super(service, repository);
         this.userService = userService;
         this.eventService = eventService;
+        this.membershipService = membershipService;
+        this.eventPictureService = eventPictureService;
     }
 
     @GetMapping("/download/{filename:.+}")
     @ResponseBody
-    @PreAuthorize("hasPermission(#filename, 'File', 'See')")
+    @PreAuthorize("hasPermission(#filename, 'File', 'read')")
     public ResponseEntity<Resource> downloadFile(@PathVariable String filename) {
         File file = service.findByName(filename);
-        Resource resource = service.loadAsResource(file);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.valueOf(file.getMediaType()));
-        headers.setContentDispositionFormData("attachment", file.getName());
-
-        return ResponseEntity
-                .ok()
-                .cacheControl(CacheControl.maxAge(10, TimeUnit.DAYS).cachePublic())
-                .headers(headers)
-                .body(resource);
+        return service.prepareFileResponse(file);
     }
 
+    @GetMapping("/eventPictures/{eventPictureId}")
+    @ResponseBody
+    @PreAuthorize("hasAuthority('MEMBER')")
+    public ResponseEntity<Resource> downloadEventPicture(@PathVariable Long eventPictureId) {
+        EventPicture eventPicture = eventPictureService.findById(eventPictureId);
+        return service.prepareFileResponse(eventPicture.getPicture());
+    }
 
-//    @PostMapping("users/{userId}/debitMandate")
-//    @PreAuthorize("hasPermission(#userId, 'User', 'signature')")
-//    public UploadFileResponse uploadUserDebitMandate(@PathVariable Long userId, @RequestBody File file) throws IOException {
-//        User user = userService.findById(userId);
-//        file.setName(user.getUsername());
-//        return service.uploadFile(FileType.DEBIT_MANDATE, user.getFullName(), file, "pdf");
-//    }
-//
-//
-//    @PostMapping("users/{userId}/membershipForm")
-//    @PreAuthorize("hasPermission(#userId, 'User', 'Edit')")
-//    public UploadFileResponse uploadMembershipForm(@PathVariable Long userId, @RequestBody FileDTO dto) throws IOException {
-//        User user = userService.findById(userId);
-//        dto.setType(FileType.MEMBERSHIP_FORM);
-//        dto.setName(user.getUsername());
-//        return service.uploadFile(FileType.DEBIT_MANDATE, user.getFullName(), file, "pdf");
-//    }
-//
-//    private String extractExtension(String contentType) {
-//        try {
-//            return MimeTypes.getDefaultMimeTypes().forName(contentType).getExtension();
-//        } catch (MimeTypeException e) {
-//            throw new BadRequestException("Unsupported file type");
-//        }
-//    }
+    @GetMapping("/events/{eventId}/banner")
+    @ResponseBody
+    @PreAuthorize("hasPermission(#eventId, 'Event', 'read')")
+    public ResponseEntity<Resource> downloadBanner(@PathVariable Long eventId) {
+        Event event = eventService.findById(eventId);
+        return service.prepareFileResponse(event.getBanner());
+    }
+
+    @GetMapping("/memberships/{membershipId}/signature")
+    @ResponseBody
+    @PreAuthorize("hasPermission(#membershipId, 'Membership', 'read')")
+    public ResponseEntity<Resource> downloadSignature(@PathVariable Long membershipId) {
+        Membership membership = membershipService.findById(membershipId);
+        return service.prepareFileResponse(membership.getSignature());
+    }
+
+    @GetMapping("/users/{userId}/profilePicture")
+    @ResponseBody
+    @PreAuthorize("hasPermission(#userId, 'User', 'read')")
+    public ResponseEntity<Resource> downloadProfilePicture(@PathVariable Long userId) {
+        User user = userService.findById(userId);
+        return service.prepareFileResponse(user.getProfilePicture());
+    }
 }

@@ -23,15 +23,12 @@ import java.util.List;
 public class EventService extends BaseModelService<Event, Long, EventRepository> {
 
     private final CalendarService calendarService;
-    private final EventMapper eventMapper;
 
     @Autowired
     public EventService(EventRepository repository,
-                        CalendarService calendarService,
-                        EventMapper eventMapper) {
+                        CalendarService calendarService) {
         super(repository);
         this.calendarService = calendarService;
-        this.eventMapper = eventMapper;
     }
 
     public List<Event> findUpcoming() {

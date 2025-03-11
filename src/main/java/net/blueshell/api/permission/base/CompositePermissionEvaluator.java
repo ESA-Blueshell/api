@@ -1,4 +1,4 @@
-package net.blueshell.api.security.base;
+package net.blueshell.api.permission.base;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;

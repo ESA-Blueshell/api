@@ -9,21 +9,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class MemberService extends BaseModelService<Member, Long, MemberRepository> {
+public class MembershipService extends BaseModelService<Membership, Long, MemberRepository> {
 
     @Autowired
-    public MemberService(MemberRepository repository) {
+    public MembershipService(MemberRepository repository) {
         super(repository);
     }
 
     @Transactional(readOnly = true)
-    public Member findBySignature(File signature) {
+    public Membership findBySignature(File signature) {
         return repository.findBySignature(signature).orElseThrow(() ->
                 new NotFoundException("Member not found for signature: " + signature.getName()));
     }
 
     @Override
-    protected Long extractId(Member entity) {
+    protected Long extractId(Membership entity) {
         return entity.getId();
     }
 }

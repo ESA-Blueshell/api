@@ -1,4 +1,4 @@
-package net.blueshell.api.security.base;
+package net.blueshell.api.permission.base;
 
 import net.blueshell.api.base.AuthorizationBase;
 import net.blueshell.api.base.BaseModelService;

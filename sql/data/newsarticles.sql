@@ -239,7 +239,7 @@ INSERT INTO blueshell.news (creator_id, last_editor_id, news_type, title, conten
 
   <p class="text-h5">
     What do you think about the digitalization of chess taking place and Grand Chessmasters becoming
-    member of Esports associations? Is chess an Esports?
+    membership of Esports associations? Is chess an Esports?
   </p>
   <p class="body-1">
     Of course it is an Esports! Next to the physical chess that we call Over the Board (OTB)¸ there

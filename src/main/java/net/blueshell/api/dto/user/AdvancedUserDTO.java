@@ -10,10 +10,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.blueshell.api.base.DTO;
 import net.blueshell.api.common.enums.MemberType;
 import net.blueshell.api.common.enums.Role;
-import net.blueshell.api.dto.MemberDTO;
+import net.blueshell.api.dto.MembershipDTO;
 import net.blueshell.api.dto.SignatureDTO;
 import net.blueshell.api.validation.group.Administration;
 import net.blueshell.api.validation.group.Creation;
@@ -111,7 +110,7 @@ public class AdvancedUserDTO extends SimpleUserDTO {
     private SignatureDTO signature;
 
     @Valid
-    private MemberDTO member;
+    private MembershipDTO member;
 
     @JsonProperty
     @NotNull(groups = {Member.class, Update.class})

@@ -5,7 +5,7 @@ import jakarta.ws.rs.NotFoundException;
 import net.blueshell.api.base.BaseModelService;
 import net.blueshell.api.common.enums.ResetType;
 import net.blueshell.api.common.enums.Role;
-import net.blueshell.api.model.Member;
+import net.blueshell.api.model.Membership;
 import net.blueshell.api.util.Util;
 import net.blueshell.api.controller.request.ActivationRequest;
 import net.blueshell.api.controller.request.PasswordResetRequest;
@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sendinblue.ApiException;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -42,15 +41,15 @@ public class UserService extends BaseModelService<User, Long, UserRepository> im
 
     private final EmailService emailService;
     private final ContactService contactService;
-    private final MemberService memberService;
+    private final MembershipService membershipService;
     private final RequestMapper requestMapper;
 
     @Autowired
-    public UserService(UserRepository repository, EmailService emailService, ContactService contactService, MemberService memberService, RequestMapper requestMapper) {
+    public UserService(UserRepository repository, EmailService emailService, ContactService contactService, MembershipService membershipService, RequestMapper requestMapper) {
         super(repository);
         this.emailService = emailService;
         this.contactService = contactService;
-        this.memberService = memberService;
+        this.membershipService = membershipService;
         this.requestMapper = requestMapper;
     }
 
@@ -168,16 +167,16 @@ public class UserService extends BaseModelService<User, Long, UserRepository> im
 
         if (isMember) {
             user.addRole(Role.MEMBER);
-            if (user.getMember() == null) {
-                Member member = new Member();
-                member.setStartDate(LocalDate.now());
+            if (user.getMembership() == null) {
+                Membership membership = new Membership();
+                membership.setStartDate(LocalDate.now());
             } else {
-                user.getMember().setEndDate(null);
+                user.getMembership().setEndDate(null);
             }
         } else {
             user.removeRole(Role.MEMBER);
-            if (user.getMember() != null) {
-                user.getMember().setEndDate(LocalDate.now());
+            if (user.getMembership() != null) {
+                user.getMembership().setEndDate(LocalDate.now());
             }
         }
 

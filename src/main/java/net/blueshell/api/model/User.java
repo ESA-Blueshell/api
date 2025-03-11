@@ -17,7 +17,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
@@ -157,7 +156,7 @@ public class User implements UserDetails {
 
     @OneToOne(mappedBy = "user")
     @ToString.Exclude
-    private Member member;
+    private Membership membership;
 
     @OneToOne
     @JoinColumn(name = "creator_id")
@@ -281,10 +280,10 @@ public class User implements UserDetails {
     }
 
     public MemberType getMemberType() {
-        return getMember() != null ? getMember().getMemberType() : null;
+        return getMembership() != null ? getMembership().getMemberType() : null;
     }
 
     public boolean getIncasso(){
-        return getMember() != null && getMember().isIncasso();
+        return getMembership() != null && getMembership().isIncasso();
     }
 }

@@ -8,15 +8,14 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Table(name = "members")
-@SQLDelete(sql = "UPDATE members SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+@Table(name = "memberships")
+@SQLDelete(sql = "UPDATE memberships SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
 @Data
-public class Member {
+public class Membership {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +40,7 @@ public class Member {
     @OneToOne
     private File signature;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "membership")
     private Set<Contribution> contributions;
 
     @Column(name = "incasso", nullable = false)

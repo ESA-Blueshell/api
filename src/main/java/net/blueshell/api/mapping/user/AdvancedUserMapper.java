@@ -3,18 +3,15 @@ package net.blueshell.api.mapping.user;
 import net.blueshell.api.base.BaseMapper;
 import net.blueshell.api.common.enums.Role;
 import net.blueshell.api.dto.user.AdvancedUserDTO;
-import net.blueshell.api.mapping.MemberMapper;
-import net.blueshell.api.model.Member;
+import net.blueshell.api.mapping.MembershipMapper;
+import net.blueshell.api.model.Membership;
 import net.blueshell.api.model.User;
-import net.blueshell.api.service.MemberService;
+import net.blueshell.api.service.MembershipService;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.security.SecureRandom;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.function.BiConsumer;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -27,9 +24,9 @@ public abstract class AdvancedUserMapper extends BaseMapper<User, AdvancedUserDT
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private MemberMapper memberMapper;
+    private MembershipMapper membershipMapper;
     @Autowired
-    private MemberService memberService;
+    private MembershipService membershipService;
 
     public static void applyCreationFields(AdvancedUserDTO dto, User user) {
         applyIfFieldIsNotNull(user, dto.getInitials(), User::setInitials);
@@ -94,18 +91,18 @@ public abstract class AdvancedUserMapper extends BaseMapper<User, AdvancedUserDT
                 user.setCreator(getPrincipal());
             }
 
-            if (dto.getMember() != null && user.getMember() != null) {
-                dto.setId(user.getMember().getId());
-                Member member = memberMapper.fromDTO(dto.getMember());
-                member.setUser(user);
-                memberService.update(member);
-                user.setMember(member);
+            if (dto.getMember() != null && user.getMembership() != null) {
+                dto.setId(user.getMembership().getId());
+                Membership membership = membershipMapper.fromDTO(dto.getMember());
+                membership.setUser(user);
+                membershipService.update(membership);
+                user.setMembership(membership);
             }
 
-            if (dto.getMember() != null && user.getMember() == null) {
-                Member member = memberMapper.fromDTO(dto.getMember());
-                member.setUser(user);
-                memberService.create(member);
+            if (dto.getMember() != null && user.getMembership() == null) {
+                Membership membership = membershipMapper.fromDTO(dto.getMember());
+                membership.setUser(user);
+                membershipService.create(membership);
                 user.addRole(Role.MEMBER);
                 user.setConsentPrivacy(true);
             }

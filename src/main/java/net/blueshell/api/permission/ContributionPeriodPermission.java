@@ -1,4 +1,4 @@
-package net.blueshell.api.security;
+package net.blueshell.api.permission;
 
 public class ContributionPeriodPermission {
 }

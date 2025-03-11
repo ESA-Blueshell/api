@@ -1,9 +1,9 @@
-package net.blueshell.api.security;
+package net.blueshell.api.permission;
 
 import net.blueshell.api.common.enums.Role;
 import net.blueshell.api.model.Event;
 import net.blueshell.api.model.User;
-import net.blueshell.api.security.base.BasePermissionEvaluator;
+import net.blueshell.api.permission.base.BasePermissionEvaluator;
 import net.blueshell.api.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

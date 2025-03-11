@@ -13,6 +13,7 @@ import net.blueshell.api.repository.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,8 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.core.io.Resource;
 
 @Service
@@ -71,7 +74,7 @@ public class FileService extends BaseModelService<File, Long, FileRepository> {
     }
 
 
-    public Resource loadAsResource(File file) {
+    private Resource loadAsResource(File file) {
         try {
             Path filePath = rootLocation.resolve(file.getName());
             Resource resource = new UrlResource(filePath.toUri());
@@ -86,27 +89,25 @@ public class FileService extends BaseModelService<File, Long, FileRepository> {
         }
     }
 
+    @Transactional(readOnly = true)
+    public ResponseEntity<Resource> prepareFileResponse(File file) {
+        Resource resource = loadAsResource(file);
 
-    public UploadFileResponse uploadFile(FileType fileType, String entityName, MultipartFile file, String mimeExtension) throws IOException {
-        // Validate content type
-        String contentType = file.getContentType();
-        if (!fileType.isValidContentType(contentType)) {
-            throw new BadRequestException("Invalid file type for " + fileType.name());
-        }
+        // Set headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.valueOf(file.getMediaType()));
 
-        // Determine file extension
-        String extension = fileType.getFileExtension();
-        if (extension == null) {
-            extension = mimeExtension;
-        }
+        // Use ContentDisposition builder for proper filename handling
+        ContentDisposition disposition = ContentDisposition.attachment()
+                .filename(file.getName())
+                .build();
+        headers.setContentDisposition(disposition);
 
-        String fileName = fileType.generateFileName(entityName, extension);
-
-        byte[] data = file.getBytes();
-        Path filePath = storeFile(fileName, data);
-
-        // Build and return response
-        return new UploadFileResponse(fileName, filePath.toString(), contentType, file.getSize());
+        // Build ResponseEntity with CacheControl
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.DAYS).cachePublic())
+                .headers(headers)
+                .body(resource);
     }
 
     @Override

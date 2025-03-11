@@ -27,7 +27,7 @@ FROM signatures s
          JOIN files f ON s.name = f.name COLLATE utf8mb4_general_ci;
 
 -- Insert data into members using the captured file IDs
-INSERT INTO members (user_id,
+INSERT INTO memberships (user_id,
                      start_date,
                      end_date,
                      type,
@@ -46,7 +46,7 @@ FROM signatures s
          JOIN users u ON u.id = s.user_id;
 
 
-INSERT INTO members (user_id, start_date, end_date, type, city, incasso, signature_id)
+INSERT INTO memberships (user_id, start_date, end_date, type, city, incasso, signature_id)
 SELECT u.id                 AS user_id,
        DATE(u.member_since) AS start_date,
        NULL                 AS end_date,
@@ -54,7 +54,7 @@ SELECT u.id                 AS user_id,
        NULL                 AS city,
        u.incasso            AS incasso,
        NULL                 AS signature_id
-FROM users u WHERE u.member_since <= CURRENT_TIME AND u.id NOT IN (SELECT user_id FROM members);
+FROM users u WHERE u.member_since <= CURRENT_TIME AND u.id NOT IN (SELECT user_id FROM memberships);
 
 
 -- Cleanup temporary table

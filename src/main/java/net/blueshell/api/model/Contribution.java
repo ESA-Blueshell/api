@@ -35,7 +35,7 @@ public class Contribution implements BaseModel {
 
     @ManyToOne
     @JoinColumn(name = "member_id")
-    private Member member;
+    private Membership membership;
 
     @Column(name = "paid")
     private Boolean paid;
