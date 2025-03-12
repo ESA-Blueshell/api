@@ -21,6 +21,6 @@ public abstract class ContributionMapper extends BaseMapper<Contribution, Contri
     @Mapping(target = "deletedAt", ignore = true)
     @Mapping(target = "paid", ignore = true)
     @Mapping(target = "remindedAt", ignore = true)
-    @Mapping(target = "member", ignore = true)
+    @Mapping(target = "membership", ignore = true)
     public abstract Contribution fromDTO(ContributionDTO dto);
 }

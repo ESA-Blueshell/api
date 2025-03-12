@@ -43,9 +43,9 @@ public interface UserRepository extends BaseRepository<User, Long> {
 
     boolean existsByPhoneNumberAndIdNot(String phoneNumber, Long id);
 
-    List<User> findByMemberNotNull();
+    List<User> findByMembershipNotNull();
 
-    Optional<User> findByMemberSignature(File signature);
+    Optional<User> findByMembershipSignature(File signature);
 
     Optional<User> findByProfilePicture(File profilePicture);
 }

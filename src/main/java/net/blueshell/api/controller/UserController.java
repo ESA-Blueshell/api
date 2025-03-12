@@ -5,7 +5,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.PathParam;
 import net.blueshell.api.base.AdvancedController;
-import net.blueshell.api.common.constants.StatusCodes;
 import net.blueshell.api.common.enums.Role;
 import net.blueshell.api.controller.request.ActivationRequest;
 import net.blueshell.api.controller.request.PasswordResetRequest;
@@ -15,18 +14,15 @@ import net.blueshell.api.mapping.user.AdvancedUserMapper;
 import net.blueshell.api.mapping.user.SimpleUserMapper;
 import net.blueshell.api.model.User;
 import net.blueshell.api.service.UserService;
-import net.blueshell.api.validation.group.Administration;
 import net.blueshell.api.validation.group.Creation;
 import net.blueshell.api.validation.group.Update;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sendinblue.ApiException;
 
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -87,7 +83,7 @@ public class UserController extends AdvancedController<UserService, AdvancedUser
     public List<AdvancedUserDTO> getAll(@PathParam("isMember") boolean isMember) {
         List<User> users;
         if (isMember) {
-            users = service.findByMemberNotNull();
+            users = service.findByMembershipNotNull();
         } else {
             users = service.findAll();
         }

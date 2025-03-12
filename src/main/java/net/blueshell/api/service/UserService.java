@@ -87,8 +87,8 @@ public class UserService extends BaseModelService<User, Long, UserRepository> im
         return user.getId();
     }
 
-    public List<User> findByMemberNotNull() {
-        return repository.findByMemberNotNull();
+    public List<User> findByMembershipNotNull() {
+        return repository.findByMembershipNotNull();
     }
 
     @Transactional
@@ -231,7 +231,7 @@ public class UserService extends BaseModelService<User, Long, UserRepository> im
     }
 
     public User findBySignature(File signature) {
-        return repository.findByMemberSignature(signature).orElseThrow(() -> new NotFoundException("User not found for signature: " + signature.getName()));
+        return repository.findByMembershipSignature(signature).orElseThrow(() -> new NotFoundException("User not found for signature: " + signature.getName()));
     }
 
     public User findByProfilePicture(File profilePicture) {
