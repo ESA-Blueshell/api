@@ -3,10 +3,7 @@ package net.blueshell.api.service;
 import net.blueshell.api.base.BaseModelService;
 import net.blueshell.api.dto.EventDTO;
 import net.blueshell.api.mapping.EventMapper;
-import net.blueshell.api.model.Event;
-import net.blueshell.api.model.EventSignUp;
-import net.blueshell.api.model.File;
-import net.blueshell.api.model.User;
+import net.blueshell.api.model.*;
 import net.blueshell.api.repository.EventRepository;
 import net.blueshell.api.service.google.CalendarService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,18 +14,20 @@ import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class EventService extends BaseModelService<Event, Long, EventRepository> {
 
     private final CalendarService calendarService;
+    private final EventPictureService eventPictureService;
 
     @Autowired
     public EventService(EventRepository repository,
-                        CalendarService calendarService) {
+                        CalendarService calendarService, EventPictureService eventPictureService) {
         super(repository);
         this.calendarService = calendarService;
+        this.eventPictureService = eventPictureService;
     }
 
     public List<Event> findUpcoming() {
@@ -104,6 +103,12 @@ public class EventService extends BaseModelService<Event, Long, EventRepository>
     public Event findByBanner(File banner) {
         return repository.findByBanner(banner);
     }
+
+//    public Event findByEventPicture(File picture) {
+//        eventPictureService.findByPicture(picture);
+//        return repository.findByEventPictures(new HashSet<>(Collections.singletonList(picture))));
+//    }/
+
 
     public List<Event> findStartTimeBetween(LocalDateTime from, LocalDateTime to) {
         return repository.findStartTimeBetween(from, to);

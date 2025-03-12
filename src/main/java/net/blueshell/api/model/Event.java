@@ -151,29 +151,4 @@ public class Event implements BaseModel {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-    /**
-     * Checks if this Event is in the given month
-     *
-     * @param month the month is formatted as "yyyy-MM"
-     * @return true if the Event is in the month
-     */
-    public boolean inMonth(String month) {
-        return inRange(month, nextMonth(month));
-    }
-
-    /**
-     * Checks if the Event is in the given range of months (exclusive)
-     *
-     * @param from the month is formatted as "yyyy-MM"
-     * @param to   the month is formatted as "yyyy-MM"
-     * @return true if the Event is in the range
-     */
-    public boolean inRange(String from, String to) {
-        String[] fromSplit = from.split("-");
-        LocalDateTime fromDateTime = LocalDateTime.of(Integer.parseInt(fromSplit[0]), Integer.parseInt(fromSplit[1]), 1, 0, 0);
-        String[] toSplit = to.split("-");
-        LocalDateTime toDateTime = LocalDateTime.of(Integer.parseInt(toSplit[0]), Integer.parseInt(toSplit[1]), 1, 0, 0);
-        return startTime.isAfter(fromDateTime) && startTime.isBefore(toDateTime);
-    }
 }

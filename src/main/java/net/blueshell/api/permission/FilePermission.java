@@ -40,50 +40,43 @@ public class FilePermission extends BasePermissionEvaluator<File, Long, FileServ
 
         return switch (permission) {
             case "read" -> handleReadPermission(file, principal);
-            case "write" -> handleWritePermission(file, principal);
             case "delete" -> handleDeletePermission(file, principal);
             default -> false;
         };
     }
 
     private boolean handleReadPermission(File file, User principal) {
-        switch (file.getFileType()) {
-            case SIGNATURE:
+        return switch (file.getFileType()) {
+            case SIGNATURE -> {
                 User user = userService.findBySignature(file);
-                return user != null && user.equals(principal);
-            case EVENT_BANNER:
+                yield user != null && user.equals(principal);
+            }
+            case EVENT_BANNER -> {
                 Event event = eventService.findByBanner(file);
-                return event != null && (event.isVisible() || event.getCommittee().hasMember(principal));
-            case EVENT_PICTURE:
-                return principal.hasRole(Role.MEMBER);
-            case PROFILE_PICTURE:
-            case DOCUMENT:
-            case SPONSOR_PICTURE:
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    private boolean handleWritePermission(File file, User principal) {
-        if (file.getFileType() == FileType.EVENT_PICTURE) {
-            Event event = eventService.findByBanner(file);
-            return event != null && event.getCommittee().hasMember(principal);
-        }
-        return false;
+                yield event != null && (event.isVisible() || event.getCommittee().hasMember(principal));
+            }
+            case EVENT_PICTURE -> principal.hasRole(Role.MEMBER);
+            case PROFILE_PICTURE, DOCUMENT, SPONSOR_PICTURE -> true;
+            default -> false;
+        };
     }
 
     private boolean handleDeletePermission(File file, User principal) {
-        switch (file.getFileType()) {
-            case EVENT_PICTURE:
+        return switch (file.getFileType()) {
+//            case EVENT_PICTURE -> {
+//                Event event = eventService.findByPicture(file);
+//                yield event != null && event.getCommittee().hasMember(principal);
+//            }
+            case EVENT_BANNER -> {
                 Event event = eventService.findByBanner(file);
-                return event != null && event.getCommittee().hasMember(principal);
-            case PROFILE_PICTURE:
+                yield event != null && event.getCommittee().hasMember(principal);
+            }
+            case PROFILE_PICTURE -> {
                 User user = userService.findByProfilePicture(file);
-                return user != null && user.equals(principal);
-            default:
-                return false;
-        }
+                yield user != null && user.equals(principal);
+            }
+            default -> false;
+        };
     }
 
     @Override
