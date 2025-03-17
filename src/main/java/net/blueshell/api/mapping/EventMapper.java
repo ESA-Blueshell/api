@@ -2,6 +2,7 @@ package net.blueshell.api.mapping;
 
 import net.blueshell.api.base.BaseMapper;
 import net.blueshell.api.dto.EventDTO;
+import net.blueshell.api.mapping.committee.SimpleCommitteeMapper;
 import net.blueshell.api.model.Event;
 import net.blueshell.api.model.File;
 import net.blueshell.api.service.CommitteeService;
@@ -21,6 +22,8 @@ public abstract class EventMapper extends BaseMapper<Event, EventDTO> {
 
     @Autowired
     protected CommitteeService committeeService;
+    @Autowired
+    protected SimpleCommitteeMapper simpleCommitteeMapper;
     @Autowired
     protected FileService fileService;
     @Autowired
@@ -56,4 +59,10 @@ public abstract class EventMapper extends BaseMapper<Event, EventDTO> {
     }
 
     public abstract EventDTO toDTO(Event event);
+
+    public void afterToDTO(Event event, @MappingTarget EventDTO dto) {
+        if (event.getCommittee() != null) {
+            dto.setCommittee(simpleCommitteeMapper.toDTO(event.getCommittee()));
+        }
+    }
 }

@@ -12,8 +12,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.blueshell.api.common.enums.MemberType;
 import net.blueshell.api.common.enums.Role;
+import net.blueshell.api.dto.FileDTO;
 import net.blueshell.api.dto.MembershipDTO;
-import net.blueshell.api.dto.SignatureDTO;
 import net.blueshell.api.validation.group.Administration;
 import net.blueshell.api.validation.group.Creation;
 import net.blueshell.api.validation.group.Member;
@@ -107,7 +107,7 @@ public class AdvancedUserDTO extends SimpleUserDTO {
     @JsonProperty
     @Valid
     @NotNull(groups = {Member.class})
-    private SignatureDTO signature;
+    private FileDTO signature;
 
     @Valid
     private MembershipDTO member;

@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.blueshell.api.base.DTO;
+import net.blueshell.api.dto.committee.SimpleCommitteeDTO;
+import net.blueshell.api.model.Committee;
 import net.blueshell.api.model.FormQuestion;
 
 import java.util.List;
@@ -20,6 +22,9 @@ public class EventDTO extends DTO {
 
     @JsonProperty("committeeId")
     private Long committeeId;
+
+    @JsonProperty("committee")
+    private SimpleCommitteeDTO committee;
 
     @NotBlank(message = "Event title cannot be empty.")
     @Size(max = 200, message = "Event title cannot exceed 200 characters.")
