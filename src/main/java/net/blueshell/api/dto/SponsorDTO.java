@@ -9,7 +9,7 @@ import net.blueshell.api.base.DTO;
 @EqualsAndHashCode(callSuper = false)
 public class SponsorDTO extends DTO {
 
-    private long id;
+    private Long id;
 
     @NotBlank(message = "Sponsor name cannot be blank.")
     private String name;

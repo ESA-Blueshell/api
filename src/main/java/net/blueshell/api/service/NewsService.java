@@ -13,9 +13,4 @@ public class NewsService extends BaseModelService<News, Long, NewsRepository> {
     public NewsService(NewsRepository repository) {
         super(repository);
     }
-
-    @Override
-    protected Long extractId(News news) {
-        return news.getId();
-    }
 }

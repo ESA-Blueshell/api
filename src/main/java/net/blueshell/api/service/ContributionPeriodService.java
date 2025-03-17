@@ -20,10 +20,6 @@ public class ContributionPeriodService extends BaseModelService<ContributionPeri
         this.contactService = contactService;
     }
 
-    @Override
-    protected Long extractId(ContributionPeriod contributionPeriod) {
-        return contributionPeriod.getId();
-    }
 
     @Transactional
     public void createContributionPeriod(ContributionPeriod contributionPeriod) throws ApiException {

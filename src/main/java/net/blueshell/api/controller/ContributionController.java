@@ -4,13 +4,11 @@ import io.swagger.annotations.ApiParam;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.PathParam;
 import net.blueshell.api.base.BaseController;
-import net.blueshell.api.common.constants.StatusCodes;
 import net.blueshell.api.dto.ContributionDTO;
 import net.blueshell.api.mapping.ContributionMapper;
 import net.blueshell.api.model.Contribution;
 import net.blueshell.api.service.ContributionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sendinblue.ApiException;
@@ -61,10 +59,9 @@ public class ContributionController extends BaseController<ContributionService, 
 
     @PreAuthorize("hasAuthority('BOARD')")
     @PutMapping("contributionPeriods/{periodId}/contributions/remind")
-    public ResponseEntity<Object> sendContributionReminder(@PathVariable("periodId") Long periodId) throws ApiException {
+    public void sendContributionReminder(@PathVariable("periodId") Long periodId) throws ApiException {
         List<Contribution> unpaidContributions = service.findByContributionPeriodIdAndPaid(periodId, false);
         service.sendReminder(unpaidContributions);
-        return StatusCodes.OK;
     }
 
     @PreAuthorize("hasAuthority('BOARD')")

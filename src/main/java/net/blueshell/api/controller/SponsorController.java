@@ -31,8 +31,10 @@ public class SponsorController extends BaseController<SponsorService, SponsorMap
 
     @PreAuthorize("hasAuthority('BOARD')")
     @PostMapping()
-    public Sponsor createSponsor(@Valid @RequestBody SponsorDTO dto) {
-        return service.create(mapper.fromDTO(dto));
+    public SponsorDTO createSponsor(@Valid @RequestBody SponsorDTO dto) {
+        Sponsor sponsor = mapper.fromDTO(dto);
+        service.create(sponsor);
+        return mapper.toDTO(sponsor);
     }
 
     @PreAuthorize("hasAuthority('BOARD')")
@@ -42,9 +44,12 @@ public class SponsorController extends BaseController<SponsorService, SponsorMap
         Sponsor sponsor = mapper.fromDTO(dto);
         if (id != null) {
             sponsor.setId(id);
-            return service.update(sponsor);
+            service.update(sponsor);
+        } else {
+            service.create(sponsor);
         }
-        return service.create(sponsor);
+
+        return mapper.toDTO(sponsor);
     }
 
     @PreAuthorize("hasAuthority('BOARD')")

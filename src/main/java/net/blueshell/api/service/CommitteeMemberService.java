@@ -3,9 +3,7 @@ package net.blueshell.api.service;
 import net.blueshell.api.dto.CommitteeMemberDTO;
 import net.blueshell.api.exception.ResourceNotFoundException;
 import net.blueshell.api.mapping.CommitteeMemberMapper;
-import net.blueshell.api.model.Committee;
 import net.blueshell.api.model.CommitteeMember;
-import net.blueshell.api.model.CommitteeMemberId;
 import net.blueshell.api.repository.CommitteeMemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +49,7 @@ public class CommitteeMemberService {
      * @param id CommitteeMember ID.
      * @return CommitteeMember entity.
      */
-    public CommitteeMember findById(CommitteeMemberId id) {
+    public CommitteeMember findById(Long id) {
         return committeeMemberRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("CommitteeMember not found for user id: " + id));
     }
@@ -74,7 +72,7 @@ public class CommitteeMemberService {
      * @param id CommitteeMember ID.
      */
     @Transactional
-    public void delete(CommitteeMemberId id) {
+    public void delete(Long id) {
         CommitteeMember member = findById(id);
         committeeMemberRepository.delete(member);
     }

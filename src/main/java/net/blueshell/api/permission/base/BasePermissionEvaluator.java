@@ -1,6 +1,7 @@
 package net.blueshell.api.permission.base;
 
 import net.blueshell.api.base.AuthorizationBase;
+import net.blueshell.api.base.BaseModel;
 import net.blueshell.api.base.BaseModelService;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.security.core.Authentication;
@@ -9,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-public abstract class BasePermissionEvaluator<T, ID, S extends BaseModelService<T, ID, ?>> extends AuthorizationBase {
+public abstract class BasePermissionEvaluator<T extends BaseModel<ID>, ID, S extends BaseModelService<T, ID, ?>> extends AuthorizationBase {
 
     protected final S service;
     protected final Map<String, BiFunction<T, Authentication, Boolean>> permissionsMap = new HashMap<>() {

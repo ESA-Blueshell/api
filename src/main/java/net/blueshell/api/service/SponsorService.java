@@ -16,11 +16,6 @@ public class SponsorService extends BaseModelService<Sponsor, Long, SponsorRepos
         super(repository);
     }
 
-    @Override
-    protected Long extractId(Sponsor sponsor) {
-        return sponsor.getId();
-    }
-
     public Sponsor findByPicture(File picture) {
         return repository.findByPicture(picture).orElseThrow(() -> new NotFoundException("Sponsor not found for picture: " + picture.getName()));
     }

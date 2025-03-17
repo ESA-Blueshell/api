@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+import net.blueshell.api.base.BaseModel;
 import net.blueshell.api.common.enums.MemberType;
 import net.blueshell.api.common.enums.ResetType;
 import net.blueshell.api.common.enums.Role;
@@ -28,11 +29,11 @@ import java.util.stream.Collectors;
 @SQLDelete(sql = "UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
 @Data
-public class User implements UserDetails {
+public class User implements UserDetails, BaseModel<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column
     private String username;

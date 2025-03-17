@@ -109,9 +109,4 @@ public class FileService extends BaseModelService<File, Long, FileRepository> {
                 .headers(headers)
                 .body(resource);
     }
-
-    @Override
-    protected Long extractId(File entity) {
-        return entity.getId();
-    }
 }

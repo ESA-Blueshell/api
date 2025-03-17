@@ -17,7 +17,6 @@ import net.blueshell.api.service.UserService;
 import net.blueshell.api.validation.group.Creation;
 import net.blueshell.api.validation.group.Update;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -55,27 +54,24 @@ public class UserController extends AdvancedController<UserService, AdvancedUser
     }
 
     @PostMapping(value = "/reset")
-    public ResponseEntity<Object> resetPassword(@RequestParam("username") String username) throws ApiException {
+    public void resetPassword(@RequestParam("username") String username) throws ApiException {
         service.resetPassword(username);
-        return ResponseEntity.ok().build();
     }
 
     @PostMapping(value = "/activate")
     @PreAuthorize("hasPermission(#request, 'User', 'activate')")
-    public ResponseEntity<Object> activate(@Valid @RequestBody ActivationRequest request) {
+    public void activate(@Valid @RequestBody ActivationRequest request) {
         User user = service.findByResetKey(request.getToken());
         requestMapper.fromRequest(request, user);
         service.update(user);
-        return ResponseEntity.ok().build();
     }
 
     @PostMapping(value = "/password")
     @PreAuthorize("hasPermission(#request, 'User', 'password')")
-    public ResponseEntity<Object> setPassword(@Valid @RequestBody PasswordResetRequest request) {
+    public void setPassword(@Valid @RequestBody PasswordResetRequest request) {
         User user = service.findByResetKey(request.getToken());
         requestMapper.fromRequest(request, user);
         service.update(user);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping

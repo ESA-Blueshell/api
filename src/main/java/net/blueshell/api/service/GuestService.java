@@ -23,9 +23,4 @@ public class GuestService extends BaseModelService<Guest, Long, GuestRepository>
         return repository.findByAccessToken(accessToken)
                 .orElseThrow(() -> new ResourceNotFoundException("Guest not found with accessToken: " + accessToken));
     }
-
-    @Override
-    protected Long extractId(Guest guest) {
-        return guest.getId();
-    }
 }

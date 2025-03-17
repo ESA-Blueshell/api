@@ -17,16 +17,14 @@ public class CommitteeService extends BaseModelService<Committee, Long, Committe
     @Autowired
     public CommitteeService(CommitteeRepository repository, UserService userService) {
         super(repository);
+        this.userService = userService;
     }
 
-    @Override
-    protected Long extractId(Committee committee) {
-        return committee.getId();
-    }
 
     public void createCommittee(Committee committee) {
-        repository.save(committee);
+        create(committee);
         for (CommitteeMember member : committee.getMembers()) {
+            System.out.println("member: " + member);
             User user = member.getUser();
             userService.addRole(user, Role.COMMITTEE);
         }

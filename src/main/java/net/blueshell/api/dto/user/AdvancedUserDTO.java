@@ -39,7 +39,7 @@ import java.util.Set;
 public class AdvancedUserDTO extends SimpleUserDTO {
 
     @NotNull(groups = {Update.class})
-    private long id;
+    private Long id;
 
     @JsonProperty
     @NotBlank(groups = {Creation.class, Administration.class})

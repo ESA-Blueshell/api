@@ -1,6 +1,9 @@
 package net.blueshell.api.base;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import net.blueshell.api.exception.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -8,7 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public abstract class BaseModelService<T, ID, R extends BaseRepository<T,ID>> extends AuthorizationBase {
+public abstract class BaseModelService<T extends BaseModel<ID>, ID, R extends BaseRepository<T,ID>> extends AuthorizationBase {
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     protected R repository;
     public BaseModelService(R repository) {
@@ -16,28 +22,27 @@ public abstract class BaseModelService<T, ID, R extends BaseRepository<T,ID>> ex
     }
 
     @Transactional
-    public T create(T entity) {
+    public void create(T entity) {
         preCreate(entity);
-        T savedEntity = repository.save(entity);
-        postCreate(savedEntity);
-        return savedEntity;
+        repository.saveAndFlush(entity);
+        postCreate(entity);
     }
 
+
     @Transactional
-    public T update(T entity) {
+    public void update(T entity) {
         preUpdate(entity);
-        ID id = extractId(entity);
+        ID id = entity.getId();
         if (id != null && !repository.existsById(id)) {
             throw new RuntimeException("Entity not found with id: " + id);
         }
-        T savedEntity = repository.save(entity);
-        postUpdate(savedEntity);
-        return savedEntity;
+        repository.saveAndFlush(entity);
+        postUpdate(entity);
     }
 
     @Transactional
-    public List<T> updateAll(List<T> entities) {
-        return entities.stream().map(this::update).toList();
+    public void updateAll(List<T> entities) {
+        entities.forEach(this::update);
     }
 
 
@@ -104,13 +109,4 @@ public abstract class BaseModelService<T, ID, R extends BaseRepository<T,ID>> ex
             throw new UnsupportedOperationException("Repository does not support Specifications");
         }
     }
-
-    /**
-     * Utility method to extract the ID from an entity.
-     * <p>
-     * Concrete classes should override this if they know how to extract the ID from entity T,
-     * or you may introduce a common interface for entities that provides a getId() method.
-     * </p>
-     */
-    protected abstract ID extractId(T entity);
 }

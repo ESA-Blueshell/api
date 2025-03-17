@@ -1,4 +1,7 @@
 package net.blueshell.api.base;
 
-public interface BaseModel {
+import java.io.Serializable;
+
+public interface BaseModel<ID> {
+    ID getId();
 }

@@ -15,11 +15,11 @@ import java.util.Objects;
 @SQLDelete(sql = "UPDATE news SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
 @Data
-public class News implements BaseModel {
+public class News  implements BaseModel<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @OneToOne
     @JoinColumn(name = "creator_id")

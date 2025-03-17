@@ -67,23 +67,17 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/authenticate",
-                                "/users/create",
                                 "/users/activate",
-                                "/members/create",
-                                "/members/activate",
                                 "/users/password"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET,
-                                "/news/**",
                                 "/events/**",
                                 "/download/**",
-                                "/news**",
                                 "/committees**",
                                 "/contributionPeriods"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/events/signups/*/guest").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/events/*/signups/*").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/events/*/signups/*").permitAll()
+                        .requestMatchers(HttpMethod.POST,
+                                "/events/signups/*/guest", "/users").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex

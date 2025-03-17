@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,10 +43,10 @@ public class EventController extends BaseController<EventService, EventMapper> {
 
     @PreAuthorize("hasAuthority('COMMITTEE')")
     @PostMapping
-    public ResponseEntity<EventDTO> createEvent(@Valid @RequestBody EventDTO eventDTO) throws IOException {
+    public EventDTO createEvent(@Valid @RequestBody EventDTO eventDTO) throws IOException {
         Event event = mapper.fromDTO(eventDTO);
         service.createEvent(event);
-        return ResponseEntity.ok(mapper.toDTO(event));
+        return mapper.toDTO(event);
     }
 
     @GetMapping("/{id}")
@@ -66,9 +65,6 @@ public class EventController extends BaseController<EventService, EventMapper> {
             @RequestParam(required = false) OffsetDateTime from,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             @RequestParam(required = false) OffsetDateTime to) {
-        System.out.println(fileService.findAll());
-        System.out.println(userService.findAll());
-        System.out.println(eventSignUpService.findAll());
         List<Event> events = service.findStartTimeBetween(from.toLocalDateTime(), to.toLocalDateTime());
         return mapper.toDTOs(events);
     }

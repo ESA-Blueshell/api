@@ -21,9 +21,4 @@ public class MembershipService extends BaseModelService<Membership, Long, Member
         return repository.findBySignature(signature).orElseThrow(() ->
                 new NotFoundException("Member not found for signature: " + signature.getName()));
     }
-
-    @Override
-    protected Long extractId(Membership entity) {
-        return entity.getId();
-    }
 }

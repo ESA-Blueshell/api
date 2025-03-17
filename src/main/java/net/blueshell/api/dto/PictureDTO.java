@@ -7,7 +7,7 @@ import net.blueshell.api.base.DTO;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class PictureDTO extends DTO {
-    private long id;
+    private Long id;
     private String name;
     private String url;
     private long uploaderId;

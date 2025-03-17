@@ -82,11 +82,6 @@ public class UserService extends BaseModelService<User, Long, UserRepository> im
         return repository.existsByPhoneNumber(phoneNumber);
     }
 
-    @Override
-    protected Long extractId(User user) {
-        return user.getId();
-    }
-
     public List<User> findByMembershipNotNull() {
         return repository.findByMembershipNotNull();
     }

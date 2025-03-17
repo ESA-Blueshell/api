@@ -23,9 +23,4 @@ public class EventPictureService extends BaseModelService<EventPicture, Long, Ev
     public EventPictureService(EventPictureRepository repository) {
         super(repository);
     }
-
-    @Override
-    protected Long extractId(EventPicture eventPicture) {
-        return eventPicture.getId();
-    }
 }

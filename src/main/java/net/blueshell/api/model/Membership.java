@@ -3,6 +3,7 @@ package net.blueshell.api.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+import net.blueshell.api.base.BaseModel;
 import net.blueshell.api.common.enums.MemberType;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -15,7 +16,7 @@ import java.util.Set;
 @SQLDelete(sql = "UPDATE memberships SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
 @Data
-public class Membership {
+public class Membership implements BaseModel<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

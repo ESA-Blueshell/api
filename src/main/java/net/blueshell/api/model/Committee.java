@@ -17,11 +17,11 @@ import java.util.Set;
 @Data
 @SQLDelete(sql = "UPDATE committees SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
-public class Committee implements BaseModel {
+public class Committee implements BaseModel<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "name")
     private String name;
@@ -29,7 +29,7 @@ public class Committee implements BaseModel {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "committee")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "committee", orphanRemoval = true)
     private Set<CommitteeMember> members;
 
     @Column(name = "deleted_at")
@@ -61,12 +61,6 @@ public class Committee implements BaseModel {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public boolean hasMember(String username) {
-        return getMembers().stream()
-                .map(CommitteeMember::getUser)
-                .anyMatch(user -> user.getUsername().equalsIgnoreCase(username));
     }
 
     public boolean hasMember(User user) {

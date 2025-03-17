@@ -4,6 +4,7 @@ import net.blueshell.api.base.BaseMapper;
 import net.blueshell.api.dto.committee.AdvancedCommitteeDTO;
 import net.blueshell.api.mapping.CommitteeMemberMapper;
 import net.blueshell.api.model.Committee;
+import net.blueshell.api.model.CommitteeMember;
 import net.blueshell.api.repository.CommitteeMemberRepository;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 @Mapper(
         componentModel = "spring",
@@ -22,9 +24,6 @@ public abstract class AdvancedCommitteeMapper extends BaseMapper<Committee, Adva
 
     @Autowired
     protected CommitteeMemberMapper memberMapper;
-    @Autowired
-    protected CommitteeMemberRepository committeeMemberRepository;
-
 
     @Mapping(target = "members", ignore = true)
     public abstract Committee fromDTO(AdvancedCommitteeDTO dto);
@@ -33,24 +32,9 @@ public abstract class AdvancedCommitteeMapper extends BaseMapper<Committee, Adva
     protected void afterFromDTO(AdvancedCommitteeDTO dto,
                                 @MappingTarget Committee committee) {
         if (dto.getMembers() != null) {
-            // Option 1
-//            HashSet<CommitteeMember> newMembers = new HashSet<>(memberMapper.fromDTOList(dto.getMembers(), committee));
-//            HashSet<CommitteeMember> oldMembers = new HashSet<>(committee.getMembers());
-//
-//            HashSet<CommitteeMember> membersToRemove = new HashSet<>(oldMembers);
-//            membersToRemove.removeAll(newMembers);
-//
-//            HashSet<CommitteeMember> membersToAdd = new HashSet<>(newMembers);
-//            membersToAdd.removeAll(oldMembers);
-//
-//            committeeMemberRepository.deleteAll(membersToRemove);
-//            committeeMemberRepository.saveAll(membersToAdd);
-
-            // Option 2
-
-            committee.setMembers(
-                    new HashSet<>(memberMapper.fromDTOs(dto.getMembers()))
-            );
+            List<CommitteeMember> members = memberMapper.fromDTOs(dto.getMembers());
+            members.forEach(member -> member.setCommittee(committee));
+            committee.setMembers(new HashSet<>(members));
         }
     }
 

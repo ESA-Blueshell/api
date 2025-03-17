@@ -18,7 +18,6 @@ public abstract class SimpleUserMapper extends BaseMapper<User, SimpleUserDTO> {
     public abstract SimpleUserDTO toDTO(User user);
 
     @InheritInverseConfiguration(name = "toDTO")
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "roles", ignore = true)
     @Mapping(target = "profilePicture", ignore = true)
     @Mapping(target = "committeeMembers", ignore = true)

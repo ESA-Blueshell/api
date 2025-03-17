@@ -95,11 +95,6 @@ public class EventService extends BaseModelService<Event, Long, EventRepository>
         repository.delete(event);
     }
 
-    @Override
-    protected Long extractId(Event event) {
-        return event.getId();
-    }
-
     public Event findByBanner(File banner) {
         return repository.findByBanner(banner);
     }

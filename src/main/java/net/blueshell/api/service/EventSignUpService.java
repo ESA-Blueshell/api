@@ -29,12 +29,6 @@ public class EventSignUpService extends BaseModelService<EventSignUp, Long, Even
         this.emailService = emailService;
     }
 
-    @Override
-    protected Long extractId(EventSignUp eventSignUp) {
-        return eventSignUp.getId();
-    }
-
-
     @Transactional(readOnly = true)
     public EventSignUp findByUserAndEventId(User user, Long eventId) {
         return repository.findByUserAndEventId(user, eventId)
@@ -55,7 +49,8 @@ public class EventSignUpService extends BaseModelService<EventSignUp, Long, Even
         if (signUp.getGuest() != null) {
             emailService.sendEventSignupEmail(signUp);
         }
-        return create(signUp);
+        create(signUp);
+        return signUp;
     }
 
     @Transactional(readOnly = true)

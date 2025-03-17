@@ -22,7 +22,7 @@ import net.blueshell.api.base.DTO;
 public class SimpleUserDTO extends DTO {
 
     @JsonProperty
-    private long id;
+    private Long id;
 
     @JsonProperty
     private String username;

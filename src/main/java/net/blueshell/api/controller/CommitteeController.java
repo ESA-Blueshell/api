@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import jakarta.ws.rs.NotFoundException;
 import net.blueshell.api.base.AdvancedController;
 import net.blueshell.api.base.DTO;
-import net.blueshell.api.common.constants.StatusCodes;
 import net.blueshell.api.common.enums.Role;
 import net.blueshell.api.dto.committee.AdvancedCommitteeDTO;
 import net.blueshell.api.mapping.committee.AdvancedCommitteeMapper;
@@ -41,6 +40,7 @@ public class CommitteeController extends AdvancedController<CommitteeService, Ad
     @PostMapping("/committees")
     public DTO createCommittee(@Valid @RequestBody AdvancedCommitteeDTO advancedCommitteeDTO) {
         Committee committee = advancedMapper.fromDTO(advancedCommitteeDTO);
+        System.out.println("committee: " + committee);
         service.createCommittee(committee);
         return advancedMapper.toDTO(committee);
     }
@@ -58,8 +58,6 @@ public class CommitteeController extends AdvancedController<CommitteeService, Ad
 
         advancedCommitteeDTO.setId(committeeId);
         Committee newCommittee = advancedMapper.fromDTO(advancedCommitteeDTO);
-        System.out.println("advanedCommittee: " + advancedCommitteeDTO);
-        System.out.println("oldCommittee: " + oldCommittee);
         System.out.println("newCommittee: " + newCommittee);
         service.update(newCommittee);
         return advancedMapper.toDTO(newCommittee);
@@ -67,8 +65,7 @@ public class CommitteeController extends AdvancedController<CommitteeService, Ad
 
     @PreAuthorize("hasPermission(#committeeId, 'Committee', 'delete')")
     @DeleteMapping(value = "/committees/{committeeId}")
-    public Object deleteCommitteeById(@PathVariable("committeeId") Long committeeId) {
+    public void deleteCommitteeById(@PathVariable("committeeId") Long committeeId) {
         service.deleteById(committeeId);
-        return StatusCodes.OK;
     }
 }

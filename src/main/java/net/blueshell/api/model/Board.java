@@ -2,6 +2,7 @@ package net.blueshell.api.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import net.blueshell.api.base.BaseModel;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -13,11 +14,11 @@ import java.util.Set;
 @SQLRestriction("deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE boards SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @Data
-public class Board {
+public class Board implements BaseModel<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "name")
     private String name;

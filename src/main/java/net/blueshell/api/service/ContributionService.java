@@ -41,11 +41,6 @@ public class ContributionService extends BaseModelService<Contribution, Long, Co
         repository.deleteByContributionPeriod(contributionPeriod);
     }
 
-    @Override
-    protected Long extractId(Contribution contribution) {
-        return contribution.getId();
-    }
-
     @Transactional
     public void createContribution(Contribution contribution) throws ApiException {
         create(contribution); // May fail so do this before any other steps

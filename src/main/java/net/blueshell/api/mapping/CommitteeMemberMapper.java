@@ -4,6 +4,7 @@ import net.blueshell.api.base.BaseMapper;
 import net.blueshell.api.dto.CommitteeMemberDTO;
 import net.blueshell.api.mapping.user.SimpleUserMapper;
 import net.blueshell.api.model.CommitteeMember;
+import net.blueshell.api.model.User;
 import net.blueshell.api.service.CommitteeService;
 import net.blueshell.api.service.UserService;
 import org.mapstruct.*;
@@ -16,8 +17,6 @@ public abstract class CommitteeMemberMapper extends BaseMapper<CommitteeMember, 
     protected SimpleUserMapper simpleUserMapper; // Field injection instead of constructor
     @Autowired
     protected UserService userService;
-    @Autowired
-    protected CommitteeService committeeService;
 
 
     @Mapping(target = "user", ignore = true)
@@ -31,6 +30,7 @@ public abstract class CommitteeMemberMapper extends BaseMapper<CommitteeMember, 
     }
 
     @Mapping(target = "user", ignore = true)
+    @Mapping(target = "committee", ignore = true)
     @Mapping(target = "role", source = "dto.role")
     public abstract CommitteeMember fromDTO(CommitteeMemberDTO dto);
 
@@ -38,9 +38,6 @@ public abstract class CommitteeMemberMapper extends BaseMapper<CommitteeMember, 
     protected void afterFromDTO(CommitteeMemberDTO dto, @MappingTarget CommitteeMember member) {
         if (dto.getUser() != null) {
             member.setUser(userService.findById(dto.getUser().getId()));
-        }
-        if (dto.getCommitteeId() != null) {
-            member.setCommittee(committeeService.findById(dto.getCommitteeId()));
         }
     }
 }

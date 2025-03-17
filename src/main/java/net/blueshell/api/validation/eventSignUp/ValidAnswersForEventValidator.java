@@ -4,7 +4,6 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import net.blueshell.api.dto.EventSignUpDTO;
 import net.blueshell.api.model.Event;
-import net.blueshell.api.model.FormAnswer;
 import net.blueshell.api.model.FormQuestion;
 import net.blueshell.api.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 @EqualsAndHashCode(callSuper = false)
 public class GuestDTO extends DTO {
 
-    private long id;
+    private Long id;
 
     private String name;
 

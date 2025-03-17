@@ -1,0 +1,3 @@
+ALTER TABLE committee_members
+    ADD COLUMN id BIGINT NOT NULL AUTO_INCREMENT,
+    ADD PRIMARY KEY (id);
