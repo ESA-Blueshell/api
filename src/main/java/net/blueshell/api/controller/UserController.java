@@ -110,7 +110,15 @@ public class UserController extends AdvancedController<UserService, AdvancedUser
     @PutMapping(value = "/{userId}/roles")
     @PreAuthorize("hasPermission(#userId, 'User', 'changeRole')")
     public AdvancedUserDTO toggleRole(@ApiParam(name = "Id of the user") @PathVariable("userId") Long userId,
-                                      @NotBlank @RequestParam(value = "role", required = true) Role role) {
+                                      @RequestParam(value = "role", required = true) Role role) {
+        User user = service.toggleRole(userId, role);
+        return advancedMapper.toDTO(user);
+    }
+
+    @PutMapping(value = "/{userId}/membership/toggle")
+    @PreAuthorize("hasPermission(#userId, 'User', 'changeRole')")
+    public AdvancedUserDTO toggleMembership(@ApiParam(name = "Id of the user") @PathVariable("userId") Long userId,
+                                      @RequestParam(value = "role", required = true) Role role) {
         User user = service.toggleRole(userId, role);
         return advancedMapper.toDTO(user);
     }
