@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Output file
-OUTPUT_FILE="java_code.txt"
+OUTPUT_FILE="controller.txt"
 
 # Clear the output file if it already exists
 > "$OUTPUT_FILE"

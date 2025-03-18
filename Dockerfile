@@ -1,6 +1,6 @@
 # Build stage
 FROM maven:3.9.9-eclipse-temurin-23 AS build
-WORKDIR /usr/app
+WORKDIR /app
 
 # Cache dependencies
 COPY pom.xml .
@@ -13,7 +13,7 @@ RUN mvn clean package -DskipTests && \
 
 # Runtime stage
 FROM eclipse-temurin:23-jre
-WORKDIR /usr/app
-COPY --from=build /usr/app/target/app.jar ./app.jar
+WORKDIR /app
+COPY --from=build /app/target/app.jar ./app.jar
 EXPOSE 8080
 CMD ["java", "-jar", "app.jar"]
