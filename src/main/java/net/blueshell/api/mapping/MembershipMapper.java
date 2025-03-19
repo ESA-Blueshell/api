@@ -5,12 +5,11 @@ import net.blueshell.api.base.BaseMapper;
 import net.blueshell.api.dto.FileDTO;
 import net.blueshell.api.dto.MembershipDTO;
 import net.blueshell.api.common.enums.FileType;
+import net.blueshell.api.mapping.user.SimpleUserMapper;
 import net.blueshell.api.model.File;
 import net.blueshell.api.model.Membership;
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import net.blueshell.api.service.UserService;
+import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
@@ -20,6 +19,9 @@ public abstract class MembershipMapper extends BaseMapper<Membership, Membership
 
     @Autowired
     private FileMapper fileMapper;
+
+    @Autowired
+    private UserService userService;
 
     public abstract MembershipDTO toDTO(Membership membership);
 
@@ -35,6 +37,9 @@ public abstract class MembershipMapper extends BaseMapper<Membership, Membership
         }
         if (membership.getStartDate() == null) {
             membership.setStartDate(LocalDate.now());
+        }
+        if (dto.getUserId() != null) {
+            membership.setUser(userService.findById(dto.getUserId()));
         }
     }
 }
