@@ -39,13 +39,13 @@ public class EventSignUpController extends BaseController<EventSignUpService, Ev
         return mapper.toDTOs(eventSignUps.stream()).toList();
     }
 
-    @GetMapping(value = "/events/{id}/signups")
-    @PreAuthorize("hasPermission(#eventId, 'EventSignup', 'edit') || hasPermission(#eventId, 'Guest', 'Edit')")
-    public EventSignUpDTO getSignUp(@PathVariable("id") @NotBlank Long eventId) {
-        User user = getPrincipal();
-        EventSignUp signUp = service.findByUserAndEventId(user, eventId);
-        return mapper.toDTO(signUp);
-    }
+//    @GetMapping(value = "/events/signups/{id}")
+//    @PreAuthorize("hasPermission(#eventId, 'EventSignup', 'edit') || hasPermission(#eventId, 'Guest', 'Edit')")
+//    public EventSignUpDTO getSignUp(@PathVariable("id") @NotBlank Long eventId) {
+//        User user = getPrincipal();
+//        EventSignUp signUp = service.findByUserAndEventId(user, eventId);
+//        return mapper.toDTO(signUp);
+//    }
 
     @GetMapping(value = "/events/signups/byAccessToken/{accessToken}")
     @PreAuthorize("hasPermission(#accessToken, 'Guest', 'see')")

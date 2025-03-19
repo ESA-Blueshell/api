@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class CommitteeMemberMapper extends BaseMapper<CommitteeMember, CommitteeMemberDTO> {
 
     @Autowired
-    protected SimpleUserMapper simpleUserMapper; // Field injection instead of constructor
+    protected SimpleUserMapper simpleUserMapper;
     @Autowired
     protected UserService userService;
 
