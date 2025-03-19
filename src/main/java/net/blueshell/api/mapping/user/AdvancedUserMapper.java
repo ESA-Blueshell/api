@@ -54,6 +54,13 @@ public abstract class AdvancedUserMapper extends BaseMapper<User, AdvancedUserDT
     @Mapping(target = "fullName", expression = "java(user.getFullName())")
     public abstract AdvancedUserDTO toDTO(User user);
 
+    @AfterMapping
+    protected void afterToDto(User user, @MappingTarget AdvancedUserDTO dto) {
+        if (user.getMembership() != null) {
+            dto.setMembership(membershipMapper.toDTO(user.getMembership()));
+        }
+    }
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "initials", ignore = true)
     @Mapping(target = "firstName", ignore = true)
@@ -91,16 +98,16 @@ public abstract class AdvancedUserMapper extends BaseMapper<User, AdvancedUserDT
                 user.setCreator(getPrincipal());
             }
 
-            if (dto.getMember() != null && user.getMembership() != null) {
+            if (dto.getMembership() != null && user.getMembership() != null) {
                 dto.setId(user.getMembership().getId());
-                Membership membership = membershipMapper.fromDTO(dto.getMember());
+                Membership membership = membershipMapper.fromDTO(dto.getMembership());
                 membership.setUser(user);
                 membershipService.update(membership);
                 user.setMembership(membership);
             }
 
-            if (dto.getMember() != null && user.getMembership() == null) {
-                Membership membership = membershipMapper.fromDTO(dto.getMember());
+            if (dto.getMembership() != null && user.getMembership() == null) {
+                Membership membership = membershipMapper.fromDTO(dto.getMembership());
                 membership.setUser(user);
                 membershipService.create(membership);
                 user.addRole(Role.MEMBER);

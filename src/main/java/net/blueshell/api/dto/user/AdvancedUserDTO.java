@@ -110,7 +110,7 @@ public class AdvancedUserDTO extends SimpleUserDTO {
     private FileDTO signature;
 
     @Valid
-    private MembershipDTO member;
+    private MembershipDTO membership;
 
     @JsonProperty
     @NotNull(groups = {Member.class, Update.class})
@@ -136,10 +136,6 @@ public class AdvancedUserDTO extends SimpleUserDTO {
     private boolean incasso;
 
     @JsonProperty
-    @NotNull(groups = {Administration.class})
-    private MemberType memberType;
-
-    @JsonProperty
     private Timestamp createdAt;
 
     @JsonProperty
@@ -147,6 +143,9 @@ public class AdvancedUserDTO extends SimpleUserDTO {
 
     @JsonProperty
     private String study;
+
+    @JsonProperty
+    private String studentNumber;
 
     @JsonProperty
     @JsonIgnore
