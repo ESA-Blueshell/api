@@ -36,4 +36,10 @@
 credentials.json
 .vscode/settings.json
 src/main/resources/hibernate.cfg.xml
+src/main/resources/application-dev.yaml
+src/main/resources/application-test.yml
+
 .mvn/
+Dockerfile
+api-deployment.yaml
+api-service.yaml
