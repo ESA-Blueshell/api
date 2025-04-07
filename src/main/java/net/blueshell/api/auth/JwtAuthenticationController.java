@@ -1,58 +1,58 @@
 package net.blueshell.api.auth;
 
-import net.blueshell.api.auth.model.JwtRequest;
-import net.blueshell.api.auth.model.JwtResponse;
-import net.blueshell.api.business.user.Role;
+import jakarta.validation.Valid;
+import net.blueshell.api.common.enums.Role;
+import net.blueshell.api.controller.request.JwtRequest;
+import net.blueshell.api.controller.response.JwtResponse;
+import net.blueshell.api.model.User;
+import net.blueshell.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.*;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
 public class JwtAuthenticationController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final UserService userService;
+    @Value("${app.jwt.expiration}")
+    public Long expiration;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    public JwtAuthenticationController(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil, UserService userService) {
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.userService = userService;
+    }
 
-    @Autowired
-    private JwtUserDetailsService userDetailsService;
-
-    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+    @PostMapping(value = "/authenticate")
+    public ResponseEntity<JwtResponse> createAuthenticationToken(@Valid @RequestBody JwtRequest authenticationRequest) {
 
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
-        var user = userDetailsService
-                .loadUserByUsername(authenticationRequest.getUsername());
+        User user = userService.findByUsername(authenticationRequest.getUsername());
 
         var token = jwtTokenUtil.generateToken(user);
 
-        var expiration = System.currentTimeMillis() + JwtTokenUtil.JWT_TOKEN_VALIDITY;
+        var expirationTime = System.currentTimeMillis() + expiration;
 
         Set<Role> roles = user.getRoles();
         //Add all inherited roles
-        roles.addAll(roles.stream().flatMap(role -> role.getAllInheritedRoles().stream()).collect(Collectors.toList()));
-        return ResponseEntity.ok(new JwtResponse(token, user.getId(), user.getUsername(), expiration, roles));
+        roles.addAll(roles.stream().flatMap(role -> role.getAllInheritedRoles().stream()).toList());
+        return ResponseEntity.ok(new JwtResponse(token, user.getId(), user.getUsername(), expirationTime, roles));
     }
 
-    private void authenticate(String username, String password) throws Exception {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        } catch (DisabledException e) {
-            throw new Exception("USER_DISABLED", e);
-        } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("WHAT???", e);
-        }
+    private void authenticate(String username, String password) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
     }
-
 }

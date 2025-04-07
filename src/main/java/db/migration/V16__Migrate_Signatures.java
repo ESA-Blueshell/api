@@ -90,8 +90,7 @@ public class V16__Migrate_Signatures extends BaseJavaMigration {
         try (Statement statement = connection.createStatement()) {
 
             // Step 1: Create the 'signatures' table
-            String createSignaturesTable = ""
-                    + "CREATE TABLE signatures ("
+            String createSignaturesTable = "CREATE TABLE signatures ("
                     + "    id BIGINT NOT NULL AUTO_INCREMENT,"
                     + "    name VARCHAR(255),"
                     + "    url VARCHAR(255),"
@@ -105,8 +104,7 @@ public class V16__Migrate_Signatures extends BaseJavaMigration {
             statement.execute(createSignaturesTable);
 
             // Step 2: Move signatures from 'pictures' to 'signatures' table
-            String insertIntoSignatures = ""
-                    + "INSERT INTO signatures (name, url, created_at, user_id, date, city) "
+            String insertIntoSignatures = "INSERT INTO signatures (name, url, created_at, user_id, date, city) "
                     + "SELECT p.name, p.url, p.created_at, u.id, u.signature_date, u.signature_city "
                     + "FROM pictures p "
                     + "JOIN users u ON u.signature_id = p.id;";
@@ -117,15 +115,13 @@ public class V16__Migrate_Signatures extends BaseJavaMigration {
             statement.execute(dropForeignKeyConstraint);
 
             // Step 4: Delete the signatures entries from the 'pictures' table
-            String deleteFromPictures = ""
-                    + "DELETE p "
+            String deleteFromPictures = "DELETE p "
                     + "FROM pictures p "
                     + "WHERE p.id IN (SELECT signature_id FROM users);";
             statement.executeUpdate(deleteFromPictures);
 
             // Step 5: Drop the 'signature_id', 'signature_city', and 'signature_date' columns from 'users' table
-            String alterUsersTable = ""
-                    + "ALTER TABLE users "
+            String alterUsersTable = "ALTER TABLE users "
                     + "DROP COLUMN signature_id, "
                     + "DROP COLUMN signature_city, "
                     + "DROP COLUMN signature_date;";

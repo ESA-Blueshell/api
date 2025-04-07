@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: api
+
+app:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration: 86400000
+
+frontend:
+  url: ${FRONTEND_URL}
+
+storage:
+  location: ./uploads

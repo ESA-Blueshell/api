@@ -1,13 +1,17 @@
 package net.blueshell.api.controller;
 
-import net.blueshell.api.storage.StorageService;
-import net.blueshell.api.storage.UploadFileResponse;
+import net.blueshell.api.base.BaseController;
+import net.blueshell.api.model.*;
+import net.blueshell.api.repository.FileRepository;
+import net.blueshell.api.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.concurrent.TimeUnit;
 
@@ -16,98 +20,59 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Controller
-public class FileController {
+public class FileController extends BaseController<FileService, FileRepository> {
 
-    private final StorageService storageService;
+    private final UserService userService;
+    private final EventService eventService;
+    private final MembershipService membershipService;
+    private final EventPictureService eventPictureService;
 
-    public FileController(StorageService storageService) {
-        this.storageService = storageService;
+    @Autowired
+    public FileController(FileService service, FileRepository repository, UserService userService, EventService eventService, MembershipService membershipService, EventPictureService eventPictureService) {
+        super(service, repository);
+        this.userService = userService;
+        this.eventService = eventService;
+        this.membershipService = membershipService;
+        this.eventPictureService = eventPictureService;
     }
 
     @GetMapping("/download/{filename:.+}")
     @ResponseBody
+    @PreAuthorize("hasPermission(#filename, 'File', 'read')")
     public ResponseEntity<Resource> downloadFile(@PathVariable String filename) {
-        if (filename.startsWith("signatures")) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
-        Resource resource = storageService.loadAsResource(filename);
-
-        HttpHeaders headers = new HttpHeaders();
-        // If the file is a pdf, open it in a new tab
-        if (filename.endsWith(".pdf")) {
-            headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.add("content-disposition", "inline;filename=\"" + resource.getFilename() + "\"");
-        } else if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png")) {
-            headers.setContentType(MediaType.IMAGE_JPEG);
-            headers.add("content-disposition", "inline;filename=\"" + resource.getFilename() + "\"");
-        } else {
-            headers.add("content-disposition", "attachment;filename=\"" + resource.getFilename() + "\"");
-        }
-        return ResponseEntity
-                .ok()
-                .cacheControl(CacheControl.maxAge(10, TimeUnit.DAYS).cachePublic())
-                .headers(headers)
-                .body(resource);
+        File file = service.findByName(filename);
+        return service.prepareFileResponse(file);
     }
 
-    @PostMapping("/upload")
-    @PreAuthorize("hasAuthority('COMMITTEE')")
+    @GetMapping("/eventPictures/{eventPictureId}")
     @ResponseBody
-    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
-        String filename = storageService.store(file);
-
-        assert filename != null;
-        String uri = storageService.getDownloadURI(filename);
-
-        return new UploadFileResponse(filename, uri, file.getContentType(), file.getSize());
+    @PreAuthorize("hasAuthority('MEMBER')")
+    public ResponseEntity<Resource> downloadEventPicture(@PathVariable Long eventPictureId) {
+        EventPicture eventPicture = eventPictureService.findById(eventPictureId);
+        return service.prepareFileResponse(eventPicture.getPicture());
     }
 
-
-    @GetMapping("/bazinga")
+    @GetMapping("/events/{eventId}/banner")
     @ResponseBody
-    public String getHtml() {
-        return "<!DOCTYPE html>\n" +
-                "<html lang=\"en\">\n" +
-                "<head>\n" +
-                "  <meta charset=\"utf-8\">\n" +
-                "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
-                "  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\">\n" +
-                "  <meta name=\"robots\" content=\"noindex\">\n" +
-                "  <title>AWOOOOGA</title>\n" +
-                "</head>\n" +
-                "<body>\n" +
-                "<noscript>\n" +
-                "  <strong>No javascript?? CRIIIIIIIIINGE</strong>\n" +
-                "</noscript>\n" +
-                "\n" +
-                "\n" +
-                "<div id=\"container\">\n" +
-                "</div>\n" +
-                "</body>\n" +
-                "</html>\n" +
-                "<script>\n" +
-                "    let image = document.createElement('img');\n" +
-                "    image.src = 'https://esa-blueshell.nl/api/download/' + Math.ceil(Math.random() * 6) + '.jpg'\n" +
-                "    image.style.cursor = 'pointer'\n" +
-                "    image.addEventListener('click', () => {\n" +
-                "        window.open(\"https://images-ext-2.discordapp.net/external/E179MQwXxZUFkccEPIOG-xS8VPBuQdLi4ZnrNXglcpM/%3F1296494117/https/i.kym-cdn.com/photos/images/newsfeed/000/096/044/trollface.jpg\")\n" +
-                "    })\n" +
-                "\n" +
-                "    document.getElementById('container').insertAdjacentElement('afterbegin', image)\n" +
-                "    let done = false\n" +
-                "    function changeSize() {\n" +
-                "        if (image.clientWidth) {\n" +
-                "            done = true\n" +
-                "            window.resizeTo(image.clientWidth + 100, image.clientHeight + 100)\n" +
-                "        }\n" +
-                "        if (!done) {\n" +
-                "            setTimeout(changeSize, 50)\n" +
-                "        }\n" +
-                "    }\n" +
-                "\n" +
-                "    changeSize()\n" +
-                "\n" +
-                "</script>\n";
+    @PreAuthorize("hasPermission(#eventId, 'Event', 'read')")
+    public ResponseEntity<Resource> downloadBanner(@PathVariable Long eventId) {
+        Event event = eventService.findById(eventId);
+        return service.prepareFileResponse(event.getBanner());
+    }
+
+    @GetMapping("/memberships/{membershipId}/signature")
+    @ResponseBody
+    @PreAuthorize("hasPermission(#membershipId, 'Membership', 'read')")
+    public ResponseEntity<Resource> downloadSignature(@PathVariable Long membershipId) {
+        Membership membership = membershipService.findById(membershipId);
+        return service.prepareFileResponse(membership.getSignature());
+    }
+
+    @GetMapping("/users/{userId}/profilePicture")
+    @ResponseBody
+    @PreAuthorize("hasPermission(#userId, 'User', 'read')")
+    public ResponseEntity<Resource> downloadProfilePicture(@PathVariable Long userId) {
+        User user = userService.findById(userId);
+        return service.prepareFileResponse(user.getProfilePicture());
     }
 }
