@@ -10,10 +10,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EventSignupPermission extends BasePermissionEvaluator<EventSignUp, Long, EventSignUpService> {
+public class EventSignUpPermission extends BasePermissionEvaluator<EventSignUp, Long, EventSignUpService> {
 
     @Autowired
-    public EventSignupPermission(EventSignUpService service) {
+    public EventSignUpPermission(EventSignUpService service) {
         super(service);
     }
 
@@ -22,14 +22,18 @@ public class EventSignupPermission extends BasePermissionEvaluator<EventSignUp, 
         if (authentication == null || targetDomainObject == null || permission == null) {
             return false;
         }
+
         EventSignUp signUp = (EventSignUp) targetDomainObject;
-        User principal = (User) authentication.getPrincipal();
-        if (principal == null) {
+        System.out.println("has permission: " + signUp.getId());
+        if (getPrincipal() == null) {
             return false;
         }
+        System.out.println("has Authority: " + hasAuthority(Role.BOARD));
+        System.out.println("signUp.getUser().equals(getPrincipal()): " + signUp.getUser().equals(getPrincipal()));
+
         return switch (permission) {
-            case "read" -> principal.hasRole(Role.BOARD) || signUp.getUser().equals(principal) || signUp.getEvent().getCommittee().hasMember(principal);
-            case "write", "delete" -> principal.hasRole(Role.BOARD) || signUp.getUser().equals(principal);
+            case "read" -> hasAuthority(Role.BOARD) || signUp.getUser().equals(getPrincipal()) || signUp.getEvent().getCommittee().hasMember(getPrincipal());
+            case "write", "delete" -> hasAuthority(Role.BOARD) || signUp.getUser().equals(getPrincipal());
             default -> false;
         };
     }
@@ -39,7 +43,9 @@ public class EventSignupPermission extends BasePermissionEvaluator<EventSignUp, 
         if (authentication == null || targetId == null || permission == null) {
             return false;
         }
+        System.out.println("service find by id: " + targetId);
         EventSignUp signUp = service.findById((Long) targetId);
+        System.out.println("found signup: " + signUp.getId());
         return signUp != null && hasPermission(authentication, signUp, permission);
     }
 }

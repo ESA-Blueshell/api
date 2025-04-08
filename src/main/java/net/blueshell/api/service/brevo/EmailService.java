@@ -74,7 +74,7 @@ public class EmailService {
         sendEmail(Collections.singletonList(user.getEmail()), this.passwordResetTemplateId, params);
     }
 
-    public void sendEventSignupEmail(EventSignUp signUp) throws ApiException {
+    public void sendEventSignUpEmail(EventSignUp signUp) throws ApiException {
         Properties params = new Properties();
         params.setProperty("link", String.format(this.frontendUrl + "/events/signups/edit/%s", signUp.getGuest().getAccessToken()));
         params.setProperty("eventTitle", signUp.getEvent().getTitle());

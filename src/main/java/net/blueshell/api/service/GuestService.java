@@ -11,8 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GuestService extends BaseModelService<Guest, Long, GuestRepository> {
 
-    private static GuestRepository repository;
-
     @Autowired
     public GuestService(GuestRepository repository) {
         super(repository);

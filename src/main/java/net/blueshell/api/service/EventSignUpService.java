@@ -47,17 +47,17 @@ public class EventSignUpService extends BaseModelService<EventSignUp, Long, Even
         Event event = eventService.findById(eventId);
         signUp.setEvent(event);
         if (signUp.getGuest() != null) {
-            emailService.sendEventSignupEmail(signUp);
+            emailService.sendEventSignUpEmail(signUp);
         }
         create(signUp);
         return signUp;
     }
 
     @Transactional(readOnly = true)
-    public void deleteSignUp(Long eventId, String accessToken) {
+    public void deleteSignUp(Long eventSignupId, String accessToken) {
         EventSignUp signUp;
         if (accessToken == null) {
-            signUp = findByUserAndEventId(getPrincipal(), eventId);
+            signUp = findById(eventSignupId);
         } else {
             signUp = findByGuestAccessToken(accessToken);
         }

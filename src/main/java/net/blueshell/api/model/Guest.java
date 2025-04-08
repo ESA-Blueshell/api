@@ -33,6 +33,8 @@ public class Guest  implements BaseModel<Long> {
     @Column(name = "access_token")
     private String accessToken;
 
+    @OneToOne(mappedBy = "guest")
+    private EventSignUp eventSignUp;
 
     public Guest() {
     }

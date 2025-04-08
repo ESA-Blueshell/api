@@ -13,20 +13,11 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class EventSignUpDTO extends DTO {
-
-    @JsonProperty
+    private Long id;
     private Long eventId;
-
-    @JsonProperty
     private String fullName;
-
-    @JsonProperty
     private String discord;
-
-    @JsonProperty
     private String email;
-
-    @JsonProperty
     @Valid
     private List<Object> formAnswers;
 }

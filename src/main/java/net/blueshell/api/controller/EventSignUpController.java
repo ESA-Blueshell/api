@@ -39,14 +39,6 @@ public class EventSignUpController extends BaseController<EventSignUpService, Ev
         return mapper.toDTOs(eventSignUps.stream()).toList();
     }
 
-//    @GetMapping(value = "/events/signups/{id}")
-//    @PreAuthorize("hasPermission(#eventId, 'EventSignup', 'edit') || hasPermission(#eventId, 'Guest', 'Edit')")
-//    public EventSignUpDTO getSignUp(@PathVariable("id") @NotBlank Long eventId) {
-//        User user = getPrincipal();
-//        EventSignUp signUp = service.findByUserAndEventId(user, eventId);
-//        return mapper.toDTO(signUp);
-//    }
-
     @GetMapping(value = "/events/signups/byAccessToken/{accessToken}")
     @PreAuthorize("hasPermission(#accessToken, 'Guest', 'see')")
     public EventSignUpDTO getSignUpByAccessToken(@PathVariable("accessToken") String accessToken) {
@@ -73,7 +65,7 @@ public class EventSignUpController extends BaseController<EventSignUpService, Ev
     }
 
     @PutMapping(value = "/events/{eventId}/signups")
-    @PreAuthorize("hasPermission(#eventId, 'EventSignup', 'edit') || hasPermission(#(eventId, accessToken), 'Guest', 'Edit')")
+    @PreAuthorize("hasPermission(#eventId, 'Event', 'signUp') or hasPermission(accessToken, 'Guest', 'delete')")
     public EventSignUpDTO updateSignUp(@PathVariable("eventId") Long eventId,
                                        @Valid @RequestBody EventSignUpDTO dto,
                                        @RequestParam(value = "accessToken", required = false) String accessToken) {
@@ -89,11 +81,11 @@ public class EventSignUpController extends BaseController<EventSignUpService, Ev
         return mapper.toDTO(signUp);
     }
 
-    @DeleteMapping(value = "/events/{eventId}/signups")
-    @PreAuthorize("hasPermission(#eventId, 'EventSignUp', 'Delete') || hasPermission(#(eventId, accessToken), 'Guest', 'Delete')")
+    @DeleteMapping(value = "/events/signups/{eventSignupId}")
+    @PreAuthorize("hasPermission(#eventSignupId, 'EventSignUp', 'delete') or hasPermission(#accessToken, 'Guest', 'delete')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteSignup(@PathVariable("eventId") Long eventId,
+    public void deleteSignup(@PathVariable("eventSignupId") Long eventSignupId,
                              @RequestParam(value = "accessToken", required = false) String accessToken) {
-        service.deleteSignUp(eventId, accessToken);
+        service.deleteSignUp(eventSignupId, accessToken);
     }
 }
