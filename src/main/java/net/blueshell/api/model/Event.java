@@ -19,7 +19,7 @@ import java.util.*;
 @Data
 @SQLDelete(sql = "UPDATE events SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
-public class Event  implements BaseModel<Long> {
+public class Event implements BaseModel<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,9 +36,12 @@ public class Event  implements BaseModel<Long> {
     private User lastEditor;
 
     @OneToOne
-    @JoinColumn(name = "committee_id")
+    @JoinColumn(name = "committee_id", insertable = false, updatable = false)
     @JsonIgnore
     private Committee committee;
+
+    @Column(name = "committee_id")
+    private Long committeeId;
 
     @JoinColumn(name = "title")
     private String title;

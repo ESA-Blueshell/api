@@ -22,7 +22,7 @@ public class AdvancedCommitteeDTO extends DTO {
     @JsonProperty("name")
     private String name;
 
-    @Size(max = 500, message = "Committee description cannot exceed 500 characters.")
+    @Size(max = 2000, message = "Committee description cannot exceed 500 characters.")
     @JsonProperty("description")
     private String description;
 

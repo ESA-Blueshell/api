@@ -41,12 +41,12 @@ public class EventController extends BaseController<EventService, EventMapper> {
         this.fileService = fileService;
     }
 
-    @PreAuthorize("hasAuthority('COMMITTEE')")
+    @PreAuthorize("hasAuthority('COMMITTEE') && hasPermission(#eventDTO, 'Event', 'write')")
     @PostMapping
     public EventDTO createEvent(@Valid @RequestBody EventDTO eventDTO) throws IOException {
         Event event = mapper.fromDTO(eventDTO);
-        service.createEvent(event);
-        return mapper.toDTO(event);
+        Event updatedEvent = service.createEvent(event);
+        return mapper.toDTO(updatedEvent);
     }
 
     @GetMapping("/{id}")
@@ -112,7 +112,7 @@ public class EventController extends BaseController<EventService, EventMapper> {
         service.deleteEvent(eventId);
     }
 
-    @PreAuthorize("hasPermission(#eventId, 'Event', 'edit')")
+    @PreAuthorize("hasPermission(#eventId, 'Event', 'read')")
     @PutMapping("/{eventId}")
     public EventDTO updateEvent(@PathVariable("eventId") Long eventId, @Valid @RequestBody EventDTO dto) throws IOException {
         Event event = mapper.fromDTO(dto);

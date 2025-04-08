@@ -195,17 +195,15 @@ public class User implements UserDetails, BaseModel<Long> {
         return set;
     }
 
+    public Set<Role> getInheritedRoles() {
+        return new HashSet<>(getRoles()
+                .stream()
+                .flatMap(role -> role.getAllInheritedRoles().stream()).toList());
+    }
+
     @JsonProperty("roles")
     public Set<String> getRoleStrings() {
-        Set<String> set = new HashSet<>();
-        if (getRoles() == null) {
-            return set;
-        }
-        // Go through all inherited roles
-        for (Role role : roles.stream().flatMap(role -> role.getAllInheritedRoles().stream()).collect(Collectors.toList())) {
-            set.add(role.getReprString());
-        }
-        return set;
+        return getInheritedRoles().stream().map(Objects::toString).collect(Collectors.toSet());
     }
 
     @JsonIgnore
@@ -232,7 +230,7 @@ public class User implements UserDetails, BaseModel<Long> {
     }
 
     public boolean hasRole(Role role) {
-        return getRoles().stream().anyMatch(r -> r.matchesRole(role));
+        return getInheritedRoles().stream().anyMatch(r -> r.matchesRole(role));
     }
 
     @Override
@@ -242,9 +240,10 @@ public class User implements UserDetails, BaseModel<Long> {
             return auths;
         }
 
-        for (var role : getRoles()) {
-            auths.add(new SimpleGrantedAuthority(role.getReprString()));
-        }
+        getRoles().stream()
+                .flatMap(role -> role.getAllInheritedRoles().stream())
+                .map(authority -> new SimpleGrantedAuthority(authority.getReprString()))
+                .forEach(auths::add);
 
         return auths;
     }
@@ -284,7 +283,7 @@ public class User implements UserDetails, BaseModel<Long> {
         return getMembership() != null ? getMembership().getMemberType() : null;
     }
 
-    public boolean getIncasso(){
+    public boolean getIncasso() {
         return getMembership() != null && getMembership().isIncasso();
     }
 }

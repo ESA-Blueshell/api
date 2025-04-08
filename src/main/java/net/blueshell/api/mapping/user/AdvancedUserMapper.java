@@ -52,6 +52,7 @@ public abstract class AdvancedUserMapper extends BaseMapper<User, AdvancedUserDT
     }
 
     @Mapping(target = "fullName", expression = "java(user.getFullName())")
+    @Mapping(target = "roles", expression = "java(user.getInheritedRoles())")
     public abstract AdvancedUserDTO toDTO(User user);
 
     @AfterMapping

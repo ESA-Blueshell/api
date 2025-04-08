@@ -1,6 +1,7 @@
-package net.blueshell.api.auth;
+package net.blueshell.api.controller;
 
 import jakarta.validation.Valid;
+import net.blueshell.api.auth.JwtTokenUtil;
 import net.blueshell.api.common.enums.Role;
 import net.blueshell.api.controller.request.JwtRequest;
 import net.blueshell.api.controller.response.JwtResponse;
@@ -46,9 +47,7 @@ public class JwtAuthenticationController {
 
         var expirationTime = System.currentTimeMillis() + expiration;
 
-        Set<Role> roles = user.getRoles();
-        //Add all inherited roles
-        roles.addAll(roles.stream().flatMap(role -> role.getAllInheritedRoles().stream()).toList());
+        Set<Role> roles = user.getInheritedRoles();
         return ResponseEntity.ok(new JwtResponse(token, user.getId(), user.getUsername(), expirationTime, roles));
     }
 

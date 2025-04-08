@@ -20,7 +20,6 @@ public class ContributionPeriodService extends BaseModelService<ContributionPeri
         this.contactService = contactService;
     }
 
-
     @Transactional
     public void createContributionPeriod(ContributionPeriod contributionPeriod) throws ApiException {
         contactService.createContributionPeriodList(contributionPeriod);

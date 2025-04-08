@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Mapper(componentModel = "spring")
 public abstract class EventMapper extends BaseMapper<Event, EventDTO> {
@@ -36,6 +38,8 @@ public abstract class EventMapper extends BaseMapper<Event, EventDTO> {
     @Mapping(target = "deletedAt", ignore = true)
     @Mapping(target = "googleId", ignore = true)
     @Mapping(target = "feedbacks", ignore = true)
+    @Mapping(target = "startTime", ignore = true)
+    @Mapping(target = "endTime", ignore = true)
     public abstract Event fromDTO(EventDTO dto);
 
     @AfterMapping
@@ -46,10 +50,12 @@ public abstract class EventMapper extends BaseMapper<Event, EventDTO> {
         event.setLastEditor(getPrincipal());
 
         if (StringUtils.hasText(dto.getStartTime())) {
-            event.setStartTime(LocalDateTime.parse(dto.getStartTime().replace(' ', 'T')));
+            OffsetDateTime startTime = OffsetDateTime.parse(dto.getStartTime());
+            event.setStartTime(startTime.toLocalDateTime());
         }
         if (StringUtils.hasText(dto.getEndTime())) {
-            event.setEndTime(LocalDateTime.parse(dto.getEndTime().replace(' ', 'T')));
+            OffsetDateTime endTime = OffsetDateTime.parse(dto.getEndTime());
+            event.setEndTime(endTime.toLocalDateTime());
         }
 
         if (dto.getBanner() != null) {
