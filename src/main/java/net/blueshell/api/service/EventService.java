@@ -41,7 +41,7 @@ public class EventService extends BaseModelService<Event, Long, EventRepository>
      * @throws IOException if calendar integration fails.
      */
     @Transactional
-    public Event createEvent(Event event) throws IOException {
+    public void createEvent(Event event) throws IOException {
 
         // Handle visibility and calendar integration
         if (event.isVisible()) {
@@ -49,7 +49,7 @@ public class EventService extends BaseModelService<Event, Long, EventRepository>
         }
 
         // Save event to database
-        return repository.save(event);
+        create(event);
     }
 
     /**

@@ -41,12 +41,12 @@ public class EventController extends BaseController<EventService, EventMapper> {
         this.fileService = fileService;
     }
 
-    @PreAuthorize("hasAuthority('COMMITTEE') && hasPermission(#eventDTO, 'Event', 'write')")
+    @PreAuthorize("hasAuthority('COMMITTEE') && hasPermission(#eventDTO.committeeId, 'Committee', 'createEvent')")
     @PostMapping
     public EventDTO createEvent(@Valid @RequestBody EventDTO eventDTO) throws IOException {
         Event event = mapper.fromDTO(eventDTO);
-        Event updatedEvent = service.createEvent(event);
-        return mapper.toDTO(updatedEvent);
+        service.createEvent(event);
+        return mapper.toDTO(event);
     }
 
     @GetMapping("/{id}")

@@ -25,6 +25,7 @@ public abstract class BaseModelService<T extends BaseModel<ID>, ID, R extends Ba
     public void create(T entity) {
         preCreate(entity);
         repository.saveAndFlush(entity);
+        entityManager.refresh(entity);
         postCreate(entity);
     }
 
