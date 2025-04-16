@@ -25,12 +25,4 @@ public abstract class AuthorizationBase {
         return authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals(role.toString()));
     }
-
-
-    protected Set<Role> getRoles() {
-        if (getPrincipal() == null) {
-            return new HashSet<>();
-        }
-        return getPrincipal().getRoles();
-    }
 }

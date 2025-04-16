@@ -1,23 +1,21 @@
-package net.blueshell.api.controller;
+package net.blueshell.api.auth;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import net.blueshell.api.auth.JwtTokenUtil;
 import net.blueshell.api.base.AuthorizationBase;
 import net.blueshell.api.mapping.IdentityMapper;
 import net.blueshell.api.model.User;
 import net.blueshell.api.service.UserService;
 import net.blueshell.common.identity.Identity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller("/identity")
+@RestController
+@RequestMapping("/identity")
 public class IdentityController extends AuthorizationBase {
 
     private final IdentityMapper identityMapper;

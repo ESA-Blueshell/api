@@ -17,9 +17,9 @@ public class JwtResponse extends DTO {
     @Getter
     private final long expiration;
     @Getter
-    private final Set<Role> roles;
+    private final Set<String> roles;
 
-    public JwtResponse(String jwtToken, long userId, String username, long expiration, Set<Role> roles) {
+    public JwtResponse(String jwtToken, long userId, String username, long expiration, Set<String> roles) {
         this.jwtToken = jwtToken;
         this.userId = userId;
         this.username = username;
