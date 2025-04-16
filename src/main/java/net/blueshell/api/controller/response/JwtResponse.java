@@ -26,8 +26,4 @@ public class JwtResponse extends DTO {
         this.expiration = expiration;
         this.roles = roles;
     }
-
-    public String getToken() {
-        return this.jwtToken;
-    }
 }

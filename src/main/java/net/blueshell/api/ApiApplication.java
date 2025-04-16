@@ -14,9 +14,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 @ComponentScan(basePackages = {"net.blueshell.api", "net.blueshell.common", "net.blueshell.db"})
 public class ApiApplication {
-
     public static void main(String[] args) {
-        System.setProperty("server.servlet.context-path", "/api");
         SpringApplication.run(ApiApplication.class, args);
     }
 }

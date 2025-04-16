@@ -12,14 +12,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
-@RestController
+@RestController("/auth")
 @CrossOrigin
 public class AuthenticationController {
 
@@ -36,8 +33,8 @@ public class AuthenticationController {
         this.userService = userService;
     }
 
-    @PostMapping(value = "/authenticate")
-    public ResponseEntity<JwtResponse> createAuthenticationToken(@Valid @RequestBody JwtRequest authenticationRequest) {
+    @PostMapping
+    public JwtResponse createAuthenticationToken(@Valid @RequestBody JwtRequest authenticationRequest) {
 
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
@@ -48,7 +45,7 @@ public class AuthenticationController {
         var expirationTime = System.currentTimeMillis() + expiration;
 
         Set<Role> roles = user.getInheritedRoles();
-        return ResponseEntity.ok(new JwtResponse(token, user.getId(), user.getUsername(), expirationTime, roles));
+        return new JwtResponse(token, user.getId(), user.getUsername(), expirationTime, roles);
     }
 
     private void authenticate(String username, String password) {

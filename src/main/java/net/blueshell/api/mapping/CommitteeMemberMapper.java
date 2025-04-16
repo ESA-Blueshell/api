@@ -31,6 +31,7 @@ public abstract class CommitteeMemberMapper extends BaseMapper<CommitteeMember, 
 
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "committee", ignore = true)
+    @Mapping(target = "deletedAt", ignore = true)
     @Mapping(target = "role", source = "dto.role")
     public abstract CommitteeMember fromDTO(CommitteeMemberDTO dto);
 
