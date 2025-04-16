@@ -74,7 +74,8 @@ public class SecurityConfig {
                                 "/events/**",
                                 "/download/**",
                                 "/committees**",
-                                "/contributionPeriods"
+                                "/contributionPeriods",
+                                "/health"
                         ).permitAll()
                         .requestMatchers(HttpMethod.POST,
                                 "/events/signups/*/guest", "/users").permitAll()

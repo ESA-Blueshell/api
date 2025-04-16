@@ -46,6 +46,7 @@ public abstract class EventSignUpMapper extends BaseMapper<EventSignUp, EventSig
     @Mapping(target = "deletedAt", ignore = true)
     @Mapping(target = "formAnswers", source = "dto.formAnswers")
     @Mapping(target = "signedUpAt", ignore = true)
+    @Mapping(target = "userId", ignore = true)
     public abstract EventSignUp fromDTO(EventSignUpDTO dto);
 
     @AfterMapping

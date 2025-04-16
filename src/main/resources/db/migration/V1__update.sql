@@ -6,6 +6,6 @@ alter table events
 add google_id text null;
 
 
-ALTER DATABASE api CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+ALTER DATABASE API CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 ALTER TABLE events CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ALTER TABLE events CHANGE description description text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
