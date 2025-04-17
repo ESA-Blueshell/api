@@ -5,14 +5,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.blueshell.api.base.DTO;
 import net.blueshell.api.dto.CommitteeMemberDTO;
+import net.blueshell.common.dto.BaseDTO;
 
 import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class AdvancedCommitteeDTO extends DTO {
+public class AdvancedCommitteeDTO extends BaseDTO {
 
     @JsonProperty("id")
     private Long id;

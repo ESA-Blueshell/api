@@ -1,10 +1,9 @@
-// config/SecurityConfig.java
 package net.blueshell.api.config;
 
-import net.blueshell.api.auth.JwtAuthFilter;
 import net.blueshell.api.auth.JwtAuthenticationEntryPoint;
-import net.blueshell.api.common.enums.Role;
-import net.blueshell.api.permission.base.CompositePermissionEvaluator;
+import net.blueshell.common.enums.Role;
+import net.blueshell.common.filter.HeaderAuthFilter;
+import net.blueshell.db.permission.CompositePermissionEvaluator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,7 +20,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl.fromHierarchy;
 
@@ -30,13 +28,13 @@ import static org.springframework.security.access.hierarchicalroles.RoleHierarch
 public class SecurityConfig {
 
     private final JwtAuthenticationEntryPoint authenticationEntryPoint;
-    private final JwtAuthFilter jwtAuthFilter;
+    private final HeaderAuthFilter headerAuthFilter;
 
-    public SecurityConfig(JwtAuthenticationEntryPoint authenticationEntryPoint,
-                          JwtAuthFilter jwtAuthFilter) {
+    public SecurityConfig(JwtAuthenticationEntryPoint authenticationEntryPoint, HeaderAuthFilter headerAuthFilter) {
+        this.headerAuthFilter = headerAuthFilter;
         this.authenticationEntryPoint = authenticationEntryPoint;
-        this.jwtAuthFilter = jwtAuthFilter;
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -62,7 +60,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/authenticate",
-                                "/identity",
+                                "/user-details",
                                 "/users/activate",
                                 "/users/password"
                         ).permitAll()
@@ -79,7 +77,7 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(authenticationEntryPoint))
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterAfter(headerAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

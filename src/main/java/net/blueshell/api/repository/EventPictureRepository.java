@@ -1,6 +1,6 @@
 package net.blueshell.api.repository;
 
-import net.blueshell.api.base.BaseRepository;
+import net.blueshell.db.BaseRepository;
 import net.blueshell.api.model.EventPicture;
 import net.blueshell.api.model.EventSignUp;
 import net.blueshell.api.model.User;

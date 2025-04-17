@@ -6,16 +6,16 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.blueshell.api.base.DTO;
 import net.blueshell.api.dto.committee.SimpleCommitteeDTO;
 import net.blueshell.api.model.Committee;
 import net.blueshell.api.model.FormQuestion;
+import net.blueshell.common.dto.BaseDTO;
 
 import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class EventDTO extends DTO {
+public class EventDTO extends BaseDTO {
     private Long id;
     private Long committeeId;
     private SimpleCommitteeDTO committee;

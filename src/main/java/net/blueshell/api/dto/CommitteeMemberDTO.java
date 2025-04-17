@@ -2,13 +2,13 @@ package net.blueshell.api.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.blueshell.api.base.DTO;
+import net.blueshell.common.dto.BaseDTO;
 import net.blueshell.api.dto.committee.AdvancedCommitteeDTO;
 import net.blueshell.api.dto.user.SimpleUserDTO;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class CommitteeMemberDTO extends DTO {
+public class CommitteeMemberDTO extends BaseDTO {
     private Long id;
     private String role;
     private Long userId;

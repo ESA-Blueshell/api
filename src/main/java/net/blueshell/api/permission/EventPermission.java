@@ -1,9 +1,9 @@
 package net.blueshell.api.permission;
 
-import net.blueshell.api.common.enums.Role;
+import net.blueshell.common.enums.Role;
 import net.blueshell.api.model.Event;
-import net.blueshell.api.model.User;
-import net.blueshell.api.permission.base.BasePermissionEvaluator;
+import net.blueshell.common.identity.SharedUserDetails;
+import net.blueshell.db.permission.BasePermissionEvaluator;
 import net.blueshell.api.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -23,19 +23,19 @@ public class EventPermission extends BasePermissionEvaluator<Event, Long, EventS
             return false;
         }
         Event event = (Event) targetDomainObject;
-        User principal = getPrincipal();
+        SharedUserDetails principal = getPrincipal();
         return switch (permission) {
             case "read" ->
-                    event.isVisible() || principal.hasRole(Role.BOARD) || event.getCommittee().hasMember(principal);
-            case "write", "delete", "seeSignUps" -> principal.hasRole(Role.BOARD) || event.getCommittee().hasMember(principal);
-            case "signUp" -> canSignUp(event, principal);
+                    event.isVisible() || hasAuthority(Role.BOARD) || event.getCommittee().hasMember(principal);
+            case "write", "delete", "seeSignUps" -> hasAuthority(Role.BOARD) || event.getCommittee().hasMember(principal);
+            case "signUp" -> canSignUp(event);
             default -> false;
         };
     }
 
-    private boolean canSignUp(Event event, User user) {
+    private boolean canSignUp(Event event) {
         if (!event.isVisible()) return false;
-        return !event.isMembersOnly() || user.hasRole(Role.MEMBER);
+        return !event.isMembersOnly() || hasAuthority(Role.MEMBER);
     }
 
     @Override

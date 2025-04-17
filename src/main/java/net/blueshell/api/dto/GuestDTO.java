@@ -2,13 +2,13 @@ package net.blueshell.api.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.blueshell.api.base.DTO;
+import net.blueshell.common.dto.BaseDTO;
 
 import java.sql.Timestamp;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class GuestDTO extends DTO {
+public class GuestDTO extends BaseDTO {
 
     private Long id;
 

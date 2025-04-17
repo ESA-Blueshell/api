@@ -1,11 +1,11 @@
 package net.blueshell.api.controller;
 
 import jakarta.validation.Valid;
-import net.blueshell.api.base.BaseController;
 import net.blueshell.api.dto.SponsorDTO;
 import net.blueshell.api.mapping.SponsorMapper;
 import net.blueshell.api.model.Sponsor;
 import net.blueshell.api.service.SponsorService;
+import net.blueshell.db.BaseController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

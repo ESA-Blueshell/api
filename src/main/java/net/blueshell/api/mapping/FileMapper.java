@@ -1,10 +1,10 @@
 package net.blueshell.api.mapping;
 
 import jakarta.ws.rs.BadRequestException;
-import net.blueshell.api.base.BaseMapper;
 import net.blueshell.api.dto.FileDTO;
 import net.blueshell.api.model.File;
 import net.blueshell.api.service.FileService;
+import net.blueshell.common.mapper.BaseMapper;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
 import org.mapstruct.*;
@@ -68,7 +68,7 @@ public abstract class FileMapper extends BaseMapper<File, FileDTO> {
 
         file.setUrl(getDownloadURI(filePath));
         file.setCreatedAt(Timestamp.from(Instant.now()));
-        file.setUploader(getPrincipal());
+        file.setUploaderId(getPrincipal().getId());
         file.setName(fileName);
         try {
             file.setSize(Files.size(filePath));

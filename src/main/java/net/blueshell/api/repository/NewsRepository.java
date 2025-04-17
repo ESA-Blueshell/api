@@ -1,6 +1,6 @@
 package net.blueshell.api.repository;
 
-import net.blueshell.api.base.BaseRepository;
+import net.blueshell.db.BaseRepository;
 import net.blueshell.api.model.News;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;

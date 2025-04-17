@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
-import net.blueshell.api.base.BaseModel;
+import net.blueshell.db.BaseModel;
 import net.blueshell.api.common.enums.MemberType;
 import net.blueshell.api.common.enums.ResetType;
-import net.blueshell.api.common.enums.Role;
+import net.blueshell.common.enums.Role;
 import net.blueshell.api.common.util.TimeUtil;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -160,9 +160,12 @@ public class User implements UserDetails, BaseModel<Long> {
     private Membership membership;
 
     @OneToOne
-    @JoinColumn(name = "creator_id")
+    @JoinColumn(name = "creator_id", insertable = false, updatable = false)
     @JsonIgnore
     private User creator;
+
+    @Column(name = "creator_id")
+    private Long creatorId;
 
     public User() {
         this.createdAt = Timestamp.from(Instant.now());
@@ -221,7 +224,7 @@ public class User implements UserDetails, BaseModel<Long> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id;
+        return Objects.equals(id, user.id);
     }
 
     @Override

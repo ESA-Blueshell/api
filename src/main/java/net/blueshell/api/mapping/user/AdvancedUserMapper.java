@@ -1,12 +1,12 @@
 package net.blueshell.api.mapping.user;
 
-import net.blueshell.api.base.BaseMapper;
-import net.blueshell.api.common.enums.Role;
+import net.blueshell.common.enums.Role;
 import net.blueshell.api.dto.user.AdvancedUserDTO;
 import net.blueshell.api.mapping.MembershipMapper;
 import net.blueshell.api.model.Membership;
 import net.blueshell.api.model.User;
 import net.blueshell.api.service.MembershipService;
+import net.blueshell.common.mapper.BaseMapper;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,7 +67,7 @@ public abstract class AdvancedUserMapper extends BaseMapper<User, AdvancedUserDT
     @Mapping(target = "firstName", ignore = true)
     @Mapping(target = "prefix", ignore = true)
     @Mapping(target = "lastName", ignore = true)
-    @Mapping(target = "username", conditionExpression = "java(hasAuthority(net.blueshell.api.common.enums.Role.BOARD))")
+    @Mapping(target = "username", conditionExpression = "java(hasAuthority(net.blueshell.common.enums.Role.BOARD))")
     @Mapping(target = "roles", ignore = true)
     @Mapping(target = "email", ignore = true)
     @Mapping(target = "enabled", ignore = true)
@@ -96,7 +96,7 @@ public abstract class AdvancedUserMapper extends BaseMapper<User, AdvancedUserDT
             }
 
             if (hasAuthority(Role.BOARD)) {
-                user.setCreator(getPrincipal());
+                user.setCreatorId(getPrincipal().getId());
             }
 
             if (dto.getMembership() != null && user.getMembership() != null) {

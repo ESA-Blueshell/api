@@ -3,7 +3,8 @@ package net.blueshell.api.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
-import net.blueshell.api.base.BaseModel;
+import net.blueshell.common.identity.SharedUserDetails;
+import net.blueshell.db.BaseModel;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -31,6 +32,14 @@ public class Committee implements BaseModel<Long> {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "committee", orphanRemoval = true)
     private Set<CommitteeMember> members;
+
+    @ManyToMany
+    @JoinTable(
+            name = "committee_member",
+            joinColumns =  @JoinColumn(name = "committee_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> users;
 
     @Column(name = "deleted_at")
     private Timestamp deletedAt;
@@ -63,7 +72,7 @@ public class Committee implements BaseModel<Long> {
         return Objects.hash(id);
     }
 
-    public boolean hasMember(User user) {
-        return getMembers().stream().anyMatch(cm -> cm.getUser().equals(user));
+    public boolean hasMember(SharedUserDetails user) {
+        return getMembers().stream().anyMatch(cm -> cm.getUserId().equals(user.getId()));
     }
 }

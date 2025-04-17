@@ -1,6 +1,7 @@
 package net.blueshell.api.controller.interceptor;
 
-import net.blueshell.api.base.BaseModel;
+
+import net.blueshell.db.BaseModel;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

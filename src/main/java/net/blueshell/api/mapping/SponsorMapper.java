@@ -1,8 +1,8 @@
 package net.blueshell.api.mapping;
 
-import net.blueshell.api.base.BaseMapper;
 import net.blueshell.api.dto.SponsorDTO;
 import net.blueshell.api.model.Sponsor;
+import net.blueshell.common.mapper.BaseMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

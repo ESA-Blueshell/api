@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
-import net.blueshell.api.base.BaseModel;
+import net.blueshell.db.BaseModel;
 import net.blueshell.api.model.converter.FormQuestionListConverter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -26,14 +26,20 @@ public class Event implements BaseModel<Long> {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "creator_id")
+    @JoinColumn(name = "creator_id", insertable = false, updatable = false)
     @JsonIgnore
     private User creator;
 
+    @Column(name = "creator_Id")
+    private Long creatorId;
+
     @OneToOne
-    @JoinColumn(name = "last_editor_id")
+    @JoinColumn(name = "last_editor_id", insertable = false, updatable = false)
     @JsonIgnore
     private User lastEditor;
+
+    @Column(name = "last_editor_id")
+    private Long lastEditorId;
 
     @OneToOne
     @JoinColumn(name = "committee_id", insertable = false, updatable = false)

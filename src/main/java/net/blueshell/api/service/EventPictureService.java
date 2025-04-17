@@ -1,6 +1,6 @@
 package net.blueshell.api.service;
 
-import net.blueshell.api.base.BaseModelService;
+import net.blueshell.db.BaseModel;
 import net.blueshell.api.exception.ResourceNotFoundException;
 import net.blueshell.api.model.Event;
 import net.blueshell.api.model.EventPicture;
@@ -9,6 +9,7 @@ import net.blueshell.api.model.User;
 import net.blueshell.api.repository.EventPictureRepository;
 import net.blueshell.api.repository.EventSignUpRepository;
 import net.blueshell.api.service.brevo.EmailService;
+import net.blueshell.db.BaseModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
