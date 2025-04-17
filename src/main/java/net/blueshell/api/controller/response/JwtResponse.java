@@ -2,25 +2,21 @@ package net.blueshell.api.controller.response;
 
 import lombok.Getter;
 import net.blueshell.api.base.DTO;
-import net.blueshell.api.common.enums.Role;
 
 import java.util.Set;
 
+@Getter
 public class JwtResponse extends DTO {
 
     private static final long serialVersionUID = -8091879091924046844L;
-    private final String jwtToken;
-    @Getter
+    private final String token;
     private final long userId;
-    @Getter
     private final String username;
-    @Getter
     private final long expiration;
-    @Getter
     private final Set<String> roles;
 
-    public JwtResponse(String jwtToken, long userId, String username, long expiration, Set<String> roles) {
-        this.jwtToken = jwtToken;
+    public JwtResponse(String token, long userId, String username, long expiration, Set<String> roles) {
+        this.token = token;
         this.userId = userId;
         this.username = username;
         this.expiration = expiration;
