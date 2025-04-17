@@ -26,6 +26,8 @@ public abstract class AdvancedCommitteeMapper extends BaseMapper<Committee, Adva
     protected CommitteeMemberMapper memberMapper;
 
     @Mapping(target = "members", ignore = true)
+    @Mapping(target = "deletedAt", ignore = true)
+    @Mapping(target = "memberIds", ignore = true)
     public abstract Committee fromDTO(AdvancedCommitteeDTO dto);
 
     @AfterMapping

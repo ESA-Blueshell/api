@@ -1,6 +1,5 @@
 package net.blueshell.api.controller;
 
-import io.swagger.annotations.ApiParam;
 import jakarta.validation.Valid;
 import net.blueshell.api.base.BaseController;
 import net.blueshell.api.dto.MembershipDTO;
@@ -49,7 +48,7 @@ public class MembershipController extends BaseController<MembershipService, Memb
 
     @PreAuthorize("hasAuthority('BOARD')")
     @GetMapping(value = "/{id}")
-    public MembershipDTO getMembershipById(@ApiParam(name = "Id of the sponsor") @PathVariable("id") Long id) {
+    public MembershipDTO getMembershipById(@PathVariable("id") Long id) {
         return mapper.toDTO(service.findById(id));
     }
 }

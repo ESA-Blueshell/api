@@ -20,8 +20,5 @@ public abstract class SimpleCommitteeMapper extends BaseMapper<Committee, Simple
     @Autowired
     protected CommitteeMemberRepository committeeMemberRepository;
 
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "name", source = "name")
-    @Mapping(target = "description", source = "description")
     public abstract SimpleCommitteeDTO toDTO(Committee committee);
 }

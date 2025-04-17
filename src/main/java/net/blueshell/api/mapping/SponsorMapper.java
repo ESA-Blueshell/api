@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 public abstract class SponsorMapper extends BaseMapper<Sponsor, SponsorDTO> {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "picture", ignore = true)
     public abstract Sponsor fromDTO(SponsorDTO dto);
 
     public abstract SponsorDTO toDTO(Sponsor sponsor);

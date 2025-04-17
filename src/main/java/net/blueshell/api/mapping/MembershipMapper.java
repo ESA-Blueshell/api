@@ -25,6 +25,9 @@ public abstract class MembershipMapper extends BaseMapper<Membership, Membership
 
     public abstract MembershipDTO toDTO(Membership membership);
 
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "contributions", ignore = true)
+    @Mapping(target = "incasso", ignore = true)
     public abstract Membership fromDTO(MembershipDTO dto);
 
     @AfterMapping

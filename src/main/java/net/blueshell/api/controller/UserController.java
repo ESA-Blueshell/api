@@ -1,6 +1,5 @@
 package net.blueshell.api.controller;
 
-import io.swagger.annotations.ApiParam;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.PathParam;
@@ -45,7 +44,7 @@ public class UserController extends AdvancedController<UserService, AdvancedUser
 
     @PutMapping(value = "/{userId}")
     @PreAuthorize("hasPermission(#userId, 'User', 'write')")
-    public AdvancedUserDTO update(@ApiParam(name = "Id of the user") @PathVariable("userId") Long userId,
+    public AdvancedUserDTO update(@PathVariable("userId") Long userId,
                                   @Validated(Update.class) @RequestBody AdvancedUserDTO dto) throws ApiException {
         dto.setId(userId);
         User user = advancedMapper.fromDTO(dto);
@@ -88,14 +87,14 @@ public class UserController extends AdvancedController<UserService, AdvancedUser
 
     @GetMapping(value = "/{userId}")
     @PreAuthorize("hasPermission(#userId, 'User', 'read')")
-    public AdvancedUserDTO getById(@ApiParam(name = "Id of the user") @PathVariable("userId") Long userId) {
+    public AdvancedUserDTO getById(@PathVariable("userId") Long userId) {
         User user = service.findById(userId);
         return advancedMapper.toDTO(user);
     }
 
     @PutMapping(value = "/{id}/membership")
     @PreAuthorize("hasAuthority('BOARD')")
-    public AdvancedUserDTO updateMembership(@ApiParam(name = "Id of the user") @PathVariable("id") Long userId,
+    public AdvancedUserDTO updateMembership(@PathVariable("id") Long userId,
                                             @RequestParam(defaultValue = "isMember") Boolean isMember) {
         User user = service.updateMembership(userId, isMember);
         return advancedMapper.toDTO(user);
@@ -109,7 +108,7 @@ public class UserController extends AdvancedController<UserService, AdvancedUser
 
     @PutMapping(value = "/{userId}/roles")
     @PreAuthorize("hasPermission(#userId, 'User', 'changeRole')")
-    public AdvancedUserDTO toggleRole(@ApiParam(name = "Id of the user") @PathVariable("userId") Long userId,
+    public AdvancedUserDTO toggleRole(@PathVariable("userId") Long userId,
                                       @RequestParam(value = "role", required = true) Role role) {
         User user = service.toggleRole(userId, role);
         return advancedMapper.toDTO(user);
@@ -117,7 +116,7 @@ public class UserController extends AdvancedController<UserService, AdvancedUser
 
     @PutMapping(value = "/{userId}/membership/toggle")
     @PreAuthorize("hasPermission(#userId, 'User', 'changeRole')")
-    public AdvancedUserDTO toggleMembership(@ApiParam(name = "Id of the user") @PathVariable("userId") Long userId,
+    public AdvancedUserDTO toggleMembership(@PathVariable("userId") Long userId,
                                       @RequestParam(value = "role", required = true) Role role) {
         User user = service.toggleRole(userId, role);
         return advancedMapper.toDTO(user);

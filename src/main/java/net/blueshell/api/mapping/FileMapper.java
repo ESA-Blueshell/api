@@ -38,6 +38,7 @@ public abstract class FileMapper extends BaseMapper<File, FileDTO> {
 
     @Mapping(target = "name", ignore = true)
     @Mapping(target = "url", ignore = true)
+    @Mapping(target = "uploader", ignore = true)
     public abstract File fromDTO(FileDTO dto);
 
     @AfterMapping

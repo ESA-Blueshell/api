@@ -5,7 +5,6 @@ import net.blueshell.api.auth.JwtAuthFilter;
 import net.blueshell.api.auth.JwtAuthenticationEntryPoint;
 import net.blueshell.api.common.enums.Role;
 import net.blueshell.api.permission.base.CompositePermissionEvaluator;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,9 +19,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.List;
@@ -60,13 +56,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/authenticate",
+                                "/identity",
                                 "/users/activate",
                                 "/users/password"
                         ).permitAll()
@@ -74,7 +70,8 @@ public class SecurityConfig {
                                 "/events/**",
                                 "/download/**",
                                 "/committees**",
-                                "/contributionPeriods"
+                                "/contributionPeriods",
+                                "/health"
                         ).permitAll()
                         .requestMatchers(HttpMethod.POST,
                                 "/events/signups/*/guest", "/users").permitAll()
@@ -85,22 +82,6 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    }
-
-    @Value("${frontend.url}")
-    private String frontendUrl;
-
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of(frontendUrl));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Auth-Token"));
-        configuration.setExposedHeaders(List.of("X-Auth-Token"));
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
     }
 
     @Bean

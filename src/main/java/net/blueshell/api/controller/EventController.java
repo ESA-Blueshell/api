@@ -1,6 +1,5 @@
 package net.blueshell.api.controller;
 
-import io.swagger.annotations.ApiParam;
 import jakarta.validation.Valid;
 import net.blueshell.api.base.BaseController;
 import net.blueshell.api.dto.EventDTO;
@@ -52,7 +51,6 @@ public class EventController extends BaseController<EventService, EventMapper> {
     @GetMapping("/{id}")
     @PreAuthorize("hasPermission(#id, 'Event', 'read')")
     public EventDTO getEventById(
-            @ApiParam(name = "Id of the event")
             @PathVariable("id") Long id) {
         Event event = service.findById(id);
         return mapper.toDTO(event);
