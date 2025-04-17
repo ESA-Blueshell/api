@@ -1,11 +1,12 @@
 package net.blueshell.api.service;
 
-import net.blueshell.api.base.BaseModelService;
+import net.blueshell.db.BaseModel;
 import net.blueshell.api.dto.EventDTO;
 import net.blueshell.api.mapping.EventMapper;
 import net.blueshell.api.model.*;
 import net.blueshell.api.repository.EventRepository;
 import net.blueshell.api.service.google.CalendarService;
+import net.blueshell.db.BaseModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

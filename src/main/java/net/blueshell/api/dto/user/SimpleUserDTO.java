@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.blueshell.api.base.DTO;
+import net.blueshell.common.dto.BaseDTO;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -19,7 +19,7 @@ import net.blueshell.api.base.DTO;
         @JsonSubTypes.Type(value = SimpleUserDTO.class, name = "simple"),
         @JsonSubTypes.Type(value = AdvancedUserDTO.class, name = "advanced"),
 })
-public class SimpleUserDTO extends DTO {
+public class SimpleUserDTO extends BaseDTO {
 
     @JsonProperty
     private Long id;

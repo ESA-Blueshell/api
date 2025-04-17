@@ -3,11 +3,11 @@ package net.blueshell.api.dto.committee;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.blueshell.api.base.DTO;
+import net.blueshell.common.dto.BaseDTO;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SimpleCommitteeDTO extends DTO {
+public class SimpleCommitteeDTO extends BaseDTO {
 
     @JsonProperty("id")
     private Long id;

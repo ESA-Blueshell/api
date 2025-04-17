@@ -1,12 +1,12 @@
 package net.blueshell.api.controller;
 
 import jakarta.validation.Valid;
-import net.blueshell.api.base.BaseController;
-import net.blueshell.api.common.enums.Role;
+import net.blueshell.common.enums.Role;
 import net.blueshell.api.dto.NewsDTO;
 import net.blueshell.api.mapping.NewsMapper;
 import net.blueshell.api.model.News;
 import net.blueshell.api.service.NewsService;
+import net.blueshell.db.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

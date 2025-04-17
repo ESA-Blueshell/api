@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/authenticate")
-public class AuthenticationController {
+public class JWTAuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
@@ -21,7 +21,7 @@ public class AuthenticationController {
     @Value("${app.jwt.expiration}")
     private Long expiration;
 
-    public AuthenticationController(
+    public JWTAuthController(
             AuthenticationManager authenticationManager,
             JwtTokenUtil jwtTokenUtil,
             UserService userService) {

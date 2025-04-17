@@ -1,12 +1,12 @@
 package net.blueshell.api.mapping;
 
-import net.blueshell.api.base.BaseMapper;
 import net.blueshell.api.dto.EventDTO;
 import net.blueshell.api.mapping.committee.SimpleCommitteeMapper;
 import net.blueshell.api.model.Event;
 import net.blueshell.api.model.File;
 import net.blueshell.api.service.CommitteeService;
 import net.blueshell.api.service.FileService;
+import net.blueshell.common.mapper.BaseMapper;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -45,9 +45,9 @@ public abstract class EventMapper extends BaseMapper<Event, EventDTO> {
     @AfterMapping
     protected void afterFromDTO(EventDTO dto, @MappingTarget Event event) {
         if (event.getCreator() == null) {
-            event.setCreator(getPrincipal());
+            event.setCreatorId(getPrincipal().getId());
         }
-        event.setLastEditor(getPrincipal());
+        event.setLastEditorId(getPrincipal().getId());
 
         if (StringUtils.hasText(dto.getStartTime())) {
             OffsetDateTime startTime = OffsetDateTime.parse(dto.getStartTime());

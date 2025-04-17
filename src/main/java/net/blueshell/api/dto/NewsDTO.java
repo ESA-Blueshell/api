@@ -4,11 +4,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.blueshell.api.base.DTO;
+import net.blueshell.common.dto.BaseDTO;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class NewsDTO extends DTO {
+public class NewsDTO extends BaseDTO {
     private String id;
 
     @NotBlank(message = "creatorId is required.")

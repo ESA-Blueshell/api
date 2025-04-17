@@ -2,11 +2,11 @@ package net.blueshell.api.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.blueshell.api.base.DTO;
+import net.blueshell.common.dto.BaseDTO;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class PictureDTO extends DTO {
+public class PictureDTO extends BaseDTO {
     private Long id;
     private String name;
     private String url;

@@ -1,7 +1,7 @@
 package net.blueshell.api.repository;
 
 import jakarta.transaction.Transactional;
-import net.blueshell.api.base.BaseRepository;
+import net.blueshell.db.BaseRepository;
 import net.blueshell.api.model.Contribution;
 import net.blueshell.api.model.ContributionPeriod;
 import org.springframework.data.jpa.repository.Modifying;

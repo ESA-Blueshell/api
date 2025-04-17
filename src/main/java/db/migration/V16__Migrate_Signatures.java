@@ -21,7 +21,6 @@ public class V16__Migrate_Signatures extends BaseJavaMigration {
         Connection connection = context.getConnection();
         String storageLocation = "uploads";
         Path rootLocation = Paths.get(storageLocation).toAbsolutePath();
-        System.out.println("ROOT: " + rootLocation);
         // Disable auto-commit mode
         boolean originalAutoCommit = connection.getAutoCommit();
         connection.setAutoCommit(false);

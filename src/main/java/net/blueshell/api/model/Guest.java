@@ -2,7 +2,7 @@ package net.blueshell.api.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import net.blueshell.api.base.BaseModel;
+import net.blueshell.db.BaseModel;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.crypto.bcrypt.BCrypt;

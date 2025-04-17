@@ -3,7 +3,7 @@ package net.blueshell.api.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
-import net.blueshell.api.base.BaseModel;
+import net.blueshell.db.BaseModel;
 import net.blueshell.api.common.enums.MemberType;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;

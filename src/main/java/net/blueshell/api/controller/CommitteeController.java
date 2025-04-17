@@ -2,9 +2,9 @@ package net.blueshell.api.controller;
 
 import jakarta.validation.Valid;
 import jakarta.ws.rs.NotFoundException;
-import net.blueshell.api.base.AdvancedController;
-import net.blueshell.api.base.DTO;
-import net.blueshell.api.common.enums.Role;
+import net.blueshell.db.AdvancedController;
+import net.blueshell.common.dto.BaseDTO;
+import net.blueshell.common.enums.Role;
 import net.blueshell.api.dto.committee.AdvancedCommitteeDTO;
 import net.blueshell.api.mapping.committee.AdvancedCommitteeMapper;
 import net.blueshell.api.mapping.committee.SimpleCommitteeMapper;
@@ -26,11 +26,12 @@ public class CommitteeController extends AdvancedController<CommitteeService, Ad
     }
 
     @GetMapping("/committees")
-    public List<? extends DTO> getCommittees(@RequestParam(required = false) boolean isMember) {
-        if (getPrincipal() != null && getPrincipal().hasRole(Role.BOARD)) {
+    public List<? extends BaseDTO> getCommittees(@RequestParam(required = false) boolean isMember) {
+        if (getPrincipal() != null && hasAuthority(Role.BOARD)) {
             return advancedMapper.toDTOs(service.findAll());
         } else if (isMember) {
-            return advancedMapper.toDTOs(service.findAllById(new ArrayList<>(getPrincipal().getCommitteeIds())));
+            List<Committee> committees = service.findALlByUserId(getPrincipal().getId());
+            return advancedMapper.toDTOs(committees);
         }
 
         return simpleMapper.toDTOs(service.findAll());
@@ -38,16 +39,15 @@ public class CommitteeController extends AdvancedController<CommitteeService, Ad
 
     @PreAuthorize("hasAuthority('BOARD')")
     @PostMapping("/committees")
-    public DTO createCommittee(@Valid @RequestBody AdvancedCommitteeDTO advancedCommitteeDTO) {
+    public AdvancedCommitteeDTO createCommittee(@Valid @RequestBody AdvancedCommitteeDTO advancedCommitteeDTO) {
         Committee committee = advancedMapper.fromDTO(advancedCommitteeDTO);
-        System.out.println("committee: " + committee);
         service.createCommittee(committee);
         return advancedMapper.toDTO(committee);
     }
 
     @PreAuthorize("hasPermission(#committeeId, 'Committee', 'write')")
     @PutMapping(value = "/committees/{committeeId}")
-    public DTO updateCommittee(
+    public BaseDTO updateCommittee(
             @PathVariable("committeeId") Long committeeId,
             @Valid @RequestBody AdvancedCommitteeDTO advancedCommitteeDTO) {
         Committee oldCommittee = service.findById(committeeId);
@@ -58,7 +58,6 @@ public class CommitteeController extends AdvancedController<CommitteeService, Ad
 
         advancedCommitteeDTO.setId(committeeId);
         Committee newCommittee = advancedMapper.fromDTO(advancedCommitteeDTO);
-        System.out.println("newCommittee: " + newCommittee);
         service.update(newCommittee);
         return advancedMapper.toDTO(newCommittee);
     }

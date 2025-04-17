@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import net.blueshell.api.base.BaseModel;
+import net.blueshell.db.BaseModel;
 import net.blueshell.api.common.enums.FileType;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -37,11 +37,11 @@ public class File  implements BaseModel<Long> {
     @Setter
     @Getter
     @OneToOne
-    @JoinColumn(name = "uploader_id")
+    @JoinColumn(name = "uploader_id", insertable = false, updatable = false)
     @JsonIgnore
     private User uploader;
 
-    @Column(name = "uploader_id", insertable = false, updatable = false)
+    @Column(name = "uploader_id")
     private long uploaderId;
 
     @Column(name = "created_at")

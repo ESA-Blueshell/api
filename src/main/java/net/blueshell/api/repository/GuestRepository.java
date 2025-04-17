@@ -1,6 +1,6 @@
 package net.blueshell.api.repository;
 
-import net.blueshell.api.base.BaseRepository;
+import net.blueshell.db.BaseRepository;
 import net.blueshell.api.model.Guest;
 import org.springframework.stereotype.Repository;
 

@@ -1,11 +1,11 @@
 package net.blueshell.api.controller;
 
 import jakarta.validation.Valid;
-import net.blueshell.api.base.BaseController;
 import net.blueshell.api.dto.ContributionPeriodDTO;
 import net.blueshell.api.mapping.ContributionPeriodMapper;
 import net.blueshell.api.model.ContributionPeriod;
 import net.blueshell.api.service.ContributionPeriodService;
+import net.blueshell.db.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

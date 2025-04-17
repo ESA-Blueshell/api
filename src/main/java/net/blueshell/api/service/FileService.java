@@ -2,7 +2,7 @@ package net.blueshell.api.service;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.ws.rs.BadRequestException;
-import net.blueshell.api.base.BaseModelService;
+import net.blueshell.db.BaseModel;
 import net.blueshell.api.config.StorageConfig;
 import net.blueshell.api.controller.response.UploadFileResponse;
 import net.blueshell.api.common.enums.FileType;
@@ -10,6 +10,7 @@ import net.blueshell.api.exception.FileNotFoundException;
 import net.blueshell.api.exception.StorageException;
 import net.blueshell.api.model.File;
 import net.blueshell.api.repository.FileRepository;
+import net.blueshell.db.BaseModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;

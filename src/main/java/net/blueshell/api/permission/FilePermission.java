@@ -1,11 +1,11 @@
 package net.blueshell.api.permission;
 
-import net.blueshell.api.common.enums.FileType;
-import net.blueshell.api.common.enums.Role;
+import net.blueshell.common.enums.Role;
 import net.blueshell.api.model.Event;
 import net.blueshell.api.model.File;
 import net.blueshell.api.model.User;
-import net.blueshell.api.permission.base.BasePermissionEvaluator;
+import net.blueshell.common.identity.SharedUserDetails;
+import net.blueshell.db.permission.BasePermissionEvaluator;
 import net.blueshell.api.service.EventService;
 import net.blueshell.api.service.FileService;
 import net.blueshell.api.service.UserService;
@@ -32,7 +32,7 @@ public class FilePermission extends BasePermissionEvaluator<File, Long, FileServ
             return false;
         }
         File file = (File) targetDomainObject;
-        User principal = (User) authentication.getPrincipal();
+        SharedUserDetails principal = getPrincipal();
 
         if (principal.hasRole(Role.BOARD)) {
             return true;
@@ -45,11 +45,11 @@ public class FilePermission extends BasePermissionEvaluator<File, Long, FileServ
         };
     }
 
-    private boolean handleReadPermission(File file, User principal) {
+    private boolean handleReadPermission(File file, SharedUserDetails principal) {
         return switch (file.getFileType()) {
             case SIGNATURE -> {
                 User user = userService.findBySignature(file);
-                yield user != null && user.equals(principal);
+                yield user != null && user.getId().equals(principal.getId());
             }
             case EVENT_BANNER -> {
                 Event event = eventService.findByBanner(file);
@@ -61,7 +61,7 @@ public class FilePermission extends BasePermissionEvaluator<File, Long, FileServ
         };
     }
 
-    private boolean handleDeletePermission(File file, User principal) {
+    private boolean handleDeletePermission(File file, SharedUserDetails principal) {
         return switch (file.getFileType()) {
 //            case EVENT_PICTURE -> {
 //                Event event = eventService.findByPicture(file);
@@ -73,7 +73,7 @@ public class FilePermission extends BasePermissionEvaluator<File, Long, FileServ
             }
             case PROFILE_PICTURE -> {
                 User user = userService.findByProfilePicture(file);
-                yield user != null && user.equals(principal);
+                yield user != null && user.getId().equals(principal.getId());
             }
             default -> false;
         };

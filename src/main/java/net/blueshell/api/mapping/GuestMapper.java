@@ -1,9 +1,9 @@
 package net.blueshell.api.mapping;
 
-import net.blueshell.api.base.BaseMapper;
 import net.blueshell.api.dto.EventSignUpDTO;
 import net.blueshell.api.dto.GuestDTO;
 import net.blueshell.api.model.Guest;
+import net.blueshell.common.mapper.BaseMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

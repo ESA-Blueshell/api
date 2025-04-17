@@ -1,14 +1,13 @@
 package net.blueshell.api.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.NotFoundException;
-import net.blueshell.api.base.BaseController;
 import net.blueshell.api.dto.EventSignUpDTO;
 import net.blueshell.api.mapping.EventSignUpMapper;
 import net.blueshell.api.model.EventSignUp;
-import net.blueshell.api.model.User;
 import net.blueshell.api.service.EventSignUpService;
+import net.blueshell.common.identity.SharedUserDetails;
+import net.blueshell.db.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,12 +29,12 @@ public class EventSignUpController extends BaseController<EventSignUpService, Ev
     @GetMapping(value = "/events/signups")
     @PreAuthorize("principal != null")
     public List<EventSignUpDTO> getMySignUps() {
-        User user = getPrincipal();
+        SharedUserDetails user = getPrincipal();
         if (user == null) {
             throw new NotFoundException();
         }
 
-        List<EventSignUp> eventSignUps = service.findByUser(user);
+        List<EventSignUp> eventSignUps = service.findByUserId(user.getId());
         return mapper.toDTOs(eventSignUps.stream()).toList();
     }
 
@@ -71,7 +70,7 @@ public class EventSignUpController extends BaseController<EventSignUpService, Ev
                                        @RequestParam(value = "accessToken", required = false) String accessToken) {
         long signUpId;
         if (accessToken == null) {
-            signUpId = service.findByUserAndEventId(getPrincipal(), eventId).getId();
+            signUpId = service.findByUserIdAndEventId(getPrincipal().getId(), eventId).getId();
         } else {
             signUpId = service.findByGuestAccessToken(accessToken).getId();
         }

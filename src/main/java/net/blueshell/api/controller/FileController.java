@@ -1,9 +1,9 @@
 package net.blueshell.api.controller;
 
-import net.blueshell.api.base.BaseController;
 import net.blueshell.api.model.*;
 import net.blueshell.api.repository.FileRepository;
 import net.blueshell.api.service.*;
+import net.blueshell.db.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;

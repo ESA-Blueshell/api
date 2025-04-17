@@ -142,12 +142,8 @@ public class ScheduleManager {
     // Testing stuff
 
     private static int i = 0;
-    private static void a() {
-        System.out.println("Banaan " + i++);
-    }
 
     private static void fin() {
-        System.out.println("Exit");
     }
 
     private static void startEndingTimer() {
@@ -155,8 +151,5 @@ public class ScheduleManager {
     }
 
     public static void main(String[] args) {
-//        addEvent(ScheduleManager::a, 1000);
-//        startEndingTimer();
-//        System.out.println("Exit");
     }
 }

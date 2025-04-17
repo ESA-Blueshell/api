@@ -3,14 +3,14 @@ package net.blueshell.api.controller.request;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.blueshell.api.base.DTO;
+import net.blueshell.common.dto.BaseDTO;
 
 import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @JsonTypeInfo(use = JsonTypeInfo.Id.NONE) // disables type id handling for this class
-public class JwtRequest extends DTO implements Serializable {
+public class JwtRequest extends BaseDTO {
     private static final long serialVersionUID = 5926468583005150707L;
     private String username;
     private String password;
