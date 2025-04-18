@@ -4,7 +4,7 @@ package net.blueshell.api.mapping;
 import net.blueshell.api.dto.EventSignUpDTO;
 import net.blueshell.api.model.EventSignUp;
 import net.blueshell.api.model.Guest;
-import net.blueshell.common.identity.SharedUserDetails;
+import net.blueshell.common.identity.Identity;
 import net.blueshell.common.mapper.BaseMapper;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -52,7 +52,7 @@ public abstract class EventSignUpMapper extends BaseMapper<EventSignUp, EventSig
 
     @AfterMapping
     protected void afterFromDTO(EventSignUpDTO dto, @MappingTarget EventSignUp signUp) {
-        SharedUserDetails user = getPrincipal();
+        Identity user = getPrincipal();
         if (signUp.getSignedUpAt() == null) {
             signUp.setSignedUpAt(LocalDateTime.now());
         }

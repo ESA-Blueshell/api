@@ -6,7 +6,7 @@ import net.blueshell.api.dto.EventSignUpDTO;
 import net.blueshell.api.mapping.EventSignUpMapper;
 import net.blueshell.api.model.EventSignUp;
 import net.blueshell.api.service.EventSignUpService;
-import net.blueshell.common.identity.SharedUserDetails;
+import net.blueshell.common.identity.Identity;
 import net.blueshell.db.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +29,7 @@ public class EventSignUpController extends BaseController<EventSignUpService, Ev
     @GetMapping(value = "/events/signups")
     @PreAuthorize("principal != null")
     public List<EventSignUpDTO> getMySignUps() {
-        SharedUserDetails user = getPrincipal();
+        Identity user = getPrincipal();
         if (user == null) {
             throw new NotFoundException();
         }

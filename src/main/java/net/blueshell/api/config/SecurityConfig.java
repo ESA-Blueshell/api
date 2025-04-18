@@ -2,7 +2,7 @@ package net.blueshell.api.config;
 
 import net.blueshell.api.auth.JwtAuthenticationEntryPoint;
 import net.blueshell.common.enums.Role;
-import net.blueshell.common.filter.HeaderAuthFilter;
+import net.blueshell.common.identity.IdentityFilter;
 import net.blueshell.db.permission.CompositePermissionEvaluator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,10 +28,10 @@ import static org.springframework.security.access.hierarchicalroles.RoleHierarch
 public class SecurityConfig {
 
     private final JwtAuthenticationEntryPoint authenticationEntryPoint;
-    private final HeaderAuthFilter headerAuthFilter;
+    private final IdentityFilter identityFilter;
 
-    public SecurityConfig(JwtAuthenticationEntryPoint authenticationEntryPoint, HeaderAuthFilter headerAuthFilter) {
-        this.headerAuthFilter = headerAuthFilter;
+    public SecurityConfig(JwtAuthenticationEntryPoint authenticationEntryPoint, IdentityFilter identityFilter) {
+        this.identityFilter = identityFilter;
         this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
@@ -59,8 +59,8 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/authenticate",
-                                "/user-details",
+                                "/auth",
+                                "/auth/identity",
                                 "/users/activate",
                                 "/users/password"
                         ).permitAll()
@@ -76,8 +76,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(authenticationEntryPoint))
-                .addFilterAfter(headerAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                        .authenticationEntryPoint(authenticationEntryPoint));
 
         return http.build();
     }

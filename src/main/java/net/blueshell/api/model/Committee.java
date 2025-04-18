@@ -3,7 +3,7 @@ package net.blueshell.api.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
-import net.blueshell.common.identity.SharedUserDetails;
+import net.blueshell.common.identity.Identity;
 import net.blueshell.db.BaseModel;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -72,7 +72,7 @@ public class Committee implements BaseModel<Long> {
         return Objects.hash(id);
     }
 
-    public boolean hasMember(SharedUserDetails user) {
+    public boolean hasMember(Identity user) {
         return getMembers().stream().anyMatch(cm -> cm.getUserId().equals(user.getId()));
     }
 }

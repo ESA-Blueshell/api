@@ -6,7 +6,7 @@ import net.blueshell.api.dto.EventDTO;
 import net.blueshell.api.mapping.EventMapper;
 import net.blueshell.api.model.Event;
 import net.blueshell.api.service.*;
-import net.blueshell.common.identity.SharedUserDetails;
+import net.blueshell.common.identity.Identity;
 import net.blueshell.db.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -77,7 +77,7 @@ public class EventController extends BaseController<EventService, EventMapper> {
 
     @GetMapping("/past")
     public Stream<EventDTO> getPastEvents(@RequestParam(required = false, defaultValue = "false") boolean editable) {
-        SharedUserDetails authedUser = getPrincipal();
+        Identity authedUser = getPrincipal();
         List<Event> events = service.findAll();
 
         Predicate<Event> predicate = event -> {
