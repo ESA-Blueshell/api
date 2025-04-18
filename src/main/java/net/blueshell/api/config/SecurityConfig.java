@@ -62,7 +62,9 @@ public class SecurityConfig {
                                 "/auth",
                                 "/auth/identity",
                                 "/users/activate",
-                                "/users/password"
+                                "/users/password",
+                                "/v3/api-docs",
+                                "/v3/api-docs.yaml"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/events/**",
