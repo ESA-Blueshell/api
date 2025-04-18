@@ -4,12 +4,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import net.blueshell.common.enums.Role;
-import net.blueshell.common.identity.SharedUserDetails;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,10 +16,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 @Component
+@Slf4j
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtTokenUtil jwtTokenUtil;
@@ -33,17 +29,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         this.userDetailsService = userDetailsService;
     }
 
-    private static final AntPathRequestMatcher USER_DETAILS = new AntPathRequestMatcher("/user-details");
+    private static final AntPathRequestMatcher USER_DETAILS = new AntPathRequestMatcher("/auth/identity");
 
     @Override
     protected boolean shouldNotFilter(@NotNull HttpServletRequest request) {
-        // only run this filter on /user-details
+        // only run this filter on /auth/identity
         return !USER_DETAILS.matches(request);
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
-
+        log.info("JWT Authentication Filter");
         final String header = request.getHeader("Authorization");
 
         if (header == null || !header.startsWith("Bearer ")) {
@@ -61,8 +57,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String username = jwtTokenUtil.getUsernameFromToken(token);
 
         if (SecurityContextHolder.getContext().getAuthentication() != null) {
-            filterChain.doFilter(request, response);
-            return;
+            log.info("AUTH ALREADY SET");
+//            filterChain.doFilter(request, response);
+//            return;
         }
 
         if (username != null) {

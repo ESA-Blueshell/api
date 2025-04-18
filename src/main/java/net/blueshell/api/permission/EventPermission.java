@@ -2,7 +2,7 @@ package net.blueshell.api.permission;
 
 import net.blueshell.common.enums.Role;
 import net.blueshell.api.model.Event;
-import net.blueshell.common.identity.SharedUserDetails;
+import net.blueshell.common.identity.Identity;
 import net.blueshell.db.permission.BasePermissionEvaluator;
 import net.blueshell.api.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class EventPermission extends BasePermissionEvaluator<Event, Long, EventS
             return false;
         }
         Event event = (Event) targetDomainObject;
-        SharedUserDetails principal = getPrincipal();
+        Identity principal = getPrincipal();
         return switch (permission) {
             case "read" ->
                     event.isVisible() || hasAuthority(Role.BOARD) || event.getCommittee().hasMember(principal);
