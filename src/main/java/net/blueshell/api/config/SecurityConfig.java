@@ -17,7 +17,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.Arrays;
 
@@ -28,10 +27,8 @@ import static org.springframework.security.access.hierarchicalroles.RoleHierarch
 public class SecurityConfig {
 
     private final JwtAuthenticationEntryPoint authenticationEntryPoint;
-    private final IdentityFilter identityFilter;
 
-    public SecurityConfig(JwtAuthenticationEntryPoint authenticationEntryPoint, IdentityFilter identityFilter) {
-        this.identityFilter = identityFilter;
+    public SecurityConfig(JwtAuthenticationEntryPoint authenticationEntryPoint) {
         this.authenticationEntryPoint = authenticationEntryPoint;
     }
 

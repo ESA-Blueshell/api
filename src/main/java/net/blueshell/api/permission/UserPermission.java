@@ -20,6 +20,7 @@ public class UserPermission extends BasePermissionEvaluator<User, Long, UserServ
     }
 
     public boolean hasPermission(Authentication authentication, Object object, String permission) {
+        log.info("Checking hasPermission: {}", object);
         if (authentication == null || object == null || permission == null) {
             return false;
         }
@@ -33,6 +34,8 @@ public class UserPermission extends BasePermissionEvaluator<User, Long, UserServ
     }
 
     public boolean hasPermissionId(Authentication authentication, Object targetId, String permission) {
+        log.info("Checking hasPermissionId principal: {}", getPrincipal());
+        log.info("Checking hasPermissionID: {}", targetId);
         if (authentication == null || targetId == null || permission == null) {
             return false;
         }
