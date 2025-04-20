@@ -1,7 +1,7 @@
 package net.blueshell.api.mapping;
 
 
-import net.blueshell.api.dto.EventSignUpDTO;
+import net.blueshell.common.dto.EventSignUpDTO;
 import net.blueshell.api.model.EventSignUp;
 import net.blueshell.api.model.Guest;
 import net.blueshell.common.identity.Identity;

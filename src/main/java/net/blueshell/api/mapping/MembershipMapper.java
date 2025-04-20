@@ -3,8 +3,7 @@ package net.blueshell.api.mapping;
 
 
 import net.blueshell.common.dto.FileDTO;
-import net.blueshell.api.dto.MembershipDTO;
-import net.blueshell.api.mapping.user.SimpleUserMapper;
+import net.blueshell.common.dto.MembershipDTO;
 import net.blueshell.api.model.File;
 import net.blueshell.api.model.Membership;
 import net.blueshell.api.service.UserService;

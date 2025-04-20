@@ -1,6 +1,6 @@
 package net.blueshell.api.mapping;
 
-import net.blueshell.api.dto.NewsDTO;
+import net.blueshell.common.dto.NewsDTO;
 import net.blueshell.api.model.News;
 import net.blueshell.api.model.User;
 import net.blueshell.api.service.UserService;

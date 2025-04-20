@@ -3,7 +3,7 @@ package net.blueshell.api.controller;
 import io.swagger.annotations.ApiParam;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.PathParam;
-import net.blueshell.api.dto.ContributionDTO;
+import net.blueshell.common.dto.ContributionDTO;
 import net.blueshell.api.mapping.ContributionMapper;
 import net.blueshell.api.model.Contribution;
 import net.blueshell.api.service.ContributionService;

@@ -1,7 +1,7 @@
 package net.blueshell.api.mapping.user;
 
 import net.blueshell.common.enums.Role;
-import net.blueshell.api.dto.user.AdvancedUserDTO;
+import net.blueshell.api.dto.AdvancedUserDTO;
 import net.blueshell.api.mapping.MembershipMapper;
 import net.blueshell.api.model.Membership;
 import net.blueshell.api.model.User;

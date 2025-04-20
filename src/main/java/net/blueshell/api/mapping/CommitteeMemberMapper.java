@@ -1,6 +1,6 @@
 package net.blueshell.api.mapping;
 
-import net.blueshell.api.dto.CommitteeMemberDTO;
+import net.blueshell.common.dto.CommitteeMemberDTO;
 import net.blueshell.api.mapping.user.SimpleUserMapper;
 import net.blueshell.api.model.CommitteeMember;
 import net.blueshell.api.service.UserService;

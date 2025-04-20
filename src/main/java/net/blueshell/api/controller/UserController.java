@@ -1,13 +1,12 @@
 package net.blueshell.api.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.PathParam;
 import net.blueshell.db.AdvancedController;
 import net.blueshell.common.enums.Role;
 import net.blueshell.api.controller.request.ActivationRequest;
 import net.blueshell.api.controller.request.PasswordResetRequest;
-import net.blueshell.api.dto.user.AdvancedUserDTO;
+import net.blueshell.api.dto.AdvancedUserDTO;
 import net.blueshell.api.mapping.RequestMapper;
 import net.blueshell.api.mapping.user.AdvancedUserMapper;
 import net.blueshell.api.mapping.user.SimpleUserMapper;

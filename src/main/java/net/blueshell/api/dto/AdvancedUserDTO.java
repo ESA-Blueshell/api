@@ -1,4 +1,4 @@
-package net.blueshell.api.dto.user;
+package net.blueshell.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,10 +10,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.blueshell.api.common.enums.MemberType;
+import net.blueshell.common.dto.SimpleUserDTO;
 import net.blueshell.common.enums.Role;
 import net.blueshell.common.dto.FileDTO;
-import net.blueshell.api.dto.MembershipDTO;
+import net.blueshell.common.dto.MembershipDTO;
 import net.blueshell.api.validation.group.Administration;
 import net.blueshell.api.validation.group.Creation;
 import net.blueshell.api.validation.group.Member;
@@ -27,15 +27,6 @@ import java.util.Set;
 @Data
 @UniqueUser
 @EqualsAndHashCode(callSuper = false)
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "type"
-)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = SimpleUserDTO.class, name = "simple"),
-        @JsonSubTypes.Type(value = AdvancedUserDTO.class, name = "advanced"),
-})
 public class AdvancedUserDTO extends SimpleUserDTO {
 
     @NotNull(groups = {Update.class})

@@ -2,7 +2,7 @@ package net.blueshell.api.controller;
 
 import jakarta.validation.Valid;
 import jakarta.ws.rs.NotFoundException;
-import net.blueshell.api.dto.EventSignUpDTO;
+import net.blueshell.common.dto.EventSignUpDTO;
 import net.blueshell.api.mapping.EventSignUpMapper;
 import net.blueshell.api.model.EventSignUp;
 import net.blueshell.api.service.EventSignUpService;

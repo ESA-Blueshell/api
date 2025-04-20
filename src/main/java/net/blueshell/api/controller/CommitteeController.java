@@ -5,7 +5,7 @@ import jakarta.ws.rs.NotFoundException;
 import net.blueshell.db.AdvancedController;
 import net.blueshell.common.dto.BaseDTO;
 import net.blueshell.common.enums.Role;
-import net.blueshell.api.dto.committee.AdvancedCommitteeDTO;
+import net.blueshell.common.dto.AdvancedCommitteeDTO;
 import net.blueshell.api.mapping.committee.AdvancedCommitteeMapper;
 import net.blueshell.api.mapping.committee.SimpleCommitteeMapper;
 import net.blueshell.api.model.Committee;
@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

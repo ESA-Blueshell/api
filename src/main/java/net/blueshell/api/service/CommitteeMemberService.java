@@ -1,6 +1,6 @@
 package net.blueshell.api.service;
 
-import net.blueshell.api.dto.CommitteeMemberDTO;
+import net.blueshell.common.dto.CommitteeMemberDTO;
 import net.blueshell.api.exception.ResourceNotFoundException;
 import net.blueshell.api.mapping.CommitteeMemberMapper;
 import net.blueshell.api.model.CommitteeMember;
