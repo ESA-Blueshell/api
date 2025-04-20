@@ -65,7 +65,7 @@ public class JWTAuthController extends JWTAuthBase{
 
 
     @GetMapping("/identity")
-    public Identity getIdentity(@RequestParam(required = false) String token) {
+    public Identity getIdentity() {
         User user = getPrincipal();
         if (user == null) return null;
         return mapper.fromUser(user);
