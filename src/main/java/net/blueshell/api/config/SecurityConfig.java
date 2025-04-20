@@ -1,11 +1,13 @@
 package net.blueshell.api.config;
 
+import net.blueshell.api.auth.JwtAuthFilter;
 import net.blueshell.api.auth.JwtAuthenticationEntryPoint;
 import net.blueshell.common.enums.Role;
 import net.blueshell.common.identity.IdentityFilter;
 import net.blueshell.db.permission.CompositePermissionEvaluator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
@@ -17,6 +19,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.Arrays;
 
@@ -27,9 +30,13 @@ import static org.springframework.security.access.hierarchicalroles.RoleHierarch
 public class SecurityConfig {
 
     private final JwtAuthenticationEntryPoint authenticationEntryPoint;
+    private final JwtAuthFilter jwtAuthFilter;
+    private final IdentityFilter identityFilter;
 
-    public SecurityConfig(JwtAuthenticationEntryPoint authenticationEntryPoint) {
+    public SecurityConfig(JwtAuthenticationEntryPoint authenticationEntryPoint, JwtAuthFilter jwtAuthFilter, IdentityFilter identityFilter) {
         this.authenticationEntryPoint = authenticationEntryPoint;
+        this.jwtAuthFilter = jwtAuthFilter;
+        this.identityFilter = identityFilter;
     }
 
 
@@ -48,37 +55,49 @@ public class SecurityConfig {
         return fromHierarchy(hierarchyString);
     }
 
+    // 1) Chain for /auth/**
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    @Order(1)
+    public SecurityFilterChain authSecurityChain(HttpSecurity http) throws Exception {
         http
+                // only apply this chain to /auth/**
+                .securityMatcher("/auth/**")
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/auth",
-                                "/auth/identity",
-                                "/users/activate",
-                                "/users/password",
-                                "/v3/api-docs",
-                                "/v3/api-docs.yaml"
-                        ).permitAll()
-                        .requestMatchers(HttpMethod.GET,
-                                "/events/**",
-                                "/download/**",
-                                "/committees**",
-                                "/contributionPeriods",
-                                "/health"
-                        ).permitAll()
-                        .requestMatchers(HttpMethod.POST,
-                                "/events/signups/*/guest", "/users").permitAll()
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // run your JWT filter here
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(a -> a
+                        .requestMatchers(HttpMethod.POST, "/auth").permitAll()        // login
+                        .requestMatchers(HttpMethod.GET,  "/auth/identity").permitAll() // token→identity
                         .anyRequest().authenticated()
                 )
-                .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(authenticationEntryPoint));
-
+                .exceptionHandling(e -> e.authenticationEntryPoint(authenticationEntryPoint));
         return http.build();
     }
+
+    // 2) Chain for everything else
+    @Bean
+    @Order(2)
+    public SecurityFilterChain apiSecurityChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/**")
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // run your header‑based filter here
+                .addFilterBefore(identityFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(a -> a
+                        .requestMatchers(HttpMethod.GET,
+                                "/events/**", "/download/**", "/committees**", "/contributionPeriods", "/health"
+                        ).permitAll()
+                        .requestMatchers(HttpMethod.POST,
+                                "/events/signups/*/guest", "/users"
+                        ).permitAll()
+                        // everything else must carry X‑User‑* headers
+                        .anyRequest().authenticated()
+                );
+        return http.build();
+    }
+
 
     @Bean
     public MethodSecurityExpressionHandler methodSecurityExpressionHandler(CompositePermissionEvaluator permissionEvaluator) {
