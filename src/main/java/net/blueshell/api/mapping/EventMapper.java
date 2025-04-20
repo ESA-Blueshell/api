@@ -1,6 +1,6 @@
 package net.blueshell.api.mapping;
 
-import net.blueshell.api.dto.EventDTO;
+import net.blueshell.common.dto.EventDTO;
 import net.blueshell.api.mapping.committee.SimpleCommitteeMapper;
 import net.blueshell.api.model.Event;
 import net.blueshell.api.model.File;
@@ -14,9 +14,7 @@ import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Mapper(componentModel = "spring")
 public abstract class EventMapper extends BaseMapper<Event, EventDTO> {
@@ -66,6 +64,7 @@ public abstract class EventMapper extends BaseMapper<Event, EventDTO> {
 
     public abstract EventDTO toDTO(Event event);
 
+    @AfterMapping
     public void afterToDTO(Event event, @MappingTarget EventDTO dto) {
         if (event.getCommittee() != null) {
             dto.setCommittee(simpleCommitteeMapper.toDTO(event.getCommittee()));

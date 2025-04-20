@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.blueshell.api.common.enums.MemberType;
 import net.blueshell.common.dto.BaseDTO;
+import net.blueshell.common.dto.FileDTO;
 
 import java.util.Date;
 

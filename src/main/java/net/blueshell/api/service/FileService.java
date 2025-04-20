@@ -2,10 +2,7 @@ package net.blueshell.api.service;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.ws.rs.BadRequestException;
-import net.blueshell.db.BaseModel;
 import net.blueshell.api.config.StorageConfig;
-import net.blueshell.api.controller.response.UploadFileResponse;
-import net.blueshell.api.common.enums.FileType;
 import net.blueshell.api.exception.FileNotFoundException;
 import net.blueshell.api.exception.StorageException;
 import net.blueshell.api.model.File;
@@ -18,7 +15,6 @@ import org.springframework.http.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

@@ -5,8 +5,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import net.blueshell.common.enums.FileType;
 import net.blueshell.db.BaseModel;
-import net.blueshell.api.common.enums.FileType;
+
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -18,7 +19,7 @@ import java.util.Objects;
 @SQLDelete(sql = "UPDATE files SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
 @Data
-public class File  implements BaseModel<Long> {
+public class File implements BaseModel<Long> {
 
     @Getter
     @Setter

@@ -1,13 +1,12 @@
 package net.blueshell.api.mapping.committee;
 
 
-import net.blueshell.api.dto.committee.SimpleCommitteeDTO;
+import net.blueshell.common.dto.SimpleCommitteeDTO;
 import net.blueshell.api.mapping.CommitteeMemberMapper;
 import net.blueshell.api.model.Committee;
 import net.blueshell.api.repository.CommitteeMemberRepository;
 import net.blueshell.common.mapper.BaseMapper;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(

@@ -2,7 +2,7 @@ package net.blueshell.api.controller;
 
 import jakarta.validation.Valid;
 
-import net.blueshell.api.dto.EventDTO;
+import net.blueshell.common.dto.EventDTO;
 import net.blueshell.api.mapping.EventMapper;
 import net.blueshell.api.model.Event;
 import net.blueshell.api.service.*;

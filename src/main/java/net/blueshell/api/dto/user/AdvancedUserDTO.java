@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.blueshell.api.common.enums.MemberType;
 import net.blueshell.common.enums.Role;
-import net.blueshell.api.dto.FileDTO;
+import net.blueshell.common.dto.FileDTO;
 import net.blueshell.api.dto.MembershipDTO;
 import net.blueshell.api.validation.group.Administration;
 import net.blueshell.api.validation.group.Creation;

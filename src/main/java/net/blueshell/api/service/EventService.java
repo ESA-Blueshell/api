@@ -1,8 +1,5 @@
 package net.blueshell.api.service;
 
-import net.blueshell.db.BaseModel;
-import net.blueshell.api.dto.EventDTO;
-import net.blueshell.api.mapping.EventMapper;
 import net.blueshell.api.model.*;
 import net.blueshell.api.repository.EventRepository;
 import net.blueshell.api.service.google.CalendarService;
@@ -12,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -99,11 +94,6 @@ public class EventService extends BaseModelService<Event, Long, EventRepository>
     public Event findByBanner(File banner) {
         return repository.findByBanner(banner);
     }
-
-//    public Event findByEventPicture(File picture) {
-//        eventPictureService.findByPicture(picture);
-//        return repository.findByEventPictures(new HashSet<>(Collections.singletonList(picture))));
-//    }/
 
 
     public List<Event> findStartTimeBetween(LocalDateTime from, LocalDateTime to) {

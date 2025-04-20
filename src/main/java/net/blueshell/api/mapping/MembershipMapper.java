@@ -2,13 +2,13 @@ package net.blueshell.api.mapping;
 
 
 
-import net.blueshell.api.dto.FileDTO;
+import net.blueshell.common.dto.FileDTO;
 import net.blueshell.api.dto.MembershipDTO;
-import net.blueshell.api.common.enums.FileType;
 import net.blueshell.api.mapping.user.SimpleUserMapper;
 import net.blueshell.api.model.File;
 import net.blueshell.api.model.Membership;
 import net.blueshell.api.service.UserService;
+import net.blueshell.common.enums.FileType;
 import net.blueshell.common.mapper.BaseMapper;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
