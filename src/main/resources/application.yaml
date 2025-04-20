@@ -11,7 +11,7 @@ frontend:
   url: ${FRONTEND_URL}
 
 storage:
-  location: ./uploads
+  location: /home/storage
 
 
 brevo:
