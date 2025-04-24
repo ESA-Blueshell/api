@@ -1,7 +1,7 @@
 package net.blueshell.api.service;
 
 import jakarta.transaction.Transactional;
-import net.blueshell.common.enums.Role;
+import net.blueshell.enums.Role;
 import net.blueshell.api.model.Committee;
 import net.blueshell.api.model.CommitteeMember;
 import net.blueshell.api.model.User;

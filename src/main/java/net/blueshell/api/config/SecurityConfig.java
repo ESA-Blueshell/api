@@ -2,9 +2,9 @@ package net.blueshell.api.config;
 
 import net.blueshell.api.auth.JwtAuthFilter;
 import net.blueshell.api.auth.JwtAuthenticationEntryPoint;
-import net.blueshell.common.enums.Role;
-import net.blueshell.common.identity.IdentityFilter;
-import net.blueshell.db.permission.CompositePermissionEvaluator;
+import net.blueshell.enums.Role;
+import net.blueshell.identity.IdentityFilter;
+import net.blueshell.permission.CompositePermissionEvaluator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;

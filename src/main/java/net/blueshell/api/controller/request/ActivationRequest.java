@@ -5,7 +5,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.blueshell.common.dto.BaseDTO;
+import net.blueshell.dto.BaseDTO;
 import net.blueshell.api.common.enums.ResetType;
 import net.blueshell.api.validation.user.ValidActivationRequest;
 

@@ -3,7 +3,7 @@ package net.blueshell.api.controller.request;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.blueshell.common.dto.BaseDTO;
+import net.blueshell.dto.BaseDTO;
 import net.blueshell.api.validation.user.ExistingUsername;
 
 @Data

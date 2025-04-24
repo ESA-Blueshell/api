@@ -1,11 +1,11 @@
 package net.blueshell.api.mapping.committee;
 
 
-import net.blueshell.common.dto.AdvancedCommitteeDTO;
+import net.blueshell.dto.AdvancedCommitteeDTO;
 import net.blueshell.api.mapping.CommitteeMemberMapper;
 import net.blueshell.api.model.Committee;
 import net.blueshell.api.model.CommitteeMember;
-import net.blueshell.common.mapper.BaseMapper;
+import net.blueshell.mapper.BaseMapper;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

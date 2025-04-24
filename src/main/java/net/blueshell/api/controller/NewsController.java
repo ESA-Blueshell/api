@@ -1,8 +1,8 @@
 package net.blueshell.api.controller;
 
 import jakarta.validation.Valid;
-import net.blueshell.common.enums.Role;
-import net.blueshell.common.dto.NewsDTO;
+import net.blueshell.enums.Role;
+import net.blueshell.dto.NewsDTO;
 import net.blueshell.api.mapping.NewsMapper;
 import net.blueshell.api.model.News;
 import net.blueshell.api.service.NewsService;

@@ -3,7 +3,7 @@ package net.blueshell.api.service;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.NotFoundException;
 import net.blueshell.db.BaseModel;
-import net.blueshell.common.enums.Role;
+import net.blueshell.enums.Role;
 import net.blueshell.api.common.enums.ResetType;
 import net.blueshell.api.model.Membership;
 import net.blueshell.api.util.Util;

@@ -1,7 +1,7 @@
 package net.blueshell.api.controller;
 
 import jakarta.validation.Valid;
-import net.blueshell.common.dto.MembershipDTO;
+import net.blueshell.dto.MembershipDTO;
 import net.blueshell.api.mapping.MembershipMapper;
 import net.blueshell.api.model.Membership;
 import net.blueshell.api.service.MembershipService;

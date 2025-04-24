@@ -1,9 +1,9 @@
 package net.blueshell.api.permission;
 
-import net.blueshell.common.enums.Role;
+import net.blueshell.enums.Role;
 import net.blueshell.api.model.Committee;
-import net.blueshell.common.identity.Identity;
-import net.blueshell.db.permission.BasePermissionEvaluator;
+import net.blueshell.identity.Identity;
+import net.blueshell.permission.BasePermissionEvaluator;
 import net.blueshell.api.service.CommitteeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

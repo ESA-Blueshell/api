@@ -7,7 +7,7 @@ import lombok.Data;
 import net.blueshell.db.BaseModel;
 import net.blueshell.api.common.enums.MemberType;
 import net.blueshell.api.common.enums.ResetType;
-import net.blueshell.common.enums.Role;
+import net.blueshell.enums.Role;
 import net.blueshell.api.common.util.TimeUtil;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;

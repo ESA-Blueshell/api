@@ -2,11 +2,11 @@ package net.blueshell.api.controller;
 
 import jakarta.validation.Valid;
 import jakarta.ws.rs.NotFoundException;
-import net.blueshell.common.dto.EventSignUpDTO;
+import net.blueshell.dto.EventSignUpDTO;
 import net.blueshell.api.mapping.EventSignUpMapper;
 import net.blueshell.api.model.EventSignUp;
 import net.blueshell.api.service.EventSignUpService;
-import net.blueshell.common.identity.Identity;
+import net.blueshell.identity.Identity;
 import net.blueshell.db.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

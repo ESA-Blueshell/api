@@ -7,7 +7,7 @@ import net.blueshell.api.controller.response.JwtResponse;
 import net.blueshell.api.mapping.IdentityMapper;
 import net.blueshell.api.model.User;
 import net.blueshell.api.service.UserService;
-import net.blueshell.common.identity.Identity;
+import net.blueshell.identity.Identity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

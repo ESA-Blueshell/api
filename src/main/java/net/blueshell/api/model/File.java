@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import net.blueshell.common.enums.FileType;
+import net.blueshell.enums.FileType;
 import net.blueshell.db.BaseModel;
 
 import org.hibernate.annotations.SQLDelete;

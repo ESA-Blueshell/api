@@ -1,8 +1,8 @@
 package net.blueshell.api.mapping;
 
-import net.blueshell.common.dto.ContributionDTO;
+import net.blueshell.dto.ContributionDTO;
 import net.blueshell.api.model.Contribution;
-import net.blueshell.common.mapper.BaseMapper;
+import net.blueshell.mapper.BaseMapper;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

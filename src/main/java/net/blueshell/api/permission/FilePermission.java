@@ -1,11 +1,11 @@
 package net.blueshell.api.permission;
 
-import net.blueshell.common.enums.Role;
+import net.blueshell.enums.Role;
 import net.blueshell.api.model.Event;
 import net.blueshell.api.model.File;
 import net.blueshell.api.model.User;
-import net.blueshell.common.identity.Identity;
-import net.blueshell.db.permission.BasePermissionEvaluator;
+import net.blueshell.identity.Identity;
+import net.blueshell.permission.BasePermissionEvaluator;
 import net.blueshell.api.service.EventService;
 import net.blueshell.api.service.FileService;
 import net.blueshell.api.service.UserService;

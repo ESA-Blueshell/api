@@ -1,10 +1,10 @@
 package net.blueshell.api.permission;
 
 import lombok.extern.slf4j.Slf4j;
-import net.blueshell.common.enums.Role;
+import net.blueshell.enums.Role;
 import net.blueshell.api.model.User;
-import net.blueshell.common.identity.Identity;
-import net.blueshell.db.permission.BasePermissionEvaluator;
+import net.blueshell.identity.Identity;
+import net.blueshell.permission.BasePermissionEvaluator;
 import net.blueshell.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

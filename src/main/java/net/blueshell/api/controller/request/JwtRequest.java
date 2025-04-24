@@ -3,7 +3,7 @@ package net.blueshell.api.controller.request;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.blueshell.common.dto.BaseDTO;
+import net.blueshell.dto.BaseDTO;
 
 import java.io.Serializable;
 

@@ -2,7 +2,7 @@ package net.blueshell.api.validation.eventSignUp;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import net.blueshell.common.dto.EventSignUpDTO;
+import net.blueshell.dto.EventSignUpDTO;
 import net.blueshell.api.model.Event;
 import net.blueshell.api.model.FormQuestion;
 import net.blueshell.api.repository.EventRepository;

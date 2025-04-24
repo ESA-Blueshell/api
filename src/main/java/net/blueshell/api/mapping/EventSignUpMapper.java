@@ -1,11 +1,11 @@
 package net.blueshell.api.mapping;
 
 
-import net.blueshell.common.dto.EventSignUpDTO;
+import net.blueshell.dto.EventSignUpDTO;
 import net.blueshell.api.model.EventSignUp;
 import net.blueshell.api.model.Guest;
-import net.blueshell.common.identity.Identity;
-import net.blueshell.common.mapper.BaseMapper;
+import net.blueshell.identity.Identity;
+import net.blueshell.mapper.BaseMapper;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -2,11 +2,11 @@ package net.blueshell.api.controller;
 
 import jakarta.validation.Valid;
 
-import net.blueshell.common.dto.EventDTO;
+import net.blueshell.dto.EventDTO;
 import net.blueshell.api.mapping.EventMapper;
 import net.blueshell.api.model.Event;
 import net.blueshell.api.service.*;
-import net.blueshell.common.identity.Identity;
+import net.blueshell.identity.Identity;
 import net.blueshell.db.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

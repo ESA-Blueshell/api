@@ -1,7 +1,7 @@
 package net.blueshell.api.controller;
 
 import jakarta.validation.Valid;
-import net.blueshell.common.dto.ContributionPeriodDTO;
+import net.blueshell.dto.ContributionPeriodDTO;
 import net.blueshell.api.mapping.ContributionPeriodMapper;
 import net.blueshell.api.model.ContributionPeriod;
 import net.blueshell.api.service.ContributionPeriodService;

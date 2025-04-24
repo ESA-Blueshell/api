@@ -1,7 +1,7 @@
 package net.blueshell.api.controller;
 
 import jakarta.validation.Valid;
-import net.blueshell.common.dto.SponsorDTO;
+import net.blueshell.dto.SponsorDTO;
 import net.blueshell.api.mapping.SponsorMapper;
 import net.blueshell.api.model.Sponsor;
 import net.blueshell.api.service.SponsorService;

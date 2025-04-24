@@ -1,7 +1,7 @@
 package net.blueshell.api.controller.response;
 
 import lombok.Getter;
-import net.blueshell.common.dto.BaseDTO;
+import net.blueshell.dto.BaseDTO;
 
 import java.util.Set;
 
